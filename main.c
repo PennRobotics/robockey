@@ -1,3 +1,4 @@
+// TODO Create Makefile
 // TODO Split main into several files with headers for definitions!
 // TODO Output to LED status indicators
 // TODO Set up mRF
