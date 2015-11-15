@@ -13,6 +13,9 @@
 #define m_set(x) set(x)
 #define m_clear(x) clear(x)
 #define m_toggle(x) toggle(x)
+#define m_check(x) check(x)
+#define m_output(x) set(x)
+#define m_input(x) clear(x)
 
 // Example of naming convention:
 // LED_OUT, DDR_LED_OUT

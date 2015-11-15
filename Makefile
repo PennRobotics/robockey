@@ -16,7 +16,7 @@ MAIN       = main.o
 CHILDRENC := $(wildcard rock_*.c)
 CHILDREN   = $(CHILDRENC:.c=.o)
 #CHILDREN   = 
-PARENTS    = 
+PARENTS    = m_bus.o m_rf.o m_wii.o m_imu.o
 
 # --------------------------------------------------------
 # if you want to use one of our pre-compiled libraries,

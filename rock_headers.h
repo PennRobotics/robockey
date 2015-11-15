@@ -22,7 +22,7 @@
 //#include "rock_mwii.h"
 //#include "rock_localization.h"
 //#include "rock_strategy.h"
-//#include "rock_debug.h"
+#include "rock_debug.h"
 
 void abort(void);
 

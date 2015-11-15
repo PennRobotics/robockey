@@ -17,5 +17,9 @@ void updateStatusFlags(unsigned int* flagMemAddr);
 #define STATUS_NO_GAMEPLAY          (0x200)
 
 #define status_clearall()   statusFlags = 0;
+//TODO Are these duplicates?
+//#define status_set()        statusFlags /*TODO*/ 
+//#define status_clear()      statusFlags /*TODO*/
+//#define status_toggle()     statusFlags /*TODO*/
 
 #endif
