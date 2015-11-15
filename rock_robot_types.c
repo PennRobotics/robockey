@@ -1,11 +1,13 @@
-#include "rock_robot_types.h"
+#ifndef _rock_headers_h
+#include "rock_headers.h"
+#endif
 
-bool robotIs(robot_id)
+char robotIs(char robot_id)
 {
   return robot_id == ROBOT;
 }
 
-bool robotIsNot(robot_id)
+char robotIsNot(char robot_id)
 {
   return robot_id != ROBOT;
 }

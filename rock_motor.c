@@ -1,11 +1,13 @@
 //TODO Fix variables in motor(id, dir, duty)
 //TODO Create port definitions e.g. MOTOR_L_EN_PORT
 
-#include "rock_motor.h"
+#ifndef _rock_headers_h
+#include "rock_headers.h"
+#endif
 
 void motor(unsigned char motor_id, char motor_dir, unsigned char motor_duty)
 {
-  if (motor_id==MOTORLEFT)
+  if (motor_id==LEFTMOTOR)
   {
 //    if (motor_dir != OFF)      {set(MOTOR_L_EN_PORT); } else {clear(MOTOR_L_EN_PORT); }
 //    if (motor_dir == FORWARD)  {set(MOTOR_L_DIR_PORT);} else {clear(MOTOR_L_DIR_PORT);}
@@ -14,7 +16,7 @@ void motor(unsigned char motor_id, char motor_dir, unsigned char motor_duty)
 //    OC4B -> B6
 //
   }
-  else if (motor_id==MOTORRIGHT)
+  else if (motor_id==RIGHTMOTOR)
   {
 // copy from above
 //    TimerRegB = motor_duty;

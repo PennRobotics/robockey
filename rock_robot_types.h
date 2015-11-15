@@ -10,7 +10,7 @@
 #define GOALIE_R  7
 #define WEDGE     8
 
-bool robotIs(char robot_id);
-bool robotIsNot(char robot_id);
+char robotIs(char robot_id);
+char robotIsNot(char robot_id);
 
 #endif

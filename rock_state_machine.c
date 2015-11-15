@@ -1,4 +1,6 @@
-#include "rock_state_machine.h"
+#ifndef _rock_headers_h
+#include "rock_headers.h"
+#endif
 
 void stateMachine(char state)
 {

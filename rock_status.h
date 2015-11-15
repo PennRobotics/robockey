@@ -1,6 +1,10 @@
 #ifndef _rock_status_h
 #define _rock_status_h
 
+void testTeamLEDPins();
+void testStatusLEDPins();
+void updateStatusFlags(unsigned int* flagMemAddr);
+
 #define STATUS_PUCK_IN_SIGHT        (0x001)
 #define STATUS_HAVE_PUCK            (0x002)
 #define STATUS_LOCALIZED            (0x004)
@@ -11,5 +15,7 @@
 #define STATUS_ASSISTING            (0x080)
 #define STATUS_NO_RECENT_COMM       (0x100)
 #define STATUS_NO_GAMEPLAY          (0x200)
+
+#define status_clearall()   statusFlags = 0;
 
 #endif

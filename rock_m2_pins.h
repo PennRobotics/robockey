@@ -1,3 +1,7 @@
+// In-Use ports
+//  B0   red team LED
+//  B1   blue team LED
+
 // Reserved ports
 //  D0   mBUS
 //  D1   mBUS
@@ -6,17 +10,18 @@
 #ifndef _rock_m2_pins_h
 #define _rock_m2_pins_h
 
-void function();
+#define m_set(x) set(x)
+#define m_clear(x) clear(x)
+#define m_toggle(x) toggle(x)
 
 // Example of naming convention:
+// LED_OUT, DDR_LED_OUT
 // PIN_IR_FRONT, PORT_IR_FRONT, DDR_IR_FRONT
-#define UNUSED_01_PIN PINB,0
-#define UNUSED_01_PORT PORTB,0
-#define UNUSED_01_DDR DDRB,0
+#define     RED_LED  PORTB, 0
+#define DDR_RED_LED   DDRB, 0
 
-#define UNUSED_02_PIN PINB,1
-#define UNUSED_02_PORT PORTB,1
-#define UNUSED_02_DDR DDRB,1
+#define     BLUE_LED PORTB, 1
+#define DDR_BLUE_LED  DDRB, 1
 
 #define UNUSED_03_PIN PINB,2
 #define UNUSED_03_PORT PORTB,2
