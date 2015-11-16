@@ -20,7 +20,7 @@ int main()
   
   while(1)
   {
-    stateMachine(state);
+    stateMachine();
     getCurrentState();
     updateStatusFlags();
   }
