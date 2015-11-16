@@ -20,6 +20,7 @@
 //#include "rock_adc.h"
 #include "rock_comm.h"
 #include "rock_localization.h"
+#include "rock_interrupts.h"
 #include "rock_debug.h"
 
 void abort(void);
