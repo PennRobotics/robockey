@@ -4,6 +4,7 @@
 void testTeamLEDPins();
 void testStatusLEDPins();
 void updateStatusFlags();
+void sendSPI(uint16_t data);
 
 #define STATUS_PUCK_IN_SIGHT        (0x001)
 #define STATUS_HAVE_PUCK            (0x002)
@@ -15,6 +16,9 @@ void updateStatusFlags();
 #define STATUS_ASSISTING            (0x080)
 #define STATUS_NO_RECENT_COMM       (0x100)
 #define STATUS_NO_GAMEPLAY          (0x200)
+
+#define LOW(x)    ((x)     & 0xFF)
+#define HIGH(x)  (((x)>>8) & 0xFF)
 
 #define status_set(flag)             statusFlags |=  (flag)
 #define status_clear(flag)           statusFlags &= ~(flag)

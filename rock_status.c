@@ -2,13 +2,6 @@
 #include "rock_headers.h"
 #endif
 
-//TODO Move these into custom pin manipulation header w/ m_set, etc.
-#define LOW(x)    ((x)     & 0xFF)
-#define HIGH(x)  (((x)>>8) & 0xFF)
-
-//TODO Move these routines into another file
-void sendSPI(uint16_t data);
-
 void testTeamLEDPins()
 {
   //TODO Set up Team LEDs on MAX7219
