@@ -17,10 +17,11 @@
 int main()
 {
   init();
+  
   while(1)
   {
     stateMachine(state);
     getCurrentState();
-    updateStatusFlags(&statusFlags);
+    updateStatusFlags();
   }
 }

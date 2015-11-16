@@ -3,7 +3,7 @@
 
 void testTeamLEDPins();
 void testStatusLEDPins();
-void updateStatusFlags(unsigned int* flagMemAddr);
+void updateStatusFlags();
 
 #define STATUS_PUCK_IN_SIGHT        (0x001)
 #define STATUS_HAVE_PUCK            (0x002)
@@ -16,10 +16,11 @@ void updateStatusFlags(unsigned int* flagMemAddr);
 #define STATUS_NO_RECENT_COMM       (0x100)
 #define STATUS_NO_GAMEPLAY          (0x200)
 
-#define status_clearall()   statusFlags = 0;
-//TODO Are these duplicates?
-//#define status_set()        statusFlags /*TODO*/ 
-//#define status_clear()      statusFlags /*TODO*/
-//#define status_toggle()     statusFlags /*TODO*/
+#define status_set(flag)             statusFlags |=  (flag)
+#define status_clear(flag)           statusFlags &= ~(flag)
+#define status_toggle(flag)          statusFlags ^=  (flag)
+#define status_clear_all()           statusFlags  =  0
+
+#define status_check(flag)    (bool)(statusFlags  &  (flag))
 
 #endif

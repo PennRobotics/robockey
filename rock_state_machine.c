@@ -9,7 +9,7 @@ void stateMachine(char state)
   case GAMEPLAY_NOT_PLAYING:
     motor(LEFTMOTOR, OFF, 0);
     motor(RIGHTMOTOR, OFF, 0);
-    status_clearall();
+    status_clear_all();
     status_set(STATUS_NO_GAMEPLAY);
     break;
   case GAMEPLAY_COMM_TEST:
@@ -52,19 +52,45 @@ void stateMachine(char state)
   case MOVE_PATROL:
     break;
   case MOVE_TO_DEFENSE_PUCK_IN_SIGHT:
+    status_set(   STATUS_PUCK_IN_SIGHT);
+    status_clear( STATUS_HAVE_PUCK);
+    status_set(   STATUS_DEFENSE);
     break;
   case MOVE_TO_DEFENSE_PUCK_OUT_OF_SIGHT:
+    status_clear( STATUS_PUCK_IN_SIGHT);
+    status_clear( STATUS_HAVE_PUCK);
+    status_set(   STATUS_DEFENSE);
     break;
   case MOVE_AROUND_PERIMETER:
     break;
   case GUARD_GOAL_PUCK_IN_SIGHT:
+    status_set(   STATUS_PUCK_IN_SIGHT);
+    status_clear( STATUS_HAVE_PUCK);
+    status_set(   STATUS_DEFENSE);
     break;
   case GUARD_GOAL_PUCK_IN_CONTACT:
+    status_set(   STATUS_PUCK_IN_SIGHT);
+    status_set(   STATUS_HAVE_PUCK);
+    status_set(   STATUS_DEFENSE);
     break;
   case GUARD_GOAL_PUCK_OUT_OF_SIGHT:
+    status_clear( STATUS_PUCK_IN_SIGHT);
+    status_clear( STATUS_HAVE_PUCK);
+    status_set(   STATUS_DEFENSE);
     break;
   default:
     // do something;
+    m_red(ON);
+    status_clear( STATUS_PUCK_IN_SIGHT);
+    status_clear( STATUS_HAVE_PUCK);
+    status_clear( STATUS_LOCALIZED);
+    status_clear( STATUS_DEFENSE);
+    status_clear( STATUS_RED_TEAM);
+    status_clear( STATUS_MOTOR_ON);
+    status_clear( STATUS_WAIT_FOR_TEAMMATE);
+    status_clear( STATUS_ASSISTING);
+    status_set(   STATUS_NO_RECENT_COMM);
+    status_set(   STATUS_NO_GAMEPLAY);
     break;
   }
 }

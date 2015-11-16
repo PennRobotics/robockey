@@ -106,11 +106,4 @@
 #define UNUSED_25_PORT PORTB,4
 #define UNUSED_25_DDR DDRB,4
 
-#define status_set(flag)             statusFlags |=  (flag)
-#define status_clear(flag)           statusFlags &= ~(flag)
-#define status_toggle(flag)          statusFlags ^=  (flag)
-#define status_clear_all()           statusFlags  =  0
-
-#define status_check(flag)    (bool)(statusFlags  &  (flag))
-
 #endif
