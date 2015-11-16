@@ -47,10 +47,10 @@ void updateStatusFlags()
 
 void sendSPI(uint16_t data)
 {
-  m_clear(SPI_PORT);
+  m_clear(SS);
   SPDR = HIGH(data);
   while(!check(SPSR,SPIF));
   SPDR = LOW(data);
   while(!check(SPSR,SPIF));
-  m_set(SPI_PORT);
+  m_set(SS);
 }

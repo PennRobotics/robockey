@@ -3,6 +3,9 @@
 //  B1   SPI SCLK
 //  B2   SPI MOSI
 
+// Proposed ports
+//  B4   input 
+
 // Reserved ports
 //  D0   mBUS
 //  D1   mBUS
@@ -21,12 +24,12 @@
 // Example of naming convention:
 // LED_OUT, DDR_LED_OUT
 // PIN_IR_FRONT, PORT_IR_FRONT, DDR_IR_FRONT
-#define SPI_PORT   PORTB,0
-#define SS          DDRB,0
+#define     SS         PORTB,0
+#define DDR_SS          DDRB,0
 
-#define SCLK        DDRB,1
+#define DDR_SCLK        DDRB,1
 
-#define MOSI        DDRB,2
+#define DDR_MOSI        DDRB,2
 
 #define UNUSED_04_PIN PINB,3
 #define UNUSED_04_PORT PORTB,3

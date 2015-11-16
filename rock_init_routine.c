@@ -36,9 +36,9 @@ void initStatusLEDPins()
 {
   // Set up SPI
   clear(PRR0, PRSPI); // disable power reduction
-  m_set(MOSI); // MOSI
-  m_set(SCLK); // SCLK
-  m_set(SS); // SS
+  m_set(DDR_MOSI); // MOSI
+  m_set(DDR_SCLK); // SCLK
+  m_set(DDR_SS); // SS
   set(SPCR, SPR1); // 125 kHz SPI clock 
   set(SPCR, SPR0); // "    "
   set(SPCR, MSTR); // SPI module in Master mode
