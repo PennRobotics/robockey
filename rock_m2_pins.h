@@ -1,6 +1,7 @@
 // In-Use ports
-//  B0   red team LED
-//  B1   blue team LED
+//  B0   SPI SS
+//  B1   SPI SCLK
+//  B2   SPI MOSI
 
 // Reserved ports
 //  D0   mBUS
@@ -20,15 +21,12 @@
 // Example of naming convention:
 // LED_OUT, DDR_LED_OUT
 // PIN_IR_FRONT, PORT_IR_FRONT, DDR_IR_FRONT
-#define     RED_LED  PORTB, 0
-#define DDR_RED_LED   DDRB, 0
+#define SPI_PORT   PORTB,0
+#define SS          DDRB,0
 
-#define     BLUE_LED PORTB, 1
-#define DDR_BLUE_LED  DDRB, 1
+#define SCLK        DDRB,1
 
-#define UNUSED_03_PIN PINB,2
-#define UNUSED_03_PORT PORTB,2
-#define UNUSED_03_DDR DDRB,2
+#define MOSI        DDRB,2
 
 #define UNUSED_04_PIN PINB,3
 #define UNUSED_04_PORT PORTB,3

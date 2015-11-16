@@ -2,7 +2,9 @@
 #include "rock_headers.h"
 #endif
 
-void stateMachine(char state)
+// This is used to update the display and act in the CURRENT state.
+// Use getCurrentState() to determine if the CURRENT state has changed!
+void stateMachine()
 {
   switch(state)
   {
@@ -95,22 +97,64 @@ void stateMachine(char state)
   }
 }
 
-int getCurrentState()
+// getCurrentState() DETERMINES the current state.
+// Use stateMachine() to control robot actions based on state and to display the current state!
+int getCurrentState(void)
 {
-  return FIND_PUCK;
-  return MOVE_TO_PUCK;
-  return ALIGN_PUCK;
-  return CHECK_FOR_ASSIST_CHANCE;
-  return MOVE_TO_GOAL;
-  return RIGHT_GUIDE_TO_GOAL;
-  return LEFT_GUIDE_TO_GOAL;
-  return CHARGE_ENEMY_GOAL;
-  return SHOOT_PUCK;
-  return MOVE_PATROL;
-  return MOVE_TO_DEFENSE_PUCK_IN_SIGHT;
-  return MOVE_TO_DEFENSE_PUCK_OUT_OF_SIGHT;
-  return MOVE_AROUND_PERIMETER;
-  return GUARD_GOAL_PUCK_IN_SIGHT;
-  return GUARD_GOAL_PUCK_IN_CONTACT;
-  return GUARD_GOAL_PUCK_OUT_OF_SIGHT;
+//  if (m_check(STRATEGY_SWITCH)) {return strategyB();}
+  if ((teamScore < enemyScore + 1) && (timeElapsedMS > 52500)) {return GO_BATSHIT_CRAZY;}
+
+  if ((teamScore == enemyScore) && (teamScore == 0)) {return stateStart();}
+  else if (teamScore == enemyScore) {return stateTied();}
+  else if (teamScore > enemyScore + 1) {return stateWinningPlus();}
+  else if (teamScore > enemyScore) {return stateWinning();}
+  else {return stateLosing();}
 }
+
+//TODO All this needs work!
+int stateStart(void)
+{
+  if (robotIs(GOALIE))
+  {
+    if (distToPuck == 255) {return GUARD_GOAL_PUCK_OUT_OF_SIGHT;}
+    if (hasPuck == TRUE) {return GUARD_GOAL_PUCK_IN_CONTACT;}
+    return GUARD_GOAL_PUCK_IN_SIGHT;
+  }
+  if (timeElapsedMS>30000) {return GET_AGGRESSIVE;}
+  if ((teamHasPuck==TRUE) && (hasPuck==FALSE))
+  {
+    //TODO See if assist opportunity exists (V formation or wedge)
+    return ASSIST_BY_CLEARING_PATH;
+    return CHECK_FOR_ASSIST_CHANCE;
+    return CALL_FOR_ASSIST;
+    return RIGHT_GUIDE_TO_GOAL;
+    return LEFT_GUIDE_TO_GOAL;
+    return CHARGE_ENEMY_GOAL;
+  }
+  if (distToPuck == 255/*TODO*/) {return FIND_PUCK;}
+  if (((angleToBehindPuck - angleOfRobot) < DEGREE_THRESHOLD)&&((angleOfRobot - angleToBehindPuck) < DEGREE_THRESHOLD)&&(hasPuck == FALSE)) {return MOVE_TO_PUCK;}
+  if ((((angleOfRobot - angleToEnemyGoal) > DEGREE_THRESHOLD) || ((angleToEnemyGoal - angleOfRobot) > DEGREE_THRESHOLD)) && (hasPuck == TRUE))
+  {
+    if (((angleOfRobot - angleToTeamGoal) < DEGREE_THRESHOLD) && ((angleToTeamGoal - angleOfRobot) < DEGREE_THRESHOLD) && (distToTeamGoal < 15)) {return CALL_FOR_ASSIST;}
+    return ALIGN_PUCK;
+  }
+  if ((distToPuck <= 4) && ((angleOfRobot - angleToEnemyGoal) <= DEGREE_THRESHOLD) && ((angleToEnemyGoal - angleOfRobot) <= DEGREE_THRESHOLD) && (distToEnemyGoal > 15))
+  {
+    if (robotIs(SHOOTER)) {return SHOOT_PUCK;}
+    return MOVE_TO_GOAL; 
+  }
+  if (puckX < 0)
+  {
+    return MOVE_TO_DEFENSE_PUCK_IN_SIGHT;
+    return MOVE_TO_DEFENSE_PUCK_OUT_OF_SIGHT;
+  }
+  if (teamHasPuck==FALSE) {
+    return MOVE_AROUND_PERIMETER;
+  }
+  return MOVE_PATROL;
+}
+
+int stateTied() {return stateStart();}
+int stateWinningPlus() {return stateStart();}
+int stateWinning() {return stateStart();}
+int stateLosing() {return stateStart();}

@@ -5,10 +5,13 @@
 #define ROBOT RUNNER
 
 // Adjustable Settings
-#define TEST_LEDS_ON_STARTUP            FALSE
+#define TEST_LEDS_ON_STARTUP            TRUE
 #define TEST_MOTORS_ON_STARTUP          FALSE
-#define TEST_STATUS_LED_TIME_MS         200
+#define TEST_STATUS_LED_TIME_MS         100
 #define TEST_TEAM_LED_TIME_MS           500
-#define SHORT_WAIT_BEFORE_TESTS         FALSE
+#define SHORT_WAIT_BEFORE_TESTS         TRUE
+
+// How much tolerance in puck-robot-goal alignment
+#define DEGREE_THRESHOLD 12
 
 #endif

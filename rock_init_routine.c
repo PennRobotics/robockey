@@ -34,10 +34,6 @@ void initMWii()
 
 void initStatusLEDPins()
 {
-//TODO move to m2_pins
-#define MOSI  DDRB,2
-#define SCLK  DDRB,1
-#define SS    DDRB,0
   // Set up SPI
   clear(PRR0, PRSPI); // disable power reduction
   m_set(MOSI); // MOSI

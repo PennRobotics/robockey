@@ -11,24 +11,27 @@ void sendSPI(uint16_t data);
 
 void testTeamLEDPins()
 {
-  m_set(RED_LED); m_wait(TEST_TEAM_LED_TIME_MS);
-  m_set(BLUE_LED); m_wait(TEST_TEAM_LED_TIME_MS);
+  //TODO Set up Team LEDs on MAX7219
+  //m_set(RED_LED); m_wait(TEST_TEAM_LED_TIME_MS);
+  //m_set(BLUE_LED); m_wait(TEST_TEAM_LED_TIME_MS);
 }
 
 void testStatusLEDPins()
 {
   sendSPI(0x0100 + 0x01); m_wait(TEST_STATUS_LED_TIME_MS);
-  sendSPI(0x0100 + 0x02); m_wait(TEST_STATUS_LED_TIME_MS);
-  sendSPI(0x0100 + 0x04); m_wait(TEST_STATUS_LED_TIME_MS);
-  sendSPI(0x0100 + 0x08); m_wait(TEST_STATUS_LED_TIME_MS);
-  sendSPI(0x0100 + 0x10); m_wait(TEST_STATUS_LED_TIME_MS);
-  sendSPI(0x0100 + 0x20); m_wait(TEST_STATUS_LED_TIME_MS);
-  sendSPI(0x0100 + 0x40); m_wait(TEST_STATUS_LED_TIME_MS);
-  sendSPI(0x0100 + 0x80); m_wait(TEST_STATUS_LED_TIME_MS);
-  sendSPI(0x0100 + 0x00); 
+  sendSPI(0x0100 + 0x03); m_wait(TEST_STATUS_LED_TIME_MS);
+  sendSPI(0x0100 + 0x06); m_wait(TEST_STATUS_LED_TIME_MS);
+  sendSPI(0x0100 + 0x0C); m_wait(TEST_STATUS_LED_TIME_MS);
+  sendSPI(0x0100 + 0x18); m_wait(TEST_STATUS_LED_TIME_MS);
+  sendSPI(0x0100 + 0x30); m_wait(TEST_STATUS_LED_TIME_MS);
+  sendSPI(0x0100 + 0x60); m_wait(TEST_STATUS_LED_TIME_MS);
+  sendSPI(0x0100 + 0xC0); m_wait(TEST_STATUS_LED_TIME_MS);
+  sendSPI(0x0100 + 0x80); 
   sendSPI(0x0200 + 0x01); m_wait(TEST_STATUS_LED_TIME_MS);
+  sendSPI(0x0100 + 0x00); 
+  sendSPI(0x0200 + 0x03); m_wait(TEST_STATUS_LED_TIME_MS);
   sendSPI(0x0200 + 0x02); m_wait(TEST_STATUS_LED_TIME_MS);
-  sendSPI(0x0200 + 0x00); 
+  sendSPI(0x0200 + 0x00); m_wait(TEST_STATUS_LED_TIME_MS);
 }
 
 void updateStatusFlags()
@@ -51,7 +54,6 @@ void updateStatusFlags()
 
 void sendSPI(uint16_t data)
 {
-#define SPI_PORT PORTB,0
   m_clear(SPI_PORT);
   SPDR = HIGH(data);
   while(!check(SPSR,SPIF));
