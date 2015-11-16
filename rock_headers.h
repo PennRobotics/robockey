@@ -18,9 +18,8 @@
 #include "rock_init_routine.h"
 #include "rock_state_machine.h"
 //#include "rock_adc.h"
-//#include "rock_comm.h"
-//#include "rock_localization.h"
-//#include "rock_strategy.h"
+#include "rock_comm.h"
+#include "rock_localization.h"
 #include "rock_debug.h"
 
 void abort(void);
