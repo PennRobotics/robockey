@@ -4,7 +4,7 @@
 //  B2   SPI MOSI
 
 // Proposed ports
-//  B4   input 
+//  B4   puck detection dig. input 
 
 // Reserved ports
 //  D0   mBUS
@@ -30,6 +30,10 @@
 #define DDR_SCLK        DDRB,1
 
 #define DDR_MOSI        DDRB,2
+
+#define  PIN_HAS_PUCK PINB,4
+#define PORT_HAS_PUCK PORTB,4
+#define  DDR_HAS_PUCK DDRB,4
 
 #define UNUSED_04_PIN PINB,3
 #define UNUSED_04_PORT PORTB,3
@@ -102,9 +106,5 @@
 #define UNUSED_24_PIN PINB,5
 #define UNUSED_24_PORT PORTB,5
 #define UNUSED_24_DDR DDRB,5
-
-#define UNUSED_25_PIN PINB,4
-#define UNUSED_25_PORT PORTB,4
-#define UNUSED_25_DDR DDRB,4
 
 #endif
