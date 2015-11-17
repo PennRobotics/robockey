@@ -48,22 +48,22 @@ void initStatusLEDPins()
   set(SPCR, SPE);  // enable SPI
 
   // Initialize MAX7219
-  sendSPI(MAX7219_NORMAL_OPERATION /*rock_init_routine.h*/); // Normal operation
+  sendSPI(/*rock_status.c*/ MAX7219_NORMAL_OPERATION /*rock_init_routine.h*/); // Normal operation
   sendSPI(MAX7219_SCAN_DIGITS_0TO1); // Scan Limit digits 0--1
   sendSPI(MAX7219_INTENSITYx); // Low-Medium intensity
   sendSPI(MAX7219_DECODE_NONE); // No decode for digits 7--0
   sendSPI(MAX7219_TEST_MODE_ON);m_wait(100); // Test mode ON for 100 ms
   sendSPI(MAX7219_TEST_MODE_OFF);m_wait(100); // Test mode OFF
 
-  int i; for (i=0;i<8;i++)
-  { sendSPI(i<8); } // Turn off all LEDs on "row" i
-  sendSPI(0x0200); //   "    "    "
-  sendSPI(0x0300); //   "    "    "
-  sendSPI(0x0400); //   "    "    "
-  sendSPI(0x0500); //   "    "    "
-  sendSPI(0x0600); //   "    "    "
-  sendSPI(0x0700); //   "    "    "
-  sendSPI(0x0800); //   "    "    "
+  int i; for (i=1;i<<8;i++)
+  { sendSPI(/*rock_status.c*/ i<8); } // Turn off all LEDs on "row" i
+  //sendSPI(0x0200); //   "    "    "
+  //sendSPI(0x0300); //   "    "    "
+  //sendSPI(0x0400); //   "    "    "
+  //sendSPI(0x0500); //   "    "    "
+  //sendSPI(0x0600); //   "    "    "
+  //sendSPI(0x0700); //   "    "    "
+  //sendSPI(0x0800); //   "    "    "
 }
 
 void initTeamLEDPins()
