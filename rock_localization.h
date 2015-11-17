@@ -5,6 +5,20 @@
 #define max3(a, b, c) max(a, max(b, c))
 #define max(a, b) (a>b)?a:b
 
+//TODO
+#define IR_SCHMITT_LEVEL 0
+
+//TODO
+#define TURN_LEFT        -1
+#define TURN_RIGHT        1
+#define TURN_NOT_NEEDED   0
+
+//TODO
+#define PUCK_DISTANCE_GAIN  10
+
+//TODO
+#define IR_THRESHOLD 6
+
 #endif
 //TODO Clean rock_localization.h
 
@@ -19,11 +33,5 @@ int highestIRPoll; //TODO extern?
 
 char puckIsLeft;
 char puckIsRight;
-#define IR_SCHMITT_LEVEL 0
 
 char turnServo;
-#define TURN_LEFT        -1
-#define TURN_RIGHT        1
-#define TURN_NOT_NEEDED   0
-
-#define PUCK_DISTANCE_GAIN  10
