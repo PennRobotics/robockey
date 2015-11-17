@@ -25,6 +25,11 @@
 //  D1   mBUS
 //  D2   mBUS
 
+//TODO Place in appropriate bin and choose real pin numbers
+#define PIN_LEFT_IR_ANALOG       15
+#define PIN_CENTER_IR_ANALOG     17
+#define PIN_RIGHT_IR_ANALOG      18
+
 #ifndef _rock_m2_pins_h
 #define _rock_m2_pins_h
 
