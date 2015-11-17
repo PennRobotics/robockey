@@ -2,4 +2,7 @@
 #include "rock_headers.h"
 #endif
 
-
+ISR(ADC_vect) /*ADC conversion complete!*/
+{
+  // Read register ADC
+}

@@ -79,5 +79,41 @@ void initMRF()
 
 void initADC()
 {
+  // Set voltage reference to AREF
+  clear(ADMUX, REFS1);
+  clear(ADMUX, REFS0);
 
+  // Set ADC clock prescaler /128 (16 MHz sys --> 125 kHz)
+  set(ADCSRA, ADPS2);
+  set(ADCSRA, ADPS1);
+  set(ADCSRA, ADPS0);
+
+  // Disable digital inputs
+  // Bits n=0--7 are in DIDR0, 8--13 in DIDR2
+  set(DIDRx, ADCnD);
+  set(DIDRx, ADCnD);
+  set(DIDRx, ADCnD);
+
+  // Enable ADC interrupts
+  set(ADCSRA, ADIE);
+  //sei(); TODO Check if needed! Should be redundant, refer to fcn.
+  //Will use ISR(ADC_vect)
+  //TODO ISR(ANALOG_COMP_vect)
+
+  // Enable triggering
+  set(ADCSRA, ADATE); // free-running mode
+  // Multiple inputs: Modify MUXn bits while conversion is in-progress.
+  //   Important! Wait at least 1 ADC CLOCK CYCLE before changing!
+
+  // Select desired analog input
+  clear(ADCSRB,MUX5); // F0 --- ADC0
+  clear(ADMUX,MUX2);  //  "   "   "
+  clear(ADMUX,MUX1);  //  "   "   "
+  clear(ADMUX,MUX0);  //  "   "   "
+
+  set(ADCSRA, ADEN); // Enable ADC subsystem
+  set(ADCSRA, ADSC); // Begin first conversion
+
+  // Read ADC result when ADIF flag is set (ISR or manual clear)
+  //   result in 16-bit register mask ADC... or ADCL, then ADCH
 }

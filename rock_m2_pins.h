@@ -4,7 +4,21 @@
 //  B2   SPI MOSI
 
 // Proposed ports
-//  B4   puck detection dig. input 
+//  B4   digital rear  IR
+//  F5   analog  left  IR
+//  F6   analog  front IR
+//  F7   analog  right IR
+
+//  C6   Servo PWM output
+
+//       Timer4 for motor L/R en
+//  D7   OC4D
+//  C7   OC4A
+//(Did not consider OC4B---multiplexed with PCINT5/6)
+//TODO  Figure out how to disable inverted outputs
+//TODO  Ensure no multiplexed pins are active
+
+//TODO Check if B7 (/RTS) or Timer0 is in use
 
 // Reserved ports
 //  D0   mBUS

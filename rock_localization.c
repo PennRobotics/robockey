@@ -3,6 +3,7 @@
 #endif
 
 //TODO Physical robot: shield phototransistors from constellation!!!
+//TODO Read ATMEGA datasheet about differential measurements on ADC
 
 int findPuckDistance(void)
   //TODO Discrete Lowpass on IR polling
