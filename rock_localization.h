@@ -2,3 +2,5 @@
 #define _rock_localization_h
 
 #endif
+
+int findPuckDistance(void);
