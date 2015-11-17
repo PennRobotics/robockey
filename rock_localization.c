@@ -21,7 +21,7 @@ int findPuckDistance(void)
   highestIRPoll = max3(pollLeftIR, pollCenterIR, pollRightIR);
 
   // If no IR signal is strong enough, return -1.
-  if (max3(highestIRPoll) < IR_THRESHOLD)
+  if (highestIRPoll < IR_THRESHOLD)
     return -1;
     // If findPuckDistance returns -1,
     //   check if puck is behind robot
