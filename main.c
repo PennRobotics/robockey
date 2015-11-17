@@ -16,12 +16,12 @@
 
 int main()
 {
-  init();
+  init(); //rock_init_routine.c
   
   while(1)
   {
-    stateMachine();
-    getCurrentState();
-    updateStatusFlags();
+    stateMachine(); //rock_state_machine.c
+    getCurrentState(); //rock_state_machine.c
+    updateStatusFlags(); //rock_status.c
   }
 }
