@@ -53,6 +53,7 @@ void getADC(char pin)
     case PIN_RIGHT_IR_ANALOG:
       break;
     default:
+      break;
   }
 
 //TODO check if we need to disable pin-change interrupts
