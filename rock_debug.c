@@ -2,4 +2,4 @@
 #include "rock_headers.h"
 #endif
 
-void abort(void) {cli();while(1){ }}
+void abort(void) {cli();while(1){m_red(ON);m_green(OFF);}}
