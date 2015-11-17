@@ -1,6 +1,7 @@
 #ifndef _rock_initialize_vars_h
 #define _rock_initialize_vars_h
 
+//TODO Rename rock_vars.h
 extern unsigned  int angleOfRobot;
 extern unsigned  int angleToBehindPuck;
 extern unsigned  int angleToEnemyGoal;
