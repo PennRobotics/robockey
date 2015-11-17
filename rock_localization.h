@@ -35,3 +35,5 @@ char puckIsLeft;
 char puckIsRight;
 
 char turnServo;
+
+void getADC(pin);
