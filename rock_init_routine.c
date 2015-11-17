@@ -6,25 +6,33 @@ void init()
 {
   m_red(ON); //m_general.h
 
-// Run the system clock at 16 MHz
+  // Run the system clock at 16 MHz
   m_clockdivide(0); //m_general.h
 
-// Disable JTAG to make F4--F7 pins available  
+  // Disable JTAG to make F4--F7 pins available  
   m_disableJTAG(); //m_general.h
 
   if (SHORT_WAIT_BEFORE_TESTS /*rock_settings.h*/)
     {m_green(ON);m_wait(1000);m_green(OFF); /*m_general.h*/}
+
 //TODO  initMWii();
+
   initStatusLEDPins(); //rock_init_routine.c
   if (TEST_LEDS_ON_STARTUP /*rock_settings.h*/)
     {testStatusLEDPins(); /*rock_status.c*/}
+
 //TODO  initTeamLEDPins();
   if (TEST_LEDS_ON_STARTUP /*rock_settings.h*/)
     {testTeamLEDPins(); /*rock_status.c*/}
+
   if (TEST_MOTORS_ON_STARTUP /*rock_settings.h*/)
     {m_green(ON);testMotors(); /*rock_motor.c*/m_green(OFF);}
+
 //TODO  initMRF();
-//TODO  initADC();
+
+  initADC();
+  getADC(PIN_CENTER_IR_ANALOG);
+
   status_clear_all(); //rock_status.h
 
   m_red(OFF); //m_general.h
@@ -83,16 +91,16 @@ void initADC()
   clear(ADMUX, REFS1);
   clear(ADMUX, REFS0);
 
-  // Set ADC clock prescaler /128 (16 MHz sys --> 125 kHz)
-  set(ADCSRA, ADPS2);
-  set(ADCSRA, ADPS1);
-  set(ADCSRA, ADPS0);
+  // Set ADC clock prescaler /32 (16 MHz sys --> 500 kHz)
+  set(  ADCSRA, ADPS2);
+  clear(ADCSRA, ADPS1);
+  set  (ADCSRA, ADPS0);
 
-  // Disable digital inputs
+  //TODO Disable digital inputs
   // Bits n=0--7 are in DIDR0, 8--13 in DIDR2
-  set(DIDRx, ADCnD);
-  set(DIDRx, ADCnD);
-  set(DIDRx, ADCnD);
+//  set(  DIDRx, ADCnD);
+//  set(  DIDRx, ADCnD);
+//  set(  DIDRx, ADCnD);
 
   // Enable ADC interrupts
   set(ADCSRA, ADIE);
@@ -100,10 +108,10 @@ void initADC()
   //Will use ISR(ADC_vect)
   //TODO ISR(ANALOG_COMP_vect)
 
-  // Enable triggering
-  set(ADCSRA, ADATE); // free-running mode
-  // Multiple inputs: Modify MUXn bits while conversion is in-progress.
-  //   Important! Wait at least 1 ADC CLOCK CYCLE before changing!
+//  // Enable triggering
+//  set(ADCSRA, ADATE); // free-running mode
+//  // Multiple inputs: Modify MUXn bits while conversion is in-progress.
+//  //   Important! Wait at least 1 ADC CLOCK CYCLE before changing!
 
   // Select desired analog input
   clear(ADCSRB,MUX5); // F0 --- ADC0
@@ -112,8 +120,14 @@ void initADC()
   clear(ADMUX,MUX0);  //  "   "   "
 
   set(ADCSRA, ADEN); // Enable ADC subsystem
-  set(ADCSRA, ADSC); // Begin first conversion
+//  set(ADCSRA, ADSC); // Begin first conversion
 
   // Read ADC result when ADIF flag is set (ISR or manual clear)
   //   result in 16-bit register mask ADC... or ADCL, then ADCH
+
+  // Using ADC sleep mode: faster conversion & results only when polled
+  clear(SMCR, SM2); //Sleep mode: ADC noise reduction mode
+  clear(SMCR, SM1); // "
+  set(  SMCR, SM0); // "
+
 }

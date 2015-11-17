@@ -4,5 +4,6 @@
 
 ISR(ADC_vect) /*ADC conversion complete!*/
 {
-  // Read register ADC
+  clear(  SMCR, SE ); //Disable sleep mode
+  // Have other routines look up the ADC register
 }
