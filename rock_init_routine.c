@@ -32,6 +32,7 @@ void init()
 
   initADC();
   getADC(PIN_CENTER_IR_ANALOG);
+  //result = ADC;
 
   status_clear_all(); //rock_status.h
 
@@ -87,6 +88,12 @@ void initMRF()
 
 void initADC()
 {
+  // Disable Power Reduction ADC (for ADC input MUX)
+  clear(PRR0, PRADC);
+
+  // Higher sample rate (more power consumption)
+  set(  ADCSRB, ADHSM);
+
   // Set voltage reference to AREF
   clear(ADMUX, REFS1);
   clear(ADMUX, REFS0);
@@ -103,7 +110,7 @@ void initADC()
 //  set(  DIDRx, ADCnD);
 
   // Enable ADC interrupts
-  set(ADCSRA, ADIE);
+  set(  ADCSRA, ADIE);
   //sei(); TODO Check if needed! Should be redundant, refer to fcn.
   //Will use ISR(ADC_vect)
   //TODO ISR(ANALOG_COMP_vect)
@@ -119,7 +126,7 @@ void initADC()
   clear(ADMUX,MUX1);  //  "   "   "
   clear(ADMUX,MUX0);  //  "   "   "
 
-  set(ADCSRA, ADEN); // Enable ADC subsystem
+  set(  ADCSRA, ADEN); // Enable ADC subsystem
 //  set(ADCSRA, ADSC); // Begin first conversion
 
   // Read ADC result when ADIF flag is set (ISR or manual clear)

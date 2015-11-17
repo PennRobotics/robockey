@@ -9,9 +9,13 @@
 int findPuckDistance(void)
 {
   //TODO Discrete Lowpass on IR polling
-  int pollLeftIR = getADC(PIN_LEFT_IR_ANALOG);
-  int pollCenterIR = getADC(PIN_CENTER_IR_ANALOG);
-  int pollRightIR = getADC(PIN_RIGHT_IR_ANALOG);
+  getADC(PIN_LEFT_IR_ANALOG);
+  int pollLeftIR = ADC;
+  // Optionally, 8-bit char poll(x)IR = ADCH w/ set(ADMUX,ADLAR);
+  getADC(PIN_CENTER_IR_ANALOG);
+  int pollCenterIR = ADC; 
+  getADC(PIN_RIGHT_IR_ANALOG);
+  int pollRightIR = ADC;
 
   // Find highest ADC value
   highestIRPoll = max3(pollLeftIR, pollCenterIR, pollRightIR);
