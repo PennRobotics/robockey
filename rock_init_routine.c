@@ -25,6 +25,7 @@ void init()
     {m_green(ON);testMotors(); /*rock_motor.c*/m_green(OFF);}
 //TODO  initMRF();
 //TODO  initADC();
+  status_clear_all(); //rock_status.h
 
   m_red(OFF); //m_general.h
 }

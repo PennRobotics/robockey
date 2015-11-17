@@ -6,12 +6,11 @@
 // Use getCurrentState() to determine if the CURRENT state has changed!
 void stateMachine()
 {
-  switch(state)
+  switch(state /*rock_initialize_vars.h*/)
   {
-  case GAMEPLAY_NOT_PLAYING:
-    motor(LEFTMOTOR, OFF, 0);
+  case GAMEPLAY_NOT_PLAYING: /*rock_states.h*/
+    motor(LEFTMOTOR, OFF, 0); /*rock_motor.h*/ 
     motor(RIGHTMOTOR, OFF, 0);
-    status_clear_all();
     status_set(STATUS_NO_GAMEPLAY);
     break;
   case GAMEPLAY_COMM_TEST:
@@ -54,36 +53,36 @@ void stateMachine()
   case MOVE_PATROL:
     break;
   case MOVE_TO_DEFENSE_PUCK_IN_SIGHT:
-    status_set(   STATUS_PUCK_IN_SIGHT);
+    status_set(   STATUS_PUCK_IN_SIGHT); /*rock_status.h*/
     status_clear( STATUS_HAVE_PUCK);
     status_set(   STATUS_DEFENSE);
     break;
   case MOVE_TO_DEFENSE_PUCK_OUT_OF_SIGHT:
-    status_clear( STATUS_PUCK_IN_SIGHT);
+    status_clear( STATUS_PUCK_IN_SIGHT); /*rock_status.h*/
     status_clear( STATUS_HAVE_PUCK);
     status_set(   STATUS_DEFENSE);
     break;
   case MOVE_AROUND_PERIMETER:
     break;
   case GUARD_GOAL_PUCK_IN_SIGHT:
-    status_set(   STATUS_PUCK_IN_SIGHT);
+    status_set(   STATUS_PUCK_IN_SIGHT); /*rock_status.h*/
     status_clear( STATUS_HAVE_PUCK);
     status_set(   STATUS_DEFENSE);
     break;
   case GUARD_GOAL_PUCK_IN_CONTACT:
-    status_set(   STATUS_PUCK_IN_SIGHT);
+    status_set(   STATUS_PUCK_IN_SIGHT); /*rock_status.h*/
     status_set(   STATUS_HAVE_PUCK);
     status_set(   STATUS_DEFENSE);
     break;
   case GUARD_GOAL_PUCK_OUT_OF_SIGHT:
-    status_clear( STATUS_PUCK_IN_SIGHT);
+    status_clear( STATUS_PUCK_IN_SIGHT); /*rock_status.h*/
     status_clear( STATUS_HAVE_PUCK);
     status_set(   STATUS_DEFENSE);
     break;
   default:
     // do something;
     m_red(ON);
-    status_clear( STATUS_PUCK_IN_SIGHT);
+    status_clear( STATUS_PUCK_IN_SIGHT); /*rock_status.h*/
     status_clear( STATUS_HAVE_PUCK);
     status_clear( STATUS_LOCALIZED);
     status_clear( STATUS_DEFENSE);
@@ -101,14 +100,28 @@ void stateMachine()
 // Use stateMachine() to control robot actions based on state and to display the current state!
 int getCurrentState(void)
 {
+//TODO Physical switch to allow changing strategy
 //  if (m_check(STRATEGY_SWITCH)) {return strategyB();}
-  if ((teamScore < enemyScore + 1) && (timeElapsedMS > 52500)) {return GO_BATSHIT_CRAZY;}
 
-  if ((teamScore == enemyScore) && (teamScore == 0)) {return stateStart();}
-  else if (teamScore == enemyScore) {return stateTied();}
-  else if (teamScore > enemyScore + 1) {return stateWinningPlus();}
-  else if (teamScore > enemyScore) {return stateWinning();}
-  else {return stateLosing();}
+  // If not winning and time is running low...
+  //TODO Potential to use STATUS_LOW_TIME
+  if ((teamScore < enemyScore + 1) && (timeElapsedMS > 52500)) /*rock_initialize_var.h*/
+    {return GO_BATSHIT_CRAZY; /*rock_states.h*/}
+
+  if ((teamScore == enemyScore) && (teamScore == 0))
+    {return stateStart();}
+
+  else if (teamScore == enemyScore)
+    {return stateTied();}
+
+  else if (teamScore > enemyScore + 1)
+    {return stateWinningPlus();}
+
+  else if (teamScore > enemyScore)
+    {return stateWinning();}
+
+  else
+    {return stateLosing();}
 }
 
 //TODO All this needs work!

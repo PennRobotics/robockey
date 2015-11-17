@@ -10,6 +10,8 @@ void sendSPI(uint16_t data);
 #define STATUS_HAVE_PUCK            (0x002)
 #define STATUS_LOCALIZED            (0x004)
 #define STATUS_DEFENSE              (0x008)
+//TODO Not needed: STATUS_RED_TEAM
+//      Suggested: STATUS_LOW_TIME
 #define STATUS_RED_TEAM             (0x010)
 #define STATUS_MOTOR_ON             (0x020)
 #define STATUS_WAIT_FOR_TEAMMATE    (0x040)
