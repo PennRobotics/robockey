@@ -41,7 +41,7 @@ int findPuckDistance(void)
   return PUCK_DISTANCE_GAIN * highestIRPoll;
 }
 
-void getADC(pin)
+void getADC(char pin)
 {
   switch (pin)
   {
