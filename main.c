@@ -1,4 +1,3 @@
-// TODO Output to LED status indicators
 // TODO Set up mRF
 // TODO Set up mWii
 // TODO Localization routine

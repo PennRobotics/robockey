@@ -1,30 +1,32 @@
 #ifndef _rock_headers_h
 #include "rock_headers.h"
 #endif
-//TODO move to header
-void initStatusLEDPins();
 
 void init()
 {
-m_red(ON);
+  m_red(ON); //m_general.h
 
 // Run the system clock at 16 MHz
-  m_clockdivide(0);
+  m_clockdivide(0); //m_general.h
 
 // Disable JTAG to make F4--F7 pins available  
-  m_disableJTAG();
+  m_disableJTAG(); //m_general.h
 
-  if (SHORT_WAIT_BEFORE_TESTS)  {m_green(ON);m_wait(1000);m_green(OFF);}
+  if (SHORT_WAIT_BEFORE_TESTS /*rock_settings.h*/)
+    {m_green(ON);m_wait(1000);m_green(OFF); /*m_general.h*/}
 //TODO  initMWii();
-  initStatusLEDPins();
-  if (TEST_LEDS_ON_STARTUP)  {testStatusLEDPins();}
+  initStatusLEDPins(); //rock_init_routine.c
+  if (TEST_LEDS_ON_STARTUP /*rock_settings.h*/)
+    {testStatusLEDPins(); /*rock_status.c*/}
 //TODO  initTeamLEDPins();
-  if (TEST_LEDS_ON_STARTUP)  {testTeamLEDPins();}
-  if (TEST_MOTORS_ON_STARTUP)  {m_green(ON);testMotors();m_green(OFF);}
+  if (TEST_LEDS_ON_STARTUP /*rock_settings.h*/)
+    {testTeamLEDPins(); /*rock_status.c*/}
+  if (TEST_MOTORS_ON_STARTUP /*rock_settings.h*/)
+    {m_green(ON);testMotors(); /*rock_motor.c*/m_green(OFF);}
 //TODO  initMRF();
 //TODO  initADC();
 
-m_red(OFF);
+  m_red(OFF); //m_general.h
 }
 
 void initMWii()
@@ -46,14 +48,15 @@ void initStatusLEDPins()
   set(SPCR, SPE);  // enable SPI
 
   // Initialize MAX7219
-  sendSPI(0x0C01); // Normal operation
-  sendSPI(0x0B01); // Scan Limit digits 0--1
-  sendSPI(0x0A03); // Low-Medium intensity
-  sendSPI(0x0900); // No decode for digits 7--0
-  sendSPI(0x0F01);m_wait(100); // Test mode ON for 100 ms
-  sendSPI(0x0F00);m_wait(100); // Test mode OFF
+  sendSPI(MAX7219_NORMAL_OPERATION /*rock_init_routine.h*/); // Normal operation
+  sendSPI(MAX7219_SCAN_DIGITS_0TO1); // Scan Limit digits 0--1
+  sendSPI(MAX7219_INTENSITYx); // Low-Medium intensity
+  sendSPI(MAX7219_DECODE_NONE); // No decode for digits 7--0
+  sendSPI(MAX7219_TEST_MODE_ON);m_wait(100); // Test mode ON for 100 ms
+  sendSPI(MAX7219_TEST_MODE_OFF);m_wait(100); // Test mode OFF
 
-  sendSPI(0x0100); // Turn off all LEDs
+  int i; for (i=0;i<8;i++)
+  { sendSPI(i<8); } // Turn off all LEDs on "row" i
   sendSPI(0x0200); //   "    "    "
   sendSPI(0x0300); //   "    "    "
   sendSPI(0x0400); //   "    "    "
