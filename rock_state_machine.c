@@ -82,7 +82,7 @@ void stateMachine()
   default:
     // do something;
     m_red(ON);
-    status_clear( STATUS_PUCK_IN_SIGHT); /*rock_status.h*/
+    status_clear( STATUS_PUCK_IN_SIGHT); /*rock_status.h;rock_states.h*/
     status_clear( STATUS_HAVE_PUCK);
     status_clear( STATUS_LOCALIZED);
     status_clear( STATUS_DEFENSE);

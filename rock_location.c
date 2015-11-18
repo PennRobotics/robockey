@@ -19,8 +19,29 @@ void whereAmI(unsigned char* xMemAddr, unsigned char* yMemAddr, unsigned char* d
   char   yOld =   *xMemAddr;
   char dirOld = *dirMemAddr;
 
-  //TODO doMWiiStuff
-  //TODO algorithmToComputeLocation
+  char i; char zeroIfFourBlobs = 0;
+
+  //TODO Check this loop goes 0, 1, 2, 3:
+  for (i=0;i<4;i++)
+  {
+    blobX[i] = m_wii_read(unsigned int* i);
+    blobY[i] = m_wii_read(unsigned int* i);
+    if ((blobX[i]==1023)&&(blobY[i]==1023)) {zeroIfFourBlobs++;}
+  }
+
+  if (zeroIfFourBlobs==0)
+  {
+    //code
+  }
+  else
+  {
+    //code
+  }
+
+  //TODO arrange points in correct order (A, B, C, D)
+  //TODO algorithm to compute distance
+  //TODO algorithm to compute heading
+  //TODO algorithm to compute X, Y from distance and heading
 
   char   xCalculated =   *xMemAddr;
   char   yCalculated =   *yMemAddr;

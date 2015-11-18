@@ -15,7 +15,7 @@ void init()
   if (SHORT_WAIT_BEFORE_TESTS /*rock_settings.h*/)
     {m_green(ON);m_wait(1000);m_green(OFF); /*m_general.h*/}
 
-//TODO  initMWii();
+  initMWii();
 
   initStatusLEDPins(); //rock_init_routine.c
   if (TEST_LEDS_ON_STARTUP /*rock_settings.h*/)
@@ -39,11 +39,6 @@ void init()
   m_red(OFF); //m_general.h
 }
 
-void initMWii()
-{
-
-}
-
 void initStatusLEDPins()
 {
   // Set up SPI
@@ -65,18 +60,24 @@ void initStatusLEDPins()
   sendSPI(MAX7219_TEST_MODE_ON);m_wait(100); // Test mode ON for 100 ms
   sendSPI(MAX7219_TEST_MODE_OFF);m_wait(100); // Test mode OFF
 
-  int i; for (i=1;i<<8;i++)
-  { sendSPI(/*rock_status.c*/ i<8); } // Turn off all LEDs on "row" i
-  //sendSPI(0x0200); //   "    "    "
-  //sendSPI(0x0300); //   "    "    "
-  //sendSPI(0x0400); //   "    "    "
-  //sendSPI(0x0500); //   "    "    "
-  //sendSPI(0x0600); //   "    "    "
-  //sendSPI(0x0700); //   "    "    "
-  //sendSPI(0x0800); //   "    "    "
+//  int i; for (i=1;i<<8;i++)
+//  { sendSPI(/*rock_status.c*/ i<8); } // Turn off all LEDs on "row" i
+  sendSPI(0x0100); // Turn off LEDs on each MAX7219 "row" 
+  sendSPI(0x0200); //   "    "    "
+  sendSPI(0x0300); //   "    "    "
+  sendSPI(0x0400); //   "    "    "
+  sendSPI(0x0500); //   "    "    "
+  sendSPI(0x0600); //   "    "    "
+  sendSPI(0x0700); //   "    "    "
+  sendSPI(0x0800); //   "    "    "
 }
 
 void initTeamLEDPins()
+{
+
+}
+
+void initMWii()
 {
 
 }
