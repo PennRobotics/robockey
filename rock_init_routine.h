@@ -15,5 +15,6 @@
 void init();
 void initStatusLEDPins();
 void initADC();
+void initMWii();
 
 #endif

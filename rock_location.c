@@ -1,4 +1,5 @@
 //TODO rock_location.h
+//TODO Check return of char whereAmI !! 0? -1? 1? et al?
 
 // When calling this function, pass pointers as inputs:
 // Let's say main() has 3 variables: robotXPos, robotYPos, robotHeading. Use:
@@ -27,8 +28,8 @@ char whereAmI(unsigned char* xMemAddr, unsigned char* yMemAddr, unsigned char* d
     blobXOld[i] = blobX[i];
     blobYOld[i] = blobY[i];
     //TODO Create a new buffer with 12 elements at blobMemAddr
-    blobX[i] = m_wii_read(unsigned int* (blobMemAddr + i*3 + 0));
-    blobY[i] = m_wii_read(unsigned int* (blobMemAddr + i*3 + 1));
+    blobX[i] = m_wii_read((unsigned int*)(blobMemAddr + i*3 + 0));
+    blobY[i] = m_wii_read((unsigned int*)(blobMemAddr + i*3 + 1));
 
     // Check if blobs leave the mWii field-of-view
     if ((blobX[i]==1023) && (blobY[i]==1023)) {zeroIfFourBlobs++;}
@@ -41,7 +42,8 @@ char whereAmI(unsigned char* xMemAddr, unsigned char* yMemAddr, unsigned char* d
           ((blobYOld[i]-blobY[i]) < thr) ||
           ((blobY[i]-blobYOld[i]) > thr))
       {
-        return -1; /*Current data is too far from previous data*/
+        //TODO Check return value!
+        return 0; /*Current data is too far from previous data*/
       }
     }
   }
@@ -154,7 +156,7 @@ char whereAmI(unsigned char* xMemAddr, unsigned char* yMemAddr, unsigned char* d
     //TODO algorithm to compute X, Y from distance and heading
     //  X = Dist * cosd(Heading);
     //  Y = Dist * sind(Heading);
-
+    return 1; //TODO Check return value!
   }
   else
   {
@@ -165,6 +167,7 @@ char whereAmI(unsigned char* xMemAddr, unsigned char* yMemAddr, unsigned char* d
     // On subsequent iterations, take diff(blobX & Y)
     // Use diff(X & Y) to adjust the last known location of each blob.
     // Also, inform the code of limited current data reliability.
+    return 0; //TODO Check return value!
   }
 
 //TODO Synchronize X, Y to rink center on startup or on switch/PCI.
