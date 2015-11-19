@@ -19,7 +19,7 @@ char whereAmI(unsigned char* xMemAddr, unsigned char* yMemAddr, unsigned char* d
   char   yOld =   *xMemAddr;
   char dirOld = *dirMemAddr;
 
-  char* i; char zeroIfFourBlobs = 0;
+  int i; char zeroIfFourBlobs = 0;
 
   //TODO Check this loop goes 0, 1, 2, 3:
   for (i=0;i<4;i++)
@@ -69,6 +69,64 @@ char whereAmI(unsigned char* xMemAddr, unsigned char* yMemAddr, unsigned char* d
     s24Norm = (long)(1000*s24)/sMax;
     s34Norm = (long)(1000*s34)/sMax;
 
+    point1 = s12Norm + s13Norm + s14Norm; // 1613 target
+    point2 = s12Norm + s23Norm + s24Norm; // 1505
+    point3 = s13Norm + s23Norm + s34Norm; // 1345
+    point4 = s14Norm + s24Norm + s34Norm; // 2260 
+
+    //TODO Double check algorithm is correct!
+    if (min(min(abs(point1-1613),abs(point2-1613)),
+            min(abs(point3-1613),abs(point4-1613))) ==
+         abs(point1-1613)) {blobXSorted[0]=blobX[0];}
+    else if (min(min(abs(point1-1505),abs(point2-1505)),
+            min(abs(point3-1505),abs(point4-1505))) ==
+         abs(point1-1505)) {blobXSorted[0]=blobX[1];}
+    else if (min(min(abs(point1-1345),abs(point2-1345)),
+            min(abs(point3-1345),abs(point4-1345))) ==
+         abs(point1-1345)) {blobXSorted[0]=blobX[2];}
+    else if (min(min(abs(point1-2260),abs(point2-2260)),
+            min(abs(point3-2260),abs(point4-2260))) ==
+         abs(point1-2260)) {blobXSorted[0]=blobX[3];}
+
+    if (min(min(abs(point1-1613),abs(point2-1613)),
+            min(abs(point3-1613),abs(point4-1613))) ==
+         abs(point2-1613)) {blobXSorted[1]=blobX[0];}
+    else if (min(min(abs(point1-1505),abs(point2-1505)),
+            min(abs(point3-1505),abs(point4-1505))) ==
+         abs(point2-1505)) {blobXSorted[1]=blobX[1];}
+    else if (min(min(abs(point1-1345),abs(point2-1345)),
+            min(abs(point3-1345),abs(point4-1345))) ==
+         abs(point2-1345)) {blobXSorted[1]=blobX[2];}
+    else if (min(min(abs(point1-2260),abs(point2-2260)),
+            min(abs(point3-2260),abs(point4-2260))) ==
+         abs(point2-2260)) {blobXSorted[1]=blobX[3];}
+
+    if (min(min(abs(point1-1613),abs(point2-1613)),
+            min(abs(point3-1613),abs(point4-1613))) ==
+         abs(point3-1613)) {blobXSorted[2]=blobX[0];}
+    else if (min(min(abs(point1-1505),abs(point2-1505)),
+            min(abs(point3-1505),abs(point4-1505))) ==
+         abs(point3-1505)) {blobXSorted[2]=blobX[1];}
+    else if (min(min(abs(point1-1345),abs(point2-1345)),
+            min(abs(point3-1345),abs(point4-1345))) ==
+         abs(point3-1345)) {blobXSorted[2]=blobX[2];}
+    else if (min(min(abs(point1-2260),abs(point2-2260)),
+            min(abs(point3-2260),abs(point4-2260))) ==
+         abs(point3-2260)) {blobXSorted[2]=blobX[3];}
+
+    if (min(min(abs(point1-1613),abs(point2-1613)),
+            min(abs(point3-1613),abs(point4-1613))) ==
+         abs(point4-1613)) {blobXSorted[3]=blobX[0];}
+    else if (min(min(abs(point1-1505),abs(point2-1505)),
+            min(abs(point3-1505),abs(point4-1505))) ==
+         abs(point4-1505)) {blobXSorted[3]=blobX[1];}
+    else if (min(min(abs(point1-1345),abs(point2-1345)),
+            min(abs(point3-1345),abs(point4-1345))) ==
+         abs(point4-1345)) {blobXSorted[3]=blobX[2];}
+    else if (min(min(abs(point1-2260),abs(point2-2260)),
+            min(abs(point3-2260),abs(point4-2260))) ==
+         abs(point4-2260)) {blobXSorted[3]=blobX[3];}
+
     //TODO Use bit manipulation to accomplish abs(x)
     //TODO (Somewhere else there is abs code!)
 //    lineABTest = sDistNorm -  205;
@@ -78,15 +136,16 @@ char whereAmI(unsigned char* xMemAddr, unsigned char* yMemAddr, unsigned char* d
 //    lineBDTest = sDistNorm - 1000;
 //    lineCDTest = sDistNorm -  453;
 
-    for (j=0; j<6; j++)
-    {
-      if (/*check if s12 is AB*/) {} 
-      if (/*check if s12 is AC*/) {} 
-      if (/*      ...         */) {} 
-      if (/*check if s34 is CD*/) {} 
-      // Solve via decision tree!
-      // i.e. Swap sets of points if s-values do not match up.
-    }
+//    for (j=0; j<6; j++)
+//    {
+//      if (/*check if s12 is AB*/) {} 
+//      if (/*check if s12 is AC*/) {} 
+//      if (/*      ...         */) {} 
+//      if (/*check if s34 is CD*/) {} 
+//      // Solve via decision tree!
+//      // i.e. Swap sets of points if s-values do not match up.
+//    }
+
     //Once points are in correct order...
     //TODO algorithm to compute distance
     //  avg(B,D) is center of constellation

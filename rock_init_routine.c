@@ -81,7 +81,7 @@ void initMWii()
 {
   if (WAIT_FOR_MWII_TO_OPEN)
   {
-    while(!m_wii_open();){}
+    while(!m_wii_open()){}
   }
   else {
     m_wii_open();
