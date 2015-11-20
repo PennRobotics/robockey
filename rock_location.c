@@ -3,13 +3,13 @@
 
 // When calling this function, pass pointers as inputs:
 // Let's say main() has 3 variables: robotXPos, robotYPos, robotHeading. Use:
-//   whereAmI(&robotXPos, &robotYPos, &robotHeading); 
+//   locationWhereAmI(&robotXPos, &robotYPos, &robotHeading); 
 
 #ifndef _rock_headers_h
 #include "rock_headers.h"
 #endif
 
-char whereAmI(unsigned char* xMemAddr, unsigned char* yMemAddr, unsigned char* dirMemAddr)
+char locationWhereAmI(unsigned char* xMemAddr, unsigned char* yMemAddr, unsigned char* dirMemAddr)
 {
   assert(  xMemAddr);
   assert(  yMemAddr);

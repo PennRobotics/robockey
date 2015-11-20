@@ -5,7 +5,7 @@
 #define GAIN_PRESENT 10
 #define GAIN_FUTURE 10
 
-char whereAmI(unsigned char* xMemAddr, unsigned char* yMemAddr, unsigned char* dirMemAddr);
+char locationWhereAmI(unsigned char* xMemAddr, unsigned char* yMemAddr, unsigned char* dirMemAddr);
 
 //TODO put all these in correct place
 char blobXSorted[4];
