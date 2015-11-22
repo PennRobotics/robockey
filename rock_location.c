@@ -22,14 +22,18 @@ char locationWhereAmI(unsigned char* xMemAddr, unsigned char* yMemAddr, unsigned
 
   int i; char zeroIfFourBlobs = 0;
 
-  //TODO Check this loop goes 0, 1, 2, 3:
+  // Use m_wii_read() to update data at blobMemAddr
+  m_wii_read(blobMemAddr);
+
   for (i=0;i<4;i++)
   {
+    // Remember the previous values of blobX and blobY
     blobXOld[i] = blobX[i];
     blobYOld[i] = blobY[i];
-    //TODO Create a new buffer with 12 elements at blobMemAddr
-    blobX[i] = m_wii_read((unsigned int*)(blobMemAddr + i*3 + 0));
-    blobY[i] = m_wii_read((unsigned int*)(blobMemAddr + i*3 + 1));
+    
+    // Copy from blobMemAddr into blobX and blobY (blob size ignored)
+    blobX[i] = blobMemAddr[i*3 + 0];
+    blobY[i] = blobMemAddr[i*3 + 1];
 
     // Check if blobs leave the mWii field-of-view
     if ((blobX[i]==1023) && (blobY[i]==1023)) {zeroIfFourBlobs++;}
@@ -37,6 +41,7 @@ char locationWhereAmI(unsigned char* xMemAddr, unsigned char* yMemAddr, unsigned
     {
       //TODO This needs to compare ORDERED data, not raw data!!
       //TODO Fix the order and compare check and create a threshold var.
+thr=25;      
       if (((blobXOld[i]-blobX[i]) < thr) ||
           ((blobX[i]-blobXOld[i]) > thr) ||
           ((blobYOld[i]-blobY[i]) < thr) ||
@@ -51,113 +56,48 @@ char locationWhereAmI(unsigned char* xMemAddr, unsigned char* yMemAddr, unsigned
   if (zeroIfFourBlobs==0)
   {
     //TODO arrange points in correct order (A, B, C, D)
-    s12 = (blobX[1]-blobX[0]) * (blobX[1]-blobX[0])+
-          (blobY[1]-blobY[0]) * (blobY[1]-blobY[0]);
-    s13 = (blobX[2]-blobX[0]) * (blobX[2]-blobX[0])+
-          (blobY[2]-blobY[0]) * (blobY[2]-blobY[0]);
-    s14 = (blobX[3]-blobX[0]) * (blobX[3]-blobX[0])+
-          (blobY[3]-blobY[0]) * (blobY[3]-blobY[0]);
-    s23 = (blobX[2]-blobX[1]) * (blobX[2]-blobX[1])+
-          (blobY[2]-blobY[1]) * (blobY[2]-blobY[1]);
-    s24 = (blobX[3]-blobX[1]) * (blobX[3]-blobX[1])+
-          (blobY[3]-blobY[1]) * (blobY[3]-blobY[1]);
-    s34 = (blobX[3]-blobX[2]) * (blobX[3]-blobX[2])+
-          (blobY[3]-blobY[2]) * (blobY[3]-blobY[2]);
-    sMax = max(max3(s12,s13,s14), max3(s23,s24,s34));
-    s12Norm = (long)(1000*s12)/sMax;
-    s13Norm = (long)(1000*s13)/sMax;
-    s14Norm = (long)(1000*s14)/sMax;
-    s23Norm = (long)(1000*s23)/sMax;
-    s24Norm = (long)(1000*s24)/sMax;
-    s34Norm = (long)(1000*s34)/sMax;
+#define SQUARE(x) ((long)(x)*(long)(x))    
+#define X(a) blobX[a]    
+#define Y(a) blobY[a]    
+    s12 = SQUARE(X(1)-X(0)) + SQUARE(Y(1)-Y(0));
+    s13 = SQUARE(X(2)-X(0)) + SQUARE(Y(2)-Y(0));
+    s14 = SQUARE(X(3)-X(0)) + SQUARE(Y(3)-Y(0));
+    s23 = SQUARE(X(2)-X(1)) + SQUARE(Y(2)-Y(1));
+    s24 = SQUARE(X(3)-X(1)) + SQUARE(Y(3)-Y(1));
+    s34 = SQUARE(X(3)-X(2)) + SQUARE(Y(3)-Y(2));
 
-    sort1 = s13Norm + s23Norm + s34Norm;
-    sort2 = s12Norm + s23Norm + s24Norm;
-    sort3 = s12Norm + s13Norm + s14Norm;
-    sort4 = s14Norm + s24Norm + s34Norm;
- 
-    // sort1 < sort2 < sort3 < sort4
-    // sort1 = 2, 4, 6
-    // sort2 = 1, 4, 5
-    // sort3 = 1, 2, 3
-    // sort4 = 3, 5, 6
+    // Find the maximum "s" (blob distance squared)
+    sMax =  s12 > s13 ?  s12 : s13;
+    sMax = sMax > s14 ? sMax : s14;
+    sMax = sMax > s23 ? sMax : s23;
+    sMax = sMax > s24 ? sMax : s24;
+    sMax = sMax > s34 ? sMax : s34;
     
-//#define P1_TARGET 1636
-//#define P2_TARGET 1504
-//#define P3_TARGET 1412
-//#define P4_TARGET 2278
+    // Find points B and D (not ordered)
+    pairBDIndex1 = (s12 == sMax) ? 0 :
+                   (s13 == sMax) ? 0 :
+                   (s14 == sMax) ? 0 :
+                   (s23 == sMax) ? 1 :
+                   (s24 == sMax) ? 1 : 2;
 
-    //TODO Double check algorithm is correct!
-//    if (min(min(abs(point1-P1_TARGET),abs(point2-P1_TARGET)),
-//            min(abs(point3-P1_TARGET),abs(point4-P1_TARGET))) ==
-//         abs(point1-P1_TARGET)) {blobXSorted[0]=blobX[0];}
-//    else if (min(min(abs(point1-P2_TARGET),abs(point2-P2_TARGET)),
-//            min(abs(point3-P2_TARGET),abs(point4-P2_TARGET))) ==
-//         abs(point1-P2_TARGET)) {blobXSorted[0]=blobX[1];}
-//    else if (min(min(abs(point1-P3_TARGET),abs(point2-P3_TARGET)),
-//            min(abs(point3-P3_TARGET),abs(point4-P3_TARGET))) ==
-//         abs(point1-P3_TARGET)) {blobXSorted[0]=blobX[2];}
-//    else if (min(min(abs(point1-P4_TARGET),abs(point2-P4_TARGET)),
-//            min(abs(point3-P4_TARGET),abs(point4-P4_TARGET))) ==
-//         abs(point1-P4_TARGET)) {blobXSorted[0]=blobX[3];}
-//
-//    if (min(min(abs(point1-1613),abs(point2-1613)),
-//            min(abs(point3-1613),abs(point4-1613))) ==
-//         abs(point2-1613)) {blobXSorted[1]=blobX[0];}
-//    else if (min(min(abs(point1-1505),abs(point2-1505)),
-//            min(abs(point3-1505),abs(point4-1505))) ==
-//         abs(point2-1505)) {blobXSorted[1]=blobX[1];}
-//    else if (min(min(abs(point1-1345),abs(point2-1345)),
-//            min(abs(point3-1345),abs(point4-1345))) ==
-//         abs(point2-1345)) {blobXSorted[1]=blobX[2];}
-//    else if (min(min(abs(point1-2260),abs(point2-2260)),
-//            min(abs(point3-2260),abs(point4-2260))) ==
-//         abs(point2-2260)) {blobXSorted[1]=blobX[3];}
-//
-//    if (min(min(abs(point1-1613),abs(point2-1613)),
-//            min(abs(point3-1613),abs(point4-1613))) ==
-//         abs(point3-1613)) {blobXSorted[2]=blobX[0];}
-//    else if (min(min(abs(point1-1505),abs(point2-1505)),
-//            min(abs(point3-1505),abs(point4-1505))) ==
-//         abs(point3-1505)) {blobXSorted[2]=blobX[1];}
-//    else if (min(min(abs(point1-1345),abs(point2-1345)),
-//            min(abs(point3-1345),abs(point4-1345))) ==
-//         abs(point3-1345)) {blobXSorted[2]=blobX[2];}
-//    else if (min(min(abs(point1-2260),abs(point2-2260)),
-//            min(abs(point3-2260),abs(point4-2260))) ==
-//         abs(point3-2260)) {blobXSorted[2]=blobX[3];}
-//
-//    if (min(min(abs(point1-1613),abs(point2-1613)),
-//            min(abs(point3-1613),abs(point4-1613))) ==
-//         abs(point4-1613)) {blobXSorted[3]=blobX[0];}
-//    else if (min(min(abs(point1-1505),abs(point2-1505)),
-//            min(abs(point3-1505),abs(point4-1505))) ==
-//         abs(point4-1505)) {blobXSorted[3]=blobX[1];}
-//    else if (min(min(abs(point1-1345),abs(point2-1345)),
-//            min(abs(point3-1345),abs(point4-1345))) ==
-//         abs(point4-1345)) {blobXSorted[3]=blobX[2];}
-//    else if (min(min(abs(point1-2260),abs(point2-2260)),
-//            min(abs(point3-2260),abs(point4-2260))) ==
-//         abs(point4-2260)) {blobXSorted[3]=blobX[3];}
+    pairBDIndex2 = (s12 == sMax) ? 1 :
+                   (s13 == sMax) ? 2 :
+                   (s14 == sMax) ? 3 :
+                   (s23 == sMax) ? 2 : 3;
+    
+    // Find points A and C (not ordered)
+    pairACIndex1 = (pairBDIndex1 != 0) ? 0 :
+                  (pairBDIndex2 != 1) ? 1 : 2;
 
-    //TODO Use bit manipulation to accomplish abs(x)
-    //TODO (Somewhere else there is abs code!)
-//    lineABTest = sDistNorm -  205;  235
-//    lineACTest = sDistNorm -  601;  689
-//    lineADTest = sDistNorm -  807;  831
-//    lineBCTest = sDistNorm -  300;  294
-//    lineBDTest = sDistNorm - 1000; 1000
-//    lineCDTest = sDistNorm -  453;  491
+    pairACIndex2 = 6 - (pairBDIndex1 + pairBDIndex2 + otherIndex1);
 
-//    for (j=0; j<6; j++)
-//    {
-//      if (/*check if s12 is AB*/) {} 
-//      if (/*check if s12 is AC*/) {} 
-//      if (/*      ...         */) {} 
-//      if (/*check if s34 is CD*/) {} 
-//      // Solve via decision tree!
-//      // i.e. Swap sets of points if s-values do not match up.
-//    }
+    //TODO The distance from B to A and B to C should be
+    //  different than the distance from D to A and D to C.
+    //  Use this to determine which index is B or D.
+    pointBX = X(pairBDIndex1);
+    pointBY = Y(pairBDIndex1);
+    pointDX = X(pairBDIndex2);
+    pointDY = Y(pairBDIndex2);
 
     //Once points are in correct order...
     //TODO algorithm to compute distance
