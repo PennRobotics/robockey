@@ -6,6 +6,7 @@
 #include "rock_settings.h"
 #include "rock_robot_types.h"
 #include "rock_m2_pins.h"
+#include "rock_timers.h"
 #include "rock_states.h"
 #include "rock_status.h"
 #include "rock_location.h"
