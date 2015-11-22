@@ -71,72 +71,83 @@ char locationWhereAmI(unsigned char* xMemAddr, unsigned char* yMemAddr, unsigned
     s24Norm = (long)(1000*s24)/sMax;
     s34Norm = (long)(1000*s34)/sMax;
 
-    point1 = s12Norm + s13Norm + s14Norm; // 1613 target
-    point2 = s12Norm + s23Norm + s24Norm; // 1505
-    point3 = s13Norm + s23Norm + s34Norm; // 1345
-    point4 = s14Norm + s24Norm + s34Norm; // 2260 
+    sort1 = s13Norm + s23Norm + s34Norm;
+    sort2 = s12Norm + s23Norm + s24Norm;
+    sort3 = s12Norm + s13Norm + s14Norm;
+    sort4 = s14Norm + s24Norm + s34Norm;
+ 
+    // sort1 < sort2 < sort3 < sort4
+    // sort1 = 2, 4, 6
+    // sort2 = 1, 4, 5
+    // sort3 = 1, 2, 3
+    // sort4 = 3, 5, 6
+    
+//#define P1_TARGET 1636
+//#define P2_TARGET 1504
+//#define P3_TARGET 1412
+//#define P4_TARGET 2278
 
     //TODO Double check algorithm is correct!
-    if (min(min(abs(point1-1613),abs(point2-1613)),
-            min(abs(point3-1613),abs(point4-1613))) ==
-         abs(point1-1613)) {blobXSorted[0]=blobX[0];}
-    else if (min(min(abs(point1-1505),abs(point2-1505)),
-            min(abs(point3-1505),abs(point4-1505))) ==
-         abs(point1-1505)) {blobXSorted[0]=blobX[1];}
-    else if (min(min(abs(point1-1345),abs(point2-1345)),
-            min(abs(point3-1345),abs(point4-1345))) ==
-         abs(point1-1345)) {blobXSorted[0]=blobX[2];}
-    else if (min(min(abs(point1-2260),abs(point2-2260)),
-            min(abs(point3-2260),abs(point4-2260))) ==
-         abs(point1-2260)) {blobXSorted[0]=blobX[3];}
-
-    if (min(min(abs(point1-1613),abs(point2-1613)),
-            min(abs(point3-1613),abs(point4-1613))) ==
-         abs(point2-1613)) {blobXSorted[1]=blobX[0];}
-    else if (min(min(abs(point1-1505),abs(point2-1505)),
-            min(abs(point3-1505),abs(point4-1505))) ==
-         abs(point2-1505)) {blobXSorted[1]=blobX[1];}
-    else if (min(min(abs(point1-1345),abs(point2-1345)),
-            min(abs(point3-1345),abs(point4-1345))) ==
-         abs(point2-1345)) {blobXSorted[1]=blobX[2];}
-    else if (min(min(abs(point1-2260),abs(point2-2260)),
-            min(abs(point3-2260),abs(point4-2260))) ==
-         abs(point2-2260)) {blobXSorted[1]=blobX[3];}
-
-    if (min(min(abs(point1-1613),abs(point2-1613)),
-            min(abs(point3-1613),abs(point4-1613))) ==
-         abs(point3-1613)) {blobXSorted[2]=blobX[0];}
-    else if (min(min(abs(point1-1505),abs(point2-1505)),
-            min(abs(point3-1505),abs(point4-1505))) ==
-         abs(point3-1505)) {blobXSorted[2]=blobX[1];}
-    else if (min(min(abs(point1-1345),abs(point2-1345)),
-            min(abs(point3-1345),abs(point4-1345))) ==
-         abs(point3-1345)) {blobXSorted[2]=blobX[2];}
-    else if (min(min(abs(point1-2260),abs(point2-2260)),
-            min(abs(point3-2260),abs(point4-2260))) ==
-         abs(point3-2260)) {blobXSorted[2]=blobX[3];}
-
-    if (min(min(abs(point1-1613),abs(point2-1613)),
-            min(abs(point3-1613),abs(point4-1613))) ==
-         abs(point4-1613)) {blobXSorted[3]=blobX[0];}
-    else if (min(min(abs(point1-1505),abs(point2-1505)),
-            min(abs(point3-1505),abs(point4-1505))) ==
-         abs(point4-1505)) {blobXSorted[3]=blobX[1];}
-    else if (min(min(abs(point1-1345),abs(point2-1345)),
-            min(abs(point3-1345),abs(point4-1345))) ==
-         abs(point4-1345)) {blobXSorted[3]=blobX[2];}
-    else if (min(min(abs(point1-2260),abs(point2-2260)),
-            min(abs(point3-2260),abs(point4-2260))) ==
-         abs(point4-2260)) {blobXSorted[3]=blobX[3];}
+//    if (min(min(abs(point1-P1_TARGET),abs(point2-P1_TARGET)),
+//            min(abs(point3-P1_TARGET),abs(point4-P1_TARGET))) ==
+//         abs(point1-P1_TARGET)) {blobXSorted[0]=blobX[0];}
+//    else if (min(min(abs(point1-P2_TARGET),abs(point2-P2_TARGET)),
+//            min(abs(point3-P2_TARGET),abs(point4-P2_TARGET))) ==
+//         abs(point1-P2_TARGET)) {blobXSorted[0]=blobX[1];}
+//    else if (min(min(abs(point1-P3_TARGET),abs(point2-P3_TARGET)),
+//            min(abs(point3-P3_TARGET),abs(point4-P3_TARGET))) ==
+//         abs(point1-P3_TARGET)) {blobXSorted[0]=blobX[2];}
+//    else if (min(min(abs(point1-P4_TARGET),abs(point2-P4_TARGET)),
+//            min(abs(point3-P4_TARGET),abs(point4-P4_TARGET))) ==
+//         abs(point1-P4_TARGET)) {blobXSorted[0]=blobX[3];}
+//
+//    if (min(min(abs(point1-1613),abs(point2-1613)),
+//            min(abs(point3-1613),abs(point4-1613))) ==
+//         abs(point2-1613)) {blobXSorted[1]=blobX[0];}
+//    else if (min(min(abs(point1-1505),abs(point2-1505)),
+//            min(abs(point3-1505),abs(point4-1505))) ==
+//         abs(point2-1505)) {blobXSorted[1]=blobX[1];}
+//    else if (min(min(abs(point1-1345),abs(point2-1345)),
+//            min(abs(point3-1345),abs(point4-1345))) ==
+//         abs(point2-1345)) {blobXSorted[1]=blobX[2];}
+//    else if (min(min(abs(point1-2260),abs(point2-2260)),
+//            min(abs(point3-2260),abs(point4-2260))) ==
+//         abs(point2-2260)) {blobXSorted[1]=blobX[3];}
+//
+//    if (min(min(abs(point1-1613),abs(point2-1613)),
+//            min(abs(point3-1613),abs(point4-1613))) ==
+//         abs(point3-1613)) {blobXSorted[2]=blobX[0];}
+//    else if (min(min(abs(point1-1505),abs(point2-1505)),
+//            min(abs(point3-1505),abs(point4-1505))) ==
+//         abs(point3-1505)) {blobXSorted[2]=blobX[1];}
+//    else if (min(min(abs(point1-1345),abs(point2-1345)),
+//            min(abs(point3-1345),abs(point4-1345))) ==
+//         abs(point3-1345)) {blobXSorted[2]=blobX[2];}
+//    else if (min(min(abs(point1-2260),abs(point2-2260)),
+//            min(abs(point3-2260),abs(point4-2260))) ==
+//         abs(point3-2260)) {blobXSorted[2]=blobX[3];}
+//
+//    if (min(min(abs(point1-1613),abs(point2-1613)),
+//            min(abs(point3-1613),abs(point4-1613))) ==
+//         abs(point4-1613)) {blobXSorted[3]=blobX[0];}
+//    else if (min(min(abs(point1-1505),abs(point2-1505)),
+//            min(abs(point3-1505),abs(point4-1505))) ==
+//         abs(point4-1505)) {blobXSorted[3]=blobX[1];}
+//    else if (min(min(abs(point1-1345),abs(point2-1345)),
+//            min(abs(point3-1345),abs(point4-1345))) ==
+//         abs(point4-1345)) {blobXSorted[3]=blobX[2];}
+//    else if (min(min(abs(point1-2260),abs(point2-2260)),
+//            min(abs(point3-2260),abs(point4-2260))) ==
+//         abs(point4-2260)) {blobXSorted[3]=blobX[3];}
 
     //TODO Use bit manipulation to accomplish abs(x)
     //TODO (Somewhere else there is abs code!)
-//    lineABTest = sDistNorm -  205;
-//    lineACTest = sDistNorm -  601;
-//    lineADTest = sDistNorm -  807;
-//    lineBCTest = sDistNorm -  300;
-//    lineBDTest = sDistNorm - 1000;
-//    lineCDTest = sDistNorm -  453;
+//    lineABTest = sDistNorm -  205;  235
+//    lineACTest = sDistNorm -  601;  689
+//    lineADTest = sDistNorm -  807;  831
+//    lineBCTest = sDistNorm -  300;  294
+//    lineBDTest = sDistNorm - 1000; 1000
+//    lineCDTest = sDistNorm -  453;  491
 
 //    for (j=0; j<6; j++)
 //    {

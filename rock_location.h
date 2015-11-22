@@ -9,18 +9,18 @@ char locationWhereAmI(unsigned char* xMemAddr, unsigned char* yMemAddr, unsigned
 
 //TODO put all these in correct place
 char blobXSorted[4];
-char point1;
-char point2;
-char point3;
-char point4;
-char s12,s12Norm;
-char s13,s13Norm;
-char s14,s14Norm;
-char s23,s23Norm;
-char s24,s24Norm;
-char s34,s34Norm;
-char sMax;
-char thr;
+char sort1;
+char sort2;
+char sort3;
+char sort4;
+long s12,s12Norm;
+long s13,s13Norm;
+long s14,s14Norm;
+long s23,s23Norm;
+long s24,s24Norm;
+long s34,s34Norm;
+int sMax;
+int thr;
 
 int blobX[4], blobY[4];
 char blobXOld[4], blobYOld[4];
