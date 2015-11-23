@@ -29,10 +29,10 @@ char locationWhereAmI(void)
 //  assert(  yMemAddr);
 //  assert(dirMemAddr); // check that addresses are not pointing to NULL
 
-  int totalGain;
-  char   xOld = robotX;       //  *xMemAddr;
-  char   yOld = robotY;       //  *xMemAddr;
-  char dirOld = angleOfRobot; //*dirMemAddr;
+//  int totalGain;
+//  char   xOld = robotX;       //  *xMemAddr;
+//  char   yOld = robotY;       //  *xMemAddr;
+//  char dirOld = angleOfRobot; //*dirMemAddr;
 
   int i; char zeroIfFourBlobs = 0;
 
@@ -178,13 +178,13 @@ int distY;
 //TODO Synchronize X, Y to rink center on startup or on switch/PCI.
   
 //TODO TODO Implement prediction into the localization.  
-  char   xCalculated = 0; //   *xMemAddr;
-  char   yCalculated = 0; //   *yMemAddr;
-  char dirCalculated = 0; // *dirMemAddr;
-
-  char   xPredicted  = 0; //   *xMemAddr;
-  char   yPredicted  = 0; //   *yMemAddr;
-  char dirPredicted  = 0; // *dirMemAddr;
+//  char   xCalculated = 0; //   *xMemAddr;
+//  char   yCalculated = 0; //   *yMemAddr;
+//  char dirCalculated = 0; // *dirMemAddr;
+//
+//  char   xPredicted  = 0; //   *xMemAddr;
+//  char   yPredicted  = 0; //   *yMemAddr;
+//  char dirPredicted  = 0; // *dirMemAddr;
 
 //    totalGain =  GAIN_PAST + GAIN_PRESENT + GAIN_FUTURE;
 //    *xMemAddr = (GAIN_PAST *   xOld + GAIN_PRESENT *   xCalculated + GAIN_FUTURE *   xPredicted) / totalGain;
@@ -192,13 +192,13 @@ int distY;
 //  *dirMemAddr = (GAIN_PAST * dirOld + GAIN_PRESENT * dirCalculated + GAIN_FUTURE * dirPredicted) / totalGain;
 
   //TODO set up cases for each level of location data reliability
-  switch (0) {
-    default:
+//  switch (0) {
+//    default:
 //      totalGain =  GAIN_PAST + GAIN_FUTURE;
 //      *xMemAddr = (GAIN_PAST *   xOld + GAIN_FUTURE *   xPredicted) / totalGain;
 //      *yMemAddr = (GAIN_PAST *   yOld + GAIN_FUTURE *   yPredicted) / totalGain;
 //    *dirMemAddr = (GAIN_PAST * dirOld + GAIN_FUTURE * dirPredicted) / totalGain;
-  }
+//  }
 }
 
 char atan2d(int y, int x)
