@@ -23,7 +23,7 @@ int sind_M(char angle);
 int cosd_M(char angle);
 
 //TODO Currently, having memory addresses as arguments is not helpful.
-char locationWhereAmI(unsigned char* xMemAddr, unsigned char* yMemAddr, unsigned char* dirMemAddr)
+char locationWhereAmI(void)
 {
   assert(  xMemAddr);
   assert(  yMemAddr);

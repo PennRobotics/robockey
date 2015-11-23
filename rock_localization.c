@@ -12,7 +12,7 @@ void updateLocalization(void)
 {
   //TODO Use the return value from locationWhereAmI
   //  to detect when the constellation is out-of-sight & update status.
-  locationWhereAmI(&robotX, &robotY, &angleOfRobot);
+  locationWhereAmI();
 }
   
 int findPuckDistance(void)
