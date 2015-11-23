@@ -6,18 +6,18 @@ void testStatusLEDPins();
 void updateStatusFlags();
 void sendSPI(uint16_t data);
 
-#define STATUS_PUCK_IN_SIGHT        (0x001)
-#define STATUS_HAVE_PUCK            (0x002)
-#define STATUS_LOCALIZED            (0x004)
-#define STATUS_DEFENSE              (0x008)
-//TODO Not needed: STATUS_RED_TEAM
-//      Suggested: STATUS_LOW_TIME
-#define STATUS_RED_TEAM             (0x010)
-#define STATUS_MOTOR_ON             (0x020)
-#define STATUS_WAIT_FOR_TEAMMATE    (0x040)
-#define STATUS_ASSISTING            (0x080)
-#define STATUS_NO_RECENT_COMM       (0x100)
-#define STATUS_NO_GAMEPLAY          (0x200)
+#define STATUS_PUCK_IN_SIGHT        (0x0001)
+#define STATUS_HAVE_PUCK            (0x0002)
+#define STATUS_LOCALIZED            (0x0004)
+#define STATUS_DEFENSE              (0x0008)
+#define STATUS_TIME_ALMOST_UP       (0x0010)
+#define STATUS_MOTOR_ON             (0x0020)
+#define STATUS_WAIT_FOR_TEAMMATE    (0x0040)
+#define STATUS_ASSISTING            (0x0080)
+#define STATUS_NO_RECENT_COMM       (0x0100)
+#define STATUS_NO_GAMEPLAY          (0x0200)
+#define LED_RED                     (0x0400)
+#define LED_BLUE                    (0x0800)
 
 #define LOW(x)    ((x)     & 0xFF)
 #define HIGH(x)  (((x)>>8) & 0xFF)
@@ -28,5 +28,8 @@ void sendSPI(uint16_t data);
 #define status_clear_all()           statusFlags  =  0
 
 #define status_check(flag)    (bool)(statusFlags  &  (flag))
+
+#define led_red(val)    if(val==OFF){status_clear(LED_RED); }else if(val==ON){status_set(LED_RED); }else if(val==TOGGLE){status_toggle(LED_RED);}
+#define led_blue(val)   if(val==OFF){status_clear(LED_BLUE);}else if(val==ON){status_set(LED_BLUE);}else if(val==TOGGLE){status_toggle(LED_BLUE);}
 
 #endif
