@@ -8,9 +8,15 @@
 #define MAX7219_TEST_MODE_ON       0x0F01
 #define MAX7219_TEST_MODE_OFF      0x0F00
 
-#ifndef _rock_headers_h 
-#include "rock_headers.h"
-#endif
+#define RF_CHANNEL       1
+#define TEAM_NUMBER      22
+#define ROBOT_NUMBER     1
+#define RF_RX_ADDRESS    (TEAM_NUMBER)*4 + (ROBOT_NUMBER)
+#define RF_PACKET_LENGTH 10
+
+// #ifndef _rock_headers_h 
+// #include "rock_headers.h"
+// #endif
 
 void init(void);
 void initStatusLEDPins(void);
