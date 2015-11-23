@@ -6,8 +6,6 @@
 //TODO Read ATMEGA datasheet about differential measurements on ADC
 //TODO Also, chapter 23 details the analog comparator.
 
-void updateLocalization(void);
-
 void updateLocalization(void)
 {
   //TODO Use the return value from locationWhereAmI

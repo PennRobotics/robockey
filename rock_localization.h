@@ -23,6 +23,8 @@
 //TODO Clean rock_localization.h
 
 int findPuckDistance(void);
+void updateLocalization(void);
+
 
 //TODO Make poll(x)IR extern and put in vars.h
 extern int pollLeftIR;
