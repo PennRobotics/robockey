@@ -6,6 +6,15 @@
 //TODO Read ATMEGA datasheet about differential measurements on ADC
 //TODO Also, chapter 23 details the analog comparator.
 
+void updateLocalization(void);
+
+void updateLocalization(void)
+{
+  //TODO Use the return value from locationWhereAmI
+  //  to detect when the constellation is out-of-sight & update status.
+  locationWhereAmI(&robotX, &robotY, &angleOfRobot);
+}
+  
 int findPuckDistance(void)
 {
   //TODO Discrete Lowpass on IR polling
