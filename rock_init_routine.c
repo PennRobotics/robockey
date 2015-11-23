@@ -28,7 +28,7 @@ void init(void)
   if (TEST_MOTORS_ON_STARTUP /*rock_settings.h*/)
     {m_green(ON);testMotors(); /*rock_motor.c*/m_green(OFF);}
 
-//TODO  initMRF();
+  initMRF();
 
   initADC();
   getADC(PIN_CENTER_IR_ANALOG);
@@ -92,7 +92,10 @@ void initMWii(void)
 
 void initMRF(void)
 {
-
+#define RF_CHANNEL       0
+#define RF_RX_ADDRESS    0
+#define RF_PACKET_LENGTH 0
+  m_rf_open(RF_CHANNEL, RF_RX_ADDRESS, RF_PACKET_LENGTH);
 }
 
 void initADC(void)
