@@ -25,7 +25,7 @@ int thr;
 int blobX[4], blobY[4];
 char blobXOld[4], blobYOld[4];
 
-int blobMemAddr[12]; 
+unsigned int blobMemAddr[12]; 
 
 #define min(a,b) ((a)<(b))?a:b
 #define abs(a) (a<0)?-1*a:a

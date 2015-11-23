@@ -18,6 +18,10 @@
 //  where each point is where the stars are focused on the rink.
 //  Refer to each point looking down from above the constellation.
 
+char atan2d(int y, int x);
+int sind_M(char angle);
+int cosd_M(char angle);
+
 char locationWhereAmI(unsigned char* xMemAddr, unsigned char* yMemAddr, unsigned char* dirMemAddr)
 {
   assert(  xMemAddr);
@@ -76,6 +80,7 @@ thr=25;
     s34 = SQUARE(X(3)-X(2)) + SQUARE(Y(3)-Y(2));
 
     // Find the maximum "s" (blob distance squared)
+    int sMax;
     sMax =  s12 > s13 ?  s12 : s13;
     sMax = sMax > s14 ? sMax : s14;
     sMax = sMax > s23 ? sMax : s23;
@@ -83,27 +88,27 @@ thr=25;
     sMax = sMax > s34 ? sMax : s34;
     
     // Find points B and D (not ordered)
-    indexBD1 = (s12 == sMax) ? 0 :
-               (s13 == sMax) ? 0 :
-               (s14 == sMax) ? 0 :
-               (s23 == sMax) ? 1 :
-               (s24 == sMax) ? 1 : 2;
+    int indexBD1 = (s12 == sMax) ? 0 :
+                    (s13 == sMax) ? 0 :
+                    (s14 == sMax) ? 0 :
+                    (s23 == sMax) ? 1 :
+                    (s24 == sMax) ? 1 : 2;
 
-    indexBD2 = (s12 == sMax) ? 1 :
-               (s13 == sMax) ? 2 :
-               (s14 == sMax) ? 3 :
-               (s23 == sMax) ? 2 : 3;
+    int indexBD2 = (s12 == sMax) ? 1 :
+                    (s13 == sMax) ? 2 :
+                    (s14 == sMax) ? 3 :
+                    (s23 == sMax) ? 2 : 3;
     
     // Find points A and C (not ordered)
-    indexAC1 = (indexBD1 != 0) ? 0 :
-               (indexBD2 != 1) ? 1 : 2;
+    int indexAC1 = (indexBD1 != 0) ? 0 :
+                    (indexBD2 != 1) ? 1 : 2;
 
-    indexAC2 = 6 - (indexBD1 + indexBD2 + indexAC1);
+    int indexAC2 = 6 - (indexBD1 + indexBD2 + indexAC1);
 
     // The sum of distances from B to A and B to C should be
     //  less than the sum of distances from D to A and D to C.
     //  Determine which index is B or D:
-    indexB =
+    int indexB =
       (SQUARE(X(indexBD1) - X(indexAC1)) + 
        SQUARE(Y(indexBD1) - Y(indexAC1)) +
        SQUARE(X(indexBD1) - X(indexAC2)) +
@@ -113,24 +118,30 @@ thr=25;
        SQUARE(X(indexBD2) - X(indexAC2)) +
        SQUARE(Y(indexBD2) - Y(indexAC2))) ? indexBD1 : indexBD2;
 
-    indexD = 6 - (indexAC1 + indexAC2 + indexB);
+    int indexD = 6 - (indexAC1 + indexAC2 + indexB);
 
-    pointBX = X(indexB);
-    pointBY = Y(indexB);
-    pointDX = X(indexD);
-    pointDY = Y(indexD);
+    int pointBX = X(indexB);
+    int pointBY = Y(indexB);
+    int pointDX = X(indexD);
+    int pointDY = Y(indexD);
 
-    pointCenterX = (pointBX + pointDX) / 2;
-    pointCenterY = (pointBY + pointDY) / 2;
+    int pointCenterX = (pointBX + pointDX) / 2;
+    int pointCenterY = (pointBY + pointDY) / 2;
 
     //TODO
 #define RINK_CENTER_X 511
 #define RINK_CENTER_Y 383
+int distR;
+int distR_aprx;
+int distRSquare;
+int distX;
+int distY;
+
     distX = RINK_CENTER_X - pointCenterX;
     distY = RINK_CENTER_Y - pointCenterY;
 
     // Start with a good estimate of distR
-    distR_aprx  = ((long)(ABS(distX) + ABS(distY)) * 11) / 14;
+    distR_aprx  = ((long)(abs(distX) + abs(distY)) * 11) / 14;
     // Find the square of distR to use with the Babylonian method
     distRSquare = SQUARE((long)distX) + SQUARE((long)distY);
     // Divide by zero protection when X and Y are at rink center
@@ -142,12 +153,13 @@ thr=25;
     // Typical convergence: error of distR < 1 in two approximations.
 
     // Compute heading in degrees
-    robotHeading = atan2d(distY,distX);
+    angleOfRobot = atan2d(distY,distX);
 
-    // Calculate current position using 
-    //TODO algorithm to compute X, Y from distance and heading
-    //  X = Dist * cosd(Heading);
-    //  Y = Dist * sind(Heading);
+    //TODO Fix signs so position is shown correctly
+    // Calculate absolute X and Y using distance and heading
+    robotX = cosd_M(angleOfRobot)*distR/1000;
+    robotY = sind_M(angleOfRobot)*distR/1000;
+
     return 1; //TODO Check return value!
   }
   else
@@ -189,11 +201,35 @@ thr=25;
 
 char atan2d(int y, int x)
 {
-  //This magic is an atan2d approximation for integers
-  R = (x<0) ? (1000*(long)(x+ABS(y)))/(ABS(y)-x) :
-                (1000*(long)(x-ABS(y)))/(ABS(y)+x);
+  long R;
+  int angle;
+//This magic is an atan2d approximation for integers
+  R = (x<0) ? (1000*(long)(x+abs(y)))/(abs(y)-x) :
+              (1000*(long)(x-abs(y)))/(abs(y)+x);
   angle = (x<0) ? 11781 : 3927;
-  angle = angle + (((((long)R*(long)R)/660)*(long)R)/1464 - (((long)R*1963)/400));
+  angle = angle + ((((R*R)/660)*R)/1464 - ((R*1963)/400));
   angle = angle / 87;
   angle = (y<0) ? -angle : angle;
+  return angle;
+}
+
+int sind_M(char angle)
+{
+  long sindCalc;
+  sindCalc = (angle<0) ? 1000*(long)angle/45 + 
+                            (10*(long)angle*(long)angle/81) :
+                         1000*(long)angle/45 -
+                            (10*(long)angle*(long)angle/81);
+  sindCalc = (sindCalc<0) ?
+    (((-9*sindCalc*sindCalc)/1000 - 9*sindCalc)/40 + sindCalc) :
+    ((( 9*sindCalc*sindCalc)/1000 - 9*sindCalc)/40 + sindCalc);
+
+  return sindCalc;
+}
+
+int cosd_M(char angle)
+{
+  // cosd(x) = sind(x + 90)
+  angle += (angle > 90) ? -270 : 90;
+  return sind_M(angle);
 }
