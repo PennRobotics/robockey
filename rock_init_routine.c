@@ -92,9 +92,11 @@ void initMWii(void)
 
 void initMRF(void)
 {
-#define RF_CHANNEL       0
-#define RF_RX_ADDRESS    0
-#define RF_PACKET_LENGTH 0
+#define RF_CHANNEL       1
+#define TEAM_NUMBER      22
+#define ROBOT_NUMBER     1
+#define RF_RX_ADDRESS    (TEAM_NUMBER)*4 + (ROBOT_NUMBER)
+#define RF_PACKET_LENGTH 10
   m_rf_open(RF_CHANNEL, RF_RX_ADDRESS, RF_PACKET_LENGTH);
 }
 

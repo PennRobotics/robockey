@@ -12,10 +12,11 @@
 #include "rock_headers.h"
 #endif
 
-void init();
-void initStatusLEDPins();
-void initADC();
-void initMWii();
-void initUSB();
+void init(void);
+void initStatusLEDPins(void);
+void initADC(void);
+void initMWii(void);
+void initUSB(void);
+void initMRF(void);
 
 #endif
