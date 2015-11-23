@@ -8,6 +8,20 @@ void stateMachine()
 {
   switch(state /*rock_initialize_vars.h*/)
   {
+  case ROBOT_STARTUP:
+    motor(LEFTMOTOR, OFF, 0); /*rock_motor.h*/ 
+    motor(RIGHTMOTOR, OFF, 0);
+    status_clear( STATUS_PUCK_IN_SIGHT); /*rock_status.h;rock_states.h*/
+    status_clear( STATUS_HAVE_PUCK);
+    status_clear( STATUS_LOCALIZED);
+    status_clear( STATUS_DEFENSE);
+    status_clear( STATUS_TIME_ALMOST_UP);
+    status_clear( STATUS_MOTOR_ON);
+    status_clear( STATUS_WAIT_FOR_TEAMMATE);
+    status_clear( STATUS_ASSISTING);
+    status_set(   STATUS_NO_RECENT_COMM);
+    status_set(   STATUS_NO_GAMEPLAY);
+    break;
   case GAMEPLAY_NOT_PLAYING: /*rock_states.h*/
     motor(LEFTMOTOR, OFF, 0); /*rock_motor.h*/ 
     motor(RIGHTMOTOR, OFF, 0);
@@ -79,6 +93,12 @@ void stateMachine()
     status_clear( STATUS_HAVE_PUCK);
     status_set(   STATUS_DEFENSE);
     break;
+  case GET_AGGRESSIVE:
+    //status_blink(STATUS_TIME_ALMOST_UP);
+    break;
+  case GO_BATSHIT_CRAZY:
+    status_set(STATUS_TIME_ALMOST_UP);
+    break;
   default:
     // do something;
     m_red(ON);
@@ -86,7 +106,7 @@ void stateMachine()
     status_clear( STATUS_HAVE_PUCK);
     status_clear( STATUS_LOCALIZED);
     status_clear( STATUS_DEFENSE);
-    status_clear( STATUS_RED_TEAM);
+    status_clear( STATUS_TIME_ALMOST_UP);
     status_clear( STATUS_MOTOR_ON);
     status_clear( STATUS_WAIT_FOR_TEAMMATE);
     status_clear( STATUS_ASSISTING);
@@ -100,6 +120,10 @@ void stateMachine()
 // Use stateMachine() to control robot actions based on state and to display the current state!
 int getCurrentState(void)
 {
+  if (state==ROBOT_STARTUP)
+  {
+    state=GAMEPLAY_NOT_PLAYING;
+  }
 //TODO Physical switch to allow changing strategy
 //  if (m_check(STRATEGY_SWITCH)) {return strategyB();}
 

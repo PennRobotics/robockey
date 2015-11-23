@@ -26,6 +26,8 @@ void sendSPI(uint16_t data);
 #define status_clear(flag)           statusFlags &= ~(flag)
 #define status_toggle(flag)          statusFlags ^=  (flag)
 #define status_clear_all()           statusFlags  =  0
+//TODO #define status_blink(flag)           statusFlags |=  (flag); statusBlinkFlags |=  (flag)
+//TODO #define STATUS_BLINK_PERIOD_MS
 
 #define status_check(flag)    (bool)(statusFlags  &  (flag))
 
