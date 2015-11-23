@@ -16,7 +16,7 @@ void stateMachine()
   case GAMEPLAY_COMM_TEST:
     // do something;
     break;
-  case GAMEPLAY_PLAYING:
+  case GAMEPLAY_PLAY_COMMAND:
     // do something;
     break;
   case GAMEPLAY_TIMEOUT:
