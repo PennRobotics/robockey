@@ -9,12 +9,29 @@ void motor(unsigned char motor_id, char motor_dir, unsigned char motor_duty)
 {
   if (motor_id==LEFTMOTOR)
   {
-//    if (motor_dir != OFF)      {set(MOTOR_L_EN_PORT); } else {clear(MOTOR_L_EN_PORT); }
-//    if (motor_dir == FORWARD)  {set(MOTOR_L_DIR_PORT);} else {clear(MOTOR_L_DIR_PORT);}
-//    TimerRegA = motor_duty;
+    // motor driver enable signal
+    if (motor_dir != OFF) 
+    {
+      //TODO set(MOTOR_L_EN_PORT);
+      status_set(STATUS_MOTOR_ON);
+    } else {
+      //TODO clear(MOTOR_L_EN_PORT);
+      //TODO Check if both motors disabled before clearing status!
+      //status_clear(STATUS_MOTOR_OFF);
+    }
+
+    // motor driver direction signal
+    if (motor_dir == FORWARD)
+    {
+      //TODO set(MOTOR_L_DIR_PORT);
+    } else {
+      //TODO clear(MOTOR_L_DIR_PORT);
+    }
+//TODO    TimerRegA = motor_duty;
+//TODO One compare reg for each motor. Check these to disable status.
 //    OC4A -> C7
 //    OC4B -> B6
-//
+
   }
   else if (motor_id==RIGHTMOTOR)
   {
