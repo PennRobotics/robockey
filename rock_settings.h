@@ -13,6 +13,8 @@
 #define WAIT_FOR_MWII_TO_OPEN           FALSE
 
 // How much tolerance in puck-robot-goal alignment
-#define DEGREE_THRESHOLD 12
+#define DEGREE_THRESHOLD                12
+
+#define USB_DEBUGGING                   TRUE
 
 #endif
