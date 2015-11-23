@@ -25,14 +25,14 @@ int cosd_M(char angle);
 //TODO Currently, having memory addresses as arguments is not helpful.
 char locationWhereAmI(void)
 {
-  assert(  xMemAddr);
-  assert(  yMemAddr);
-  assert(dirMemAddr); // check that addresses are not pointing to NULL
+//  assert(  xMemAddr);
+//  assert(  yMemAddr);
+//  assert(dirMemAddr); // check that addresses are not pointing to NULL
 
   int totalGain;
-  char   xOld =   *xMemAddr;
-  char   yOld =   *xMemAddr;
-  char dirOld = *dirMemAddr;
+  char   xOld = robotX;       //  *xMemAddr;
+  char   yOld = robotY;       //  *xMemAddr;
+  char dirOld = angleOfRobot; //*dirMemAddr;
 
   int i; char zeroIfFourBlobs = 0;
 
