@@ -2,7 +2,7 @@
 
 __Snapshot of "TODO" tags as of 23 November:__
 
-`main.c:1:// TODO Set up mRF  
+main.c:1:// TODO Set up mRF  
 main.c:2:// TODO Set up mWii  
 main.c:3:// TODO Localization routine  
 main.c:4:// TODO Communication routine  
@@ -65,4 +65,4 @@ rock_location.c:194:  //TODO set up cases for each level of location data reliab
 rock_m2_pins.h:18://TODO  Figure out how to disable inverted outputs  
 rock_m2_pins.h:19://TODO  Ensure no multiplexed pins are active  
 rock_m2_pins.h:21://TODO Check if B7 (/RTS) or Timer0 is in use  
-rock_m2_pins.h:28://TODO Place in appropriate bin and choose real pin numbers`  
+rock_m2_pins.h:28://TODO Place in appropriate bin and choose real pin numbers  
