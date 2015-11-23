@@ -18,10 +18,4 @@
   sendRF(PuckY)
 }
 
-//TODO Add to rock_interrupts:
-ISR(m2)
-{
-  // Get packets from team
-  // Get packets from JF
-}
 */
