@@ -13,7 +13,7 @@
 #include "rock_motor.h"
 #include "m_bus.h"
 #include "m_rf.h"
-// #include "m_usb.h"
+#include "m_usb.h"
 #include "m_wii.h"
 #include "rock_initialize_vars.h"
 #include "rock_init_routine.h"
@@ -23,7 +23,5 @@
 #include "rock_localization.h"
 #include "rock_interrupts.h"
 #include "rock_debug.h"
-
-void abort(void);
 
 #endif
