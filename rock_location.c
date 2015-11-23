@@ -9,6 +9,15 @@
 #include "rock_headers.h"
 #endif
 
+// Constellation points:
+// A   ( 11.655,   8.741)
+// B   (  0.000,  14.500)
+// C   (-10.563,   2.483)
+// D   (  0.000, -14.500)
+// These coordinates are (X, Y) Cartesian pairs,
+//  where each point is where the stars are focused on the rink.
+//  Refer to each point looking down from above the constellation.
+
 char locationWhereAmI(unsigned char* xMemAddr, unsigned char* yMemAddr, unsigned char* dirMemAddr)
 {
   assert(  xMemAddr);
@@ -74,34 +83,66 @@ thr=25;
     sMax = sMax > s34 ? sMax : s34;
     
     // Find points B and D (not ordered)
-    pairBDIndex1 = (s12 == sMax) ? 0 :
-                   (s13 == sMax) ? 0 :
-                   (s14 == sMax) ? 0 :
-                   (s23 == sMax) ? 1 :
-                   (s24 == sMax) ? 1 : 2;
+    indexBD1 = (s12 == sMax) ? 0 :
+               (s13 == sMax) ? 0 :
+               (s14 == sMax) ? 0 :
+               (s23 == sMax) ? 1 :
+               (s24 == sMax) ? 1 : 2;
 
-    pairBDIndex2 = (s12 == sMax) ? 1 :
-                   (s13 == sMax) ? 2 :
-                   (s14 == sMax) ? 3 :
-                   (s23 == sMax) ? 2 : 3;
+    indexBD2 = (s12 == sMax) ? 1 :
+               (s13 == sMax) ? 2 :
+               (s14 == sMax) ? 3 :
+               (s23 == sMax) ? 2 : 3;
     
     // Find points A and C (not ordered)
-    pairACIndex1 = (pairBDIndex1 != 0) ? 0 :
-                  (pairBDIndex2 != 1) ? 1 : 2;
+    indexAC1 = (indexBD1 != 0) ? 0 :
+               (indexBD2 != 1) ? 1 : 2;
 
-    pairACIndex2 = 6 - (pairBDIndex1 + pairBDIndex2 + otherIndex1);
+    indexAC2 = 6 - (indexBD1 + indexBD2 + indexAC1);
 
-    //TODO The distance from B to A and B to C should be
-    //  different than the distance from D to A and D to C.
-    //  Use this to determine which index is B or D.
-    pointBX = X(pairBDIndex1);
-    pointBY = Y(pairBDIndex1);
-    pointDX = X(pairBDIndex2);
-    pointDY = Y(pairBDIndex2);
+    // The sum of distances from B to A and B to C should be
+    //  less than the sum of distances from D to A and D to C.
+    //  Determine which index is B or D:
+    indexB =
+      (SQUARE(X(indexBD1) - X(indexAC1)) + 
+       SQUARE(Y(indexBD1) - Y(indexAC1)) +
+       SQUARE(X(indexBD1) - X(indexAC2)) +
+       SQUARE(Y(indexBD1) - Y(indexAC2))) <
+      (SQUARE(X(indexBD2) - X(indexAC1)) + 
+       SQUARE(Y(indexBD2) - Y(indexAC1)) +
+       SQUARE(X(indexBD2) - X(indexAC2)) +
+       SQUARE(Y(indexBD2) - Y(indexAC2))) ? indexBD1 : indexBD2;
 
-    //Once points are in correct order...
-    //TODO algorithm to compute distance
-    //  avg(B,D) is center of constellation
+    indexD = 6 - (indexAC1 + indexAC2 + indexB);
+
+    pointBX = X(indexB);
+    pointBY = Y(indexB);
+    pointDX = X(indexD);
+    pointDY = Y(indexD);
+
+    pointCenterX = (pointBX + pointDX) / 2;
+    pointCenterY = (pointBY + pointDY) / 2;
+
+    //TODO
+#define RINK_CENTER_X 511
+#define RINK_CENTER_Y 383
+    distX = RINK_CENTER_X - pointCenterX;
+    distY = RINK_CENTER_Y - pointCenterY;
+
+    // Start with a good estimate of distR
+    distR_aprx  = ((long)(ABS(distX) + ABS(distY)) * 11) / 14;
+    // Find the square of distR to use with the Babylonian method
+    distRSquare = SQUARE((long)distX) + SQUARE((long)distY);
+    // Divide by zero protection when X and Y are at rink center
+    distR_aprx  = (distR_aprx != 0) ? distR_aprx : 2;
+    // Approximate distR by finding the midpoint between
+    //  the estimate and the square divided by the estimate
+    distR_aprx  = (distR_aprx + distRSquare / distR_aprx) / 2;
+    distR       = (distR_aprx + distRSquare / distR_aprx) / 2;
+    // Typical convergence: error of distR < 1 in two approximations.
+
+    robotHeading = atan2d(distY,distX);
+
     //TODO algorithm to compute heading
     //  atan2d(DBy/DBx);
     //TODO algorithm to compute X, Y from distance and heading
@@ -146,3 +187,13 @@ thr=25;
   }
 }
 
+char atan2d(int y, int x)
+{
+  //This magic is an atan2d approximation for integers
+  R = (x<0) ? (1000*(long)(x+ABS(y)))/(ABS(y)-x) :
+                (1000*(long)(x-ABS(y)))/(ABS(y)+x);
+  angle = (x<0) ? 11781 : 3927;
+  angle = angle + (((((long)R*(long)R)/660)*(long)R)/1464 - (((long)R*1963)/400));
+  angle = angle / 87;
+  angle = (y<0) ? -angle : angle;
+}
