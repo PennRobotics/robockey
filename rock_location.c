@@ -141,10 +141,10 @@ thr=25;
     distR       = (distR_aprx + distRSquare / distR_aprx) / 2;
     // Typical convergence: error of distR < 1 in two approximations.
 
+    // Compute heading in degrees
     robotHeading = atan2d(distY,distX);
 
-    //TODO algorithm to compute heading
-    //  atan2d(DBy/DBx);
+    // Calculate current position using 
     //TODO algorithm to compute X, Y from distance and heading
     //  X = Dist * cosd(Heading);
     //  Y = Dist * sind(Heading);
