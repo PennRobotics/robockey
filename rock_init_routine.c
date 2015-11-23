@@ -2,7 +2,7 @@
 #include "rock_headers.h"
 #endif
 
-void init()
+void init(void)
 {
   m_red(ON); //m_general.h
 
@@ -34,12 +34,14 @@ void init()
   getADC(PIN_CENTER_IR_ANALOG);
   //result = ADC;
 
+  initUSB();
+
   status_clear_all(); //rock_status.h
 
   m_red(OFF); //m_general.h
 }
 
-void initStatusLEDPins()
+void initStatusLEDPins(void)
 {
   // Set up SPI
   clear(PRR0, PRSPI); // disable power reduction
@@ -72,12 +74,12 @@ void initStatusLEDPins()
   sendSPI(0x0800); //   "    "    "
 }
 
-void initTeamLEDPins()
+void initTeamLEDPins(void)
 {
 
 }
 
-void initMWii()
+void initMWii(void)
 {
   if (WAIT_FOR_MWII_TO_OPEN)
   {
@@ -88,12 +90,12 @@ void initMWii()
   } 
 }
 
-void initMRF()
+void initMRF(void)
 {
 
 }
 
-void initADC()
+void initADC(void)
 {
   // Disable Power Reduction ADC (for ADC input MUX)
   clear(PRR0, PRADC);
@@ -144,4 +146,9 @@ void initADC()
   clear(SMCR, SM1); // "
   set(  SMCR, SM0); // "
 
+}
+
+void initUSB(void)
+{
+  m_usb_init();
 }

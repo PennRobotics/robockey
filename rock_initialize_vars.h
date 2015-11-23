@@ -2,10 +2,10 @@
 #define _rock_initialize_vars_h
 
 //TODO Rename rock_vars.h
-extern unsigned  int angleOfRobot;
-extern unsigned  int angleToBehindPuck;
-extern unsigned  int angleToEnemyGoal;
-extern unsigned  int angleToTeamGoal;
+extern           int angleOfRobot;
+extern           int angleToBehindPuck;
+extern           int angleToEnemyGoal;
+extern           int angleToTeamGoal;
 extern unsigned  int distToBehindPuck;
 extern unsigned  int distToEnemyGoal;
 extern unsigned  int distToPuck;

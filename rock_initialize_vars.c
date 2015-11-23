@@ -2,10 +2,10 @@
 #include "rock_headers.h"
 #endif
 
-unsigned  int angleOfRobot = 0; // Range -179 to 180
-unsigned  int angleToBehindPuck = 0;
-unsigned  int angleToEnemyGoal = 0;
-unsigned  int angleToTeamGoal = 180;
+          int angleOfRobot = 0; // Range -179 to 180
+          int angleToBehindPuck = 0;
+          int angleToEnemyGoal = 0;
+          int angleToTeamGoal = 180;
 unsigned  int distToBehindPuck = 285;
 unsigned  int distToEnemyGoal = 780;
 unsigned  int distToTeamGoal = 120;
