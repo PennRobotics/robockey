@@ -43,16 +43,22 @@ void stateMachine()
     // do something;
     break;
   case FIND_PUCK:
+//TODO turn
     break;
   case MOVE_TO_PUCK:
+//TODO estimate puck distance
     break;
   case ALIGN_PUCK:
+//TODO if puck is too close and robot is pointing toward enemy half, drive while steering puck
     break;
   case CHECK_FOR_ASSIST_CHANCE:
+//TODO ready to attempt a goal; get friendly robot position and see if robot "role" allows assist
     break;
   case CALL_FOR_ASSIST:
+//TODO send request, if not acknowledged, move on to next state. otherwise, wait for assist.
     break;
   case ASSIST_BY_CLEARING_PATH:
+//TODO OR drive down path in front of puck (assisting runner)
     break;
   case MOVE_TO_GOAL:
     break;
@@ -61,10 +67,13 @@ void stateMachine()
   case LEFT_GUIDE_TO_GOAL:
     break;
   case CHARGE_ENEMY_GOAL:
+//TODO charge goal from the side (assisting shooter) 
     break;
   case SHOOT_PUCK:
+//TODO fire solenoid or run to goal (stop short at 15 cm[?] if seeking 2 points)
     break;
   case MOVE_PATROL:
+//TODO if puck and/or constellation has been out-of-sight for several seconds, move in large figure eights
     break;
   case MOVE_TO_DEFENSE_PUCK_IN_SIGHT:
     status_set(   STATUS_PUCK_IN_SIGHT); /*rock_status.h*/
