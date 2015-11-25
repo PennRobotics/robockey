@@ -18,7 +18,7 @@
 //  where each point is where the stars are focused on the rink.
 //  Refer to each point looking down from above the constellation.
 
-char atan2d(int y, int x);
+int atan2d(long y, long x);
 int sind_M(char angle);
 int cosd_M(char angle);
 
@@ -55,15 +55,15 @@ char locationWhereAmI(void)
     {
       //TODO This needs to compare ORDERED data, not raw data!!
       //TODO Fix the order and compare check and create a threshold var.
-thr=25;      
-      if (((blobXOld[i]-blobX[i]) < thr) ||
-          ((blobX[i]-blobXOld[i]) > thr) ||
-          ((blobYOld[i]-blobY[i]) < thr) ||
-          ((blobY[i]-blobYOld[i]) > thr))
-      {
-        //TODO Check return value!
-        return 0; /*Current data is too far from previous data*/
-      }
+//TODO thr=25;      
+//      if (((blobXOld[i]-blobX[i]) < thr) ||
+//          ((blobX[i]-blobXOld[i]) > thr) ||
+//          ((blobYOld[i]-blobY[i]) < thr) ||
+//          ((blobY[i]-blobYOld[i]) > thr))
+//      {
+//        //TODO Check return value!
+//        return 0; /*Current data is too far from previous data*/
+//      }
     }
   }
 
@@ -80,8 +80,14 @@ thr=25;
     s24 = SQUARE(X(3)-X(1)) + SQUARE(Y(3)-Y(1));
     s34 = SQUARE(X(3)-X(2)) + SQUARE(Y(3)-Y(2));
 
+    //m_usb_tx_long(s12);m_usb_tx_char(32);
+    //m_usb_tx_long(s13);m_usb_tx_char(32);
+    //m_usb_tx_long(s14);m_usb_tx_char(32);
+    //m_usb_tx_long(s23);m_usb_tx_char(32);
+    //m_usb_tx_long(s24);m_usb_tx_char(32);
+    //m_usb_tx_long(s34);m_usb_tx_char(13);
     // Find the maximum "s" (blob distance squared)
-    int sMax;
+    long sMax;
     sMax =  s12 > s13 ?  s12 : s13;
     sMax = sMax > s14 ? sMax : s14;
     sMax = sMax > s23 ? sMax : s23;
@@ -126,6 +132,9 @@ thr=25;
     int pointDX = X(indexD);
     int pointDY = Y(indexD);
 
+    m_usb_tx_int(pointDX);m_usb_tx_char(44);
+    m_usb_tx_int(pointDY);m_usb_tx_char(32);
+
     int pointCenterX = (pointBX + pointDX) / 2;
     int pointCenterY = (pointBY + pointDY) / 2;
 
@@ -134,13 +143,16 @@ thr=25;
 #define RINK_CENTER_Y 383
 int distR;
 int distR_aprx;
-int distRSquare;
+long distRSquare;
 int distX;
 int distY;
 
     distX = RINK_CENTER_X - pointCenterX;
     distY = RINK_CENTER_Y - pointCenterY;
 
+    m_usb_tx_int(distX);m_usb_tx_char(32);
+    m_usb_tx_int(distY);m_usb_tx_char(32);
+ 
     // Start with a good estimate of distR
     distR_aprx  = ((long)(abs(distX) + abs(distY)) * 11) / 14;
     // Find the square of distR to use with the Babylonian method
@@ -154,7 +166,8 @@ int distY;
     // Typical convergence: error of distR < 1 in two approximations.
 
     // Compute heading in degrees
-    angleOfRobot = atan2d(distY,distX);
+    angleOfRobot = atan2d(pointDY-pointBY,pointDX-pointBX);
+    m_usb_tx_char(46);m_usb_tx_int(angleOfRobot);m_usb_tx_char(32);
 
     //TODO Fix signs so position is shown correctly
     // Calculate absolute X and Y using distance and heading
@@ -201,17 +214,23 @@ int distY;
 //  }
 }
 
-char atan2d(int y, int x)
+int atan2d(long y, long x)
 {
   long R;
-  int angle;
+  long angle;
 //This magic is an atan2d approximation for integers
   R = (x<0) ? (1000*(long)(x+abs(y)))/(abs(y)-x) :
               (1000*(long)(x-abs(y)))/(abs(y)+x);
+  m_usb_tx_char(47);m_usb_tx_long(R);m_usb_tx_char(45);
+
   angle = (x<0) ? 11781 : 3927;
+  m_usb_tx_int(angle);m_usb_tx_char(32);
   angle = angle + ((((R*R)/660)*R)/1464 - ((R*1963)/400));
+  m_usb_tx_int(angle);m_usb_tx_char(32);
   angle = angle / 87;
+  m_usb_tx_int(angle);m_usb_tx_char(32);
   angle = (y<0) ? -angle : angle;
+  m_usb_tx_int(angle);m_usb_tx_char(32);
   return angle;
 }
 

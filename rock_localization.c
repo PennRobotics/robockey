@@ -10,7 +10,7 @@ void updateLocalization(void)
 {
   //TODO Use the return value from locationWhereAmI
   //  to detect when the constellation is out-of-sight & update status.
-  locationWhereAmI();
+  locationWhereAmI(); //rock_location.c
 }
   
 int findPuckDistance(void)
