@@ -83,8 +83,8 @@ void steeringAlgorithm(void)
   int degErrTurnCW, degErrTurnCCW;
   degErrTurnCW  = robotAngle -  goalAngle - ANGLE_ERROR_TO_START_TURN;
   degErrTurnCCW =  goalAngle - robotAngle - ANGLE_ERROR_TO_START_TURN;
-  degErrTurnCW  = max(0,min(MAX_ANGLE_ERROR,degErrorTurnCW ));
-  degErrTurnCCW = max(0,min(MAX_ANGLE_ERROR,degErrorTurnCCW));
+  degErrTurnCW  = max(0,min(MAX_ANGLE_ERROR,degErrTurnCW ));
+  degErrTurnCCW = max(0,min(MAX_ANGLE_ERROR,degErrTurnCCW));
   //TODO Double check if this algorithm changes appropriate PWM:
   //Calculate amount to SUBTRACT from each motor PWM:
   motorDutyR =     SLOW_WHEEL_SPEED_PER_DEG * degErrTurnCCW;
