@@ -12,7 +12,7 @@
 #include "rock_location.h"
 #include "rock_motor.h"
 #include "m_bus.h"
-//#include "m_rf.h"
+#include "m_rf.h"
 #include "m_usb.h"
 #include "m_wii.h"
 #include "rock_initialize_vars.h"

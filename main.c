@@ -15,10 +15,9 @@
 
 void qualify(void); //TODO Move function after qualification!
 void calculateAngleToGoal(void); //TODO Move function after qual
+void steeringAlgorithm(void); //TODO
 
 //TODO
-extern unsigned char currentTeam;
-
 unsigned char motorDutyL, motorDutyR;
 
 int main()
@@ -30,10 +29,6 @@ int main()
   m_green(TOGGLE);m_wait(50);
   locationWhereAmI();
   m_green(TOGGLE);
-#ifndef RED
-#define RED  1
-#define BLUE 2
-#endif
   if (robotX < 0)
   {
     currentTeam = RED;
@@ -81,8 +76,9 @@ void steeringAlgorithm(void)
 {
   //TODO Use proper variable names!
   int degErrTurnCW, degErrTurnCCW;
-  degErrTurnCW  = robotAngle -  goalAngle - ANGLE_ERROR_TO_START_TURN;
-  degErrTurnCCW =  goalAngle - robotAngle - ANGLE_ERROR_TO_START_TURN;
+  int degAngleErr = angleOfRobot -  angleToEnemyGoal;
+  degErrTurnCW  =  degAngleErr - ANGLE_ERROR_TO_START_TURN;
+  degErrTurnCCW = -degAngleErr - ANGLE_ERROR_TO_START_TURN;
   degErrTurnCW  = max(0,min(MAX_ANGLE_ERROR,degErrTurnCW ));
   degErrTurnCCW = max(0,min(MAX_ANGLE_ERROR,degErrTurnCCW));
   //TODO Double check if this algorithm changes appropriate PWM:
@@ -104,17 +100,12 @@ void calculateAngleToGoal(void)
 #define GOAL_A_Y       0
 #define GOAL_B_X     400
 #define GOAL_B_Y       0
-  switch (currentTeam)
+  if (currentTeam==RED)
   {
-    case RED:
-      angleToEnemyGoal = atan2d(GOAL_A_Y-robotY,GOAL_A_X-robotX);
-      angleToTeamGoal  = atan2d(GOAL_B_Y-robotY,GOAL_B_X-robotX);
-      break;
-    case BLUE:
-      angleToEnemyGoal = atan2d(GOAL_B_Y-robotY,GOAL_B_X-robotX);
-      angleToTeamGoal  = atan2d(GOAL_A_Y-robotY,GOAL_A_X-robotX);
-      break;
-    default:
-      break;
+    angleToEnemyGoal = atan2d(GOAL_A_Y-robotY,GOAL_A_X-robotX);
+    angleToTeamGoal  = atan2d(GOAL_B_Y-robotY,GOAL_B_X-robotX);
+  } else {
+    angleToEnemyGoal = atan2d(GOAL_B_Y-robotY,GOAL_B_X-robotX);
+    angleToTeamGoal  = atan2d(GOAL_A_Y-robotY,GOAL_A_X-robotX);
   }
 }

@@ -29,3 +29,4 @@ unsigned char teamScore = 0;
 unsigned  int timeElapsedMS = 0;
 
           int debugVar = 127;
+unsigned char currentTeam = 0;
