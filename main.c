@@ -91,10 +91,9 @@ void steeringAlgorithm(void)
   motorL = max(FAST_WHEEL_SPEED_PER_DEG * degErrTurnCCW,motorL);
   motorR = max(0,FULL_SPEED - motorR);
   motorL = max(0,FULL_SPEED - motorL);
-  OCR_MOTOR_R = motorR;
-  OCR_MOTOR_L = motorL;
-  TIMER_MAX_R = MAX_SPEED;
-  TIMER_MAX_L = MAX_SPEED;
+  MOTOR_TIMER_OCR_R = motorR;
+  MOTOR_TIMER_OCR_L = motorL;
+  MOTOR_TIMER_MAX = MAX_SPEED;
 
 
   //TODO Decrease motorR and motorL proportionately w/ goal distance!
@@ -109,10 +108,12 @@ void calculateAngleToGoal(void)
   switch (currentTeam)
   {
     case RED:
-      angleToGoal = atan2d(GOAL_A_Y-robotY,GOAL_A_X-robotX);
+      angleToEnemyGoal = atan2d(GOAL_A_Y-robotY,GOAL_A_X-robotX);
+      angleToTeamGoal  = atan2d(GOAL_B_Y-robotY,GOAL_B_X-robotX);
       break;
     case BLUE:
-      angleToGoal = atan2d(GOAL_B_Y-robotY,GOAL_B_X-robotX);
+      angleToEnemyGoal = atan2d(GOAL_B_Y-robotY,GOAL_B_X-robotX);
+      angleToTeamGoal  = atan2d(GOAL_A_Y-robotY,GOAL_A_X-robotX);
       break;
     default:
       break;
