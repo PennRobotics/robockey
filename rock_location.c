@@ -18,10 +18,6 @@
 //  where each point is where the stars are focused on the rink.
 //  Refer to each point looking down from above the constellation.
 
-int atan2d(long y, long x);
-int sind_M(char angle);
-int cosd_M(char angle);
-
 //TODO Currently, having memory addresses as arguments is not helpful.
 char locationWhereAmI(void)
 {
