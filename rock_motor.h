@@ -9,8 +9,9 @@
 #define OFF                              0
 #endif
 #define QTR_SPEED                       65
-#define HALF_SPEED                     130
-#define FULL_SPEED                     255
+#define HALF_SPEED                     125
+#define FULL_SPEED                     250
+#define MAX_SPEED                      250
 #define SLOW_WHEEL_SPEED_PER_DEG         5
 #define FAST_WHEEL_SPEED_PER_DEG        10  
 #define ANGLE_ERROR_TO_START_TURN        2

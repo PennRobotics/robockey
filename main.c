@@ -25,12 +25,14 @@ int main()
   
   //TODO Which side of the rink does the robot start?
   m_wait(500);
+  m_green(TOGGLE);m_wait(50);
   locationWhereAmI();
+  m_green(TOGGLE);
 #ifndef RED
 #define RED  1
 #define BLUE 2
 #endif
-  if (robotX < 511)
+  if (robotX < 0)
   {
     currentTeam = RED;
   } else {
@@ -76,6 +78,7 @@ void qualify(void)
 void steeringAlgorithm(void)
 {
   //TODO Use proper variable names!
+  int degErrTurnCW, degErrTurnCCW;
   degErrTurnCW  = robotAngle -  goalAngle - ANGLE_ERROR_TO_START_TURN;
   degErrTurnCCW =  goalAngle - robotAngle - ANGLE_ERROR_TO_START_TURN;
   degErrTurnCW  = max(0,min(MAX_ANGLE_ERROR,degreeErrorTurnCW ));
@@ -88,15 +91,30 @@ void steeringAlgorithm(void)
   motorL = max(FAST_WHEEL_SPEED_PER_DEG * degErrTurnCCW,motorL);
   motorR = max(0,FULL_SPEED - motorR);
   motorL = max(0,FULL_SPEED - motorL);
+  OCR_MOTOR_R = motorR;
+  OCR_MOTOR_L = motorL;
+  TIMER_MAX_R = MAX_SPEED;
+  TIMER_MAX_L = MAX_SPEED;
+
 
   //TODO Decrease motorR and motorL proportionately w/ goal distance!
 }
 
 void calculateAngleToGoal(void)
 {
-#define GOAL_A_X     911
-#define GOAL_A_Y     383
-#define GOAL_B_X     112
-#define GOAL_B_Y     383
-  
+#define GOAL_A_X    -400 
+#define GOAL_A_Y       0
+#define GOAL_B_X     400
+#define GOAL_B_Y       0
+  switch (currentTeam)
+  {
+    case RED:
+      angleToGoal = atan2d(GOAL_A_Y-robotY,GOAL_A_X-robotX);
+      break;
+    case BLUE:
+      angleToGoal = atan2d(GOAL_B_Y-robotY,GOAL_B_X-robotX);
+      break;
+    default:
+      break;
+  }
 }
