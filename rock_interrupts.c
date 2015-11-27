@@ -47,4 +47,4 @@ ISR(INT2_vect)
   }
 }
 
-ISR(TIMER0_OVF) { timeElapsedMS++; }
+ISR(TIMER0_OVF_vect) { timeElapsedMS++; }
