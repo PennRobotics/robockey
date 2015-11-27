@@ -1,32 +1,19 @@
-# --------------------------------------------------------
-# Custom M2 Makefile
-# written by: Jonathan Bohren & Jonathan Fiene
-# updated: June 16, 2012
-# --------------------------------------------------------
+# -----------------------------------------------------------
+# Custom M2 Makefile for Robockey
+# written by: Jonathan Bohren, Jonathan Fiene, Brian Wright
+# updated: November 26, 2015
+# -----------------------------------------------------------
 
-# --------------------------------------------------------
-# if you write separate C files to include in main,
-# add their .o targets to the CHILDREN line below
-# (e.g. "CHILDREN = myfile.o")
-#
-# to include code supplied by maevarm, add a .o target
-# tag to the parents line (e.g. "PARENTS = "m_bus.o")
-# --------------------------------------------------------
 MAIN       = main.o 
 CHILDRENC := $(wildcard rock_*.c)
 CHILDREN   = $(CHILDRENC:.c=.o)
 #CHILDREN   = 
 PARENTS    = m_bus.o m_rf.o m_wii.o m_imu.o m_usb.o
 
-# --------------------------------------------------------
-# if you want to use one of our pre-compiled libraries,
-# add it to the line below (e.g. "LIBRARIES = libsaast.a")
-# --------------------------------------------------------
-
-# --------------------------------------------------------
+# -----------------------------------------------------------
 # you shouldn't change anything below here,
 # unless you really know what you're doing
-# --------------------------------------------------------
+# -----------------------------------------------------------
 DEVICE     = atmega32u4
 CLOCK      = 16000000
 
