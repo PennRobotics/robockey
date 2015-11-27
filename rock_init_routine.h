@@ -24,6 +24,7 @@
 
 void init(void);
 void initStatusLEDPins(void);
+void initTeamLEDPins(void);
 void initADC(void);
 void initMWii(void);
 void initUSB(void);
