@@ -9,11 +9,11 @@
 //  F6   analog  front IR
 //  F7   analog  right IR
 
-//  C6   Servo PWM output
+//  B7   Servo PWM output
 
 //       Timer4 for motor L/R en
-//  D7   OC4D
-//  C7   OC4A
+//  C7   OC4A (L)
+//  D7   OC4D (R)
 //(Did not consider OC4B---multiplexed with PCINT5/6)
 //TODO  Figure out how to disable inverted outputs
 //TODO  Ensure no multiplexed pins are active

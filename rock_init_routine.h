@@ -28,5 +28,6 @@ void initADC(void);
 void initMWii(void);
 void initUSB(void);
 void initMRF(void);
+void initTimers(void);
 
 #endif

@@ -47,7 +47,4 @@ ISR(INT2_vect)
   }
 }
 
-//ISR(/*TODO ___timer*/)
-//{
-//  timeElapsedMS++;
-//}
+ISR(TIMER0_OVF) { timeElapsedMS++; }

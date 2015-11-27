@@ -15,13 +15,13 @@ void init(void)
   if (SHORT_WAIT_BEFORE_TESTS /*rock_settings.h*/)
     {m_green(ON);m_wait(1000);m_green(OFF); /*m_general.h*/}
 
-  initMWii();
+  initMWii(); //rock_init_routine.c
 
   initStatusLEDPins(); //rock_init_routine.c
   if (TEST_LEDS_ON_STARTUP /*rock_settings.h*/)
     {testStatusLEDPins(); /*rock_status.c*/}
 
-//TODO  initTeamLEDPins();
+  initTeamLEDPins();
   if (TEST_LEDS_ON_STARTUP /*rock_settings.h*/)
     {testTeamLEDPins(); /*rock_status.c*/}
 
@@ -35,6 +35,8 @@ void init(void)
   //result = ADC;
 
   initUSB();
+
+  initTimers();
 
   status_clear_all(); //rock_status.h
 
@@ -51,19 +53,17 @@ void initStatusLEDPins(void)
   set(SPCR, SPR1); // 125 kHz SPI clock 
   set(SPCR, SPR0); // "    "
   set(SPCR, MSTR); // SPI module in Master mode
-  // set(SPCR, SPIE); // enable SPI interrupts
+  clear(SPCR, SPIE); // disable SPI interrupts (TODO needed?)
   set(SPCR, SPE);  // enable SPI
 
-  // Initialize MAX7219
-  sendSPI(/*rock_status.c*/ MAX7219_NORMAL_OPERATION /*rock_init_routine.h*/); // Normal operation
+  // Initialize MAX7219 (rock_status.c, rock_init_routine.h)
+  sendSPI(MAX7219_NORMAL_OPERATION); // Normal operation
   sendSPI(MAX7219_SCAN_DIGITS_0TO1); // Scan Limit digits 0--1
   sendSPI(MAX7219_INTENSITYx); // Low-Medium intensity
   sendSPI(MAX7219_DECODE_NONE); // No decode for digits 7--0
-  sendSPI(MAX7219_TEST_MODE_ON);m_wait(100); // Test mode ON for 100 ms
-  sendSPI(MAX7219_TEST_MODE_OFF);m_wait(100); // Test mode OFF
+  if (TEST_LEDS_ON_STARTUP) {sendSPI(MAX7219_TEST_MODE_ON);m_wait(90);}
+  sendSPI(MAX7219_TEST_MODE_OFF);m_wait(10); // Test mode OFF
 
-//  int i; for (i=1;i<<8;i++)
-//  { sendSPI(/*rock_status.c*/ i<8); } // Turn off all LEDs on "row" i
   sendSPI(0x0100); // Turn off LEDs on each MAX7219 "row" 
   sendSPI(0x0200); //   "    "    "
   sendSPI(0x0300); //   "    "    "
@@ -76,7 +76,7 @@ void initStatusLEDPins(void)
 
 void initTeamLEDPins(void)
 {
-
+  // Function deprecated. Team LEDs controlled by MAX7219.
 }
 
 void initMWii(void)
@@ -151,4 +151,88 @@ void initADC(void)
 void initUSB(void)
 {
   m_usb_init();
+}
+
+void initTimers(void)
+{
+  // Timer 0 fires interrupt every 1 ms, increments timeElapsedMS
+  // Timer 1 controls servo PWM, 2 MHz (40000 overflow, 3000 neutral)
+  // Timer 4 controls motor PWM.
+
+  /* **************************************************** */  
+  //   TIMER 0 CONFIGURATION
+  // Timer 0 clock 16MHz / 64 = 250 kHz (period 4 us)
+  clear(TCCR0B,CS02);
+  set(  TCCR0B,CS01);
+  set(  TCCR0B,CS00);
+
+  // Count UP to OCR0A
+  clear(TCCR0B,WGM02);
+  set(  TCCR0A,WGM01);
+  set(  TCCR0A,WGM00);
+
+  // Timer overflows every 250 cycles, 1000 us (1 ms)
+  OCR0A = 250;
+
+  // Output compares aren't used in this configuration
+  // Enable the overflow interrupt
+  set(TIMSK0,TOIE0);
+
+  /* **************************************************** */  
+  //   TIMER 1 CONFIGURATION
+  // Timer 1 clock 16MHz / 8 = 2 MHz (period 500 ns)
+  clear(TCCR1B,CS12);
+  set(  TCCR1B,CS11);
+  clear(TCCR1B,CS10);
+
+  // Count UP to OCR3A
+  set(  TCCR1B,WGM13);
+  set(  TCCR1B,WGM12);
+  set(  TCCR1A,WGM11);
+  set(  TCCR1A,WGM10);
+
+  // Timer overflows every 40,000 cycles, 20 ms
+  OCR1A = 40000;
+
+  // Channel C output B7
+  set(  DDRB,7); //TODO Move to rock_m2_pins.h
+
+  // Channel C PWM ON at 0, OFF at OCR1C
+  set(  TCCR1A,COM1C1);
+  clear(TCCR1A,COM1C0);
+
+  OCR1C = 3000; // 1.5 ms, servo neutral position
+
+  /* **************************************************** */  
+  //   TIMER 4 CONFIGURATION
+  // Timer 4 clock 16MHz / 2 = 8 MHz (period 125 ns)
+  clear(TCCR4B,CS43);
+  clear(TCCR4B,CS42);
+  set(  TCCR4B,CS41);
+  clear(TCCR4B,CS40);
+
+  // Count UP to OCR4C
+  clear(TCCR4D,WGM41);
+  clear(TCCR4D,WGM40);
+
+  // Timer overflows every 250 cycles, 31.25 us (32 kHz)
+  OCR4C = 250;
+
+  // Channels A and D output C7 (L) and D7 (R)
+  set(  DDRC,7); //TODO Move to rock_m2_pins.h
+  set(  DDRD,7); //TODO Move to rock_m2_pins.h
+
+  // Channel A PWM ON at 0, OFF at OCR4C
+  set(  TCCR4A,PWM4A);
+  set(  TCCR4A,COM4A1);
+  clear(TCCR4A,COM4A0);
+
+  // Channel D PWM ON at 0, OFF at OCR4C
+  set(  TCCR4C,PWM4D);
+  set(  TCCR4C,COM4D1);
+  clear(TCCR4C,COM4D0);
+
+  OCR4A = 50; // 20 percent duty cycle
+  OCR4D = 75; // 30 percent duty cycle
+
 }
