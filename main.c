@@ -58,6 +58,8 @@ void steeringAlgorithm(void)
   //TODO Use proper variable names!
   int degErrTurnCW, degErrTurnCCW;
   int degAngleErr = angleOfRobot -  angleToEnemyGoal;
+  degAngleErr += (degAngleErr >  180) ? -360 :
+                 (degAngleErr < -179) ?  360 : 0;
   //TODO Error when moving from 179 to -179 (and vice versa)
   degErrTurnCW  =  degAngleErr - ANGLE_ERROR_TO_START_TURN;
   degErrTurnCCW = -degAngleErr - ANGLE_ERROR_TO_START_TURN;
@@ -84,10 +86,11 @@ void calculateAngleToGoal(void)
 #define GOAL_B_Y       0
   if (currentTeam==RED)
   {
-    angleToEnemyGoal = atan2d(GOAL_A_Y-robotY,GOAL_A_X-robotX);
-    angleToTeamGoal  = atan2d(GOAL_B_Y-robotY,GOAL_B_X-robotX);
+    // Low-pass filter, take average of old and new value
+    angleToEnemyGoal = (angleToEnemyGoal + atan2d(GOAL_A_Y-robotY,GOAL_A_X-robotX)+1)/2;
+    angleToTeamGoal  = (angleToTeamGoal  + atan2d(GOAL_B_Y-robotY,GOAL_B_X-robotX)+1)/2;
   } else {
-    angleToEnemyGoal = atan2d(GOAL_B_Y-robotY,GOAL_B_X-robotX);
-    angleToTeamGoal  = atan2d(GOAL_A_Y-robotY,GOAL_A_X-robotX);
+    angleToEnemyGoal = (angleToEnemyGoal + atan2d(GOAL_B_Y-robotY,GOAL_B_X-robotX)+1)/2;
+    angleToTeamGoal  = (angleToTeamGoal  + atan2d(GOAL_A_Y-robotY,GOAL_A_X-robotX)+1)/2;
   }
 }
