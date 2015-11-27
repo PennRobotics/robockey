@@ -84,12 +84,14 @@ void calculateAngleToGoal(void)
 #define GOAL_A_Y       0
 #define GOAL_B_X     400
 #define GOAL_B_Y       0
+//TODO Make sure goal selection is correct during actual gameplay!
   if (currentTeam==RED)
   {
+    // Calculate angle between robot and each goal
     // Low-pass filter, take average of old and new value
     angleToEnemyGoal = (angleToEnemyGoal + atan2d(GOAL_A_Y-robotY,GOAL_A_X-robotX)+1)/2;
     angleToTeamGoal  = (angleToTeamGoal  + atan2d(GOAL_B_Y-robotY,GOAL_B_X-robotX)+1)/2;
-  } else {
+  } else if (currentTeam==BLUE) {
     angleToEnemyGoal = (angleToEnemyGoal + atan2d(GOAL_B_Y-robotY,GOAL_B_X-robotX)+1)/2;
     angleToTeamGoal  = (angleToTeamGoal  + atan2d(GOAL_A_Y-robotY,GOAL_A_X-robotX)+1)/2;
   }
