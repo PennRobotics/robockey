@@ -71,8 +71,8 @@ void steeringAlgorithm(void)
   motorDutyR = max(FAST_WHEEL_SPEED_PER_DEG * degErrTurnCW, motorDutyR);
   motorDutyL = max(0,FULL_SPEED - motorDutyL);
   motorDutyR = max(0,FULL_SPEED - motorDutyR);
-  MOTOR_TIMER_OCR_R = motorDutyR;
-  MOTOR_TIMER_OCR_L = motorDutyL;
+  MOTOR_TIMER_OCR_R = (7*MOTOR_TIMER_OCR_R + 1*motorDutyR)/8;
+  MOTOR_TIMER_OCR_L = (7*MOTOR_TIMER_OCR_L + 1*motorDutyL)/8;
   MOTOR_TIMER_MAX   = MAX_SPEED;
 }
 
