@@ -1,6 +1,4 @@
 // TODO Set up mRF
-// TODO Set up mWii
-// TODO Localization routine
 // TODO Communication routine
 // TODO Comm with game controller
 // TODO Comm with other robots
@@ -34,12 +32,15 @@ int main()
   }
   while(1)
   {
+    qualify();
+    if (USB_DEBUGGING) {doUSB(); m_wait(1);} //rock_debug.c
+  }
+  while(1)
+  { //TODO This is the main routine code. Re-enable after qual.
 //    stateMachine(); //rock_state_machine.c
 //    getCurrentState(); //rock_state_machine.c
 //    updateStatusFlags(); //rock_status.c
 //    updateLocalization(); //rock_localization.c
-    qualify();
-//    if (USB_DEBUGGING) {doUSB();} //rock_debug.c
   }
 }
 
@@ -47,32 +48,36 @@ int main()
 void qualify(void)
 {
   debugVar = locationWhereAmI();
-  doUSB();
-  m_wait(1);
   calculateAngleToGoal();
   steeringAlgorithm();
 }
 
 void steeringAlgorithm(void)
 {
-  //TODO Use proper variable names!
   int degErrTurnCW, degErrTurnCCW;
+  // Calculate angle error (where robot SHOULD be pointed)
   int degAngleErr = angleOfRobot -  angleToEnemyGoal;
+  // Handle angles which wrap around at -179 to 180
   degAngleErr += (degAngleErr >  180) ? -360 :
                  (degAngleErr < -179) ?  360 : 0;
-  //TODO Error when moving from 179 to -179 (and vice versa)
+  // Include a small buffer when robot is almost aligned
   degErrTurnCW  =  degAngleErr - ANGLE_ERROR_TO_START_TURN;
   degErrTurnCCW = -degAngleErr - ANGLE_ERROR_TO_START_TURN;
+  // Bound CW and CCW errors between 0 and MAX_ANGLE_ERROR
   degErrTurnCW  = max(0,min(MAX_ANGLE_ERROR,degErrTurnCW ));
   degErrTurnCCW = max(0,min(MAX_ANGLE_ERROR,degErrTurnCCW));
-  //TODO Double check if this algorithm changes appropriate PWM:
-  //Calculate amount to SUBTRACT from each motor PWM:
+  // Each motor's PWM duty cycle will vary based on CW/CCW error
+  // When the robot needs to move CW, L wheel will be faster than R
+  // Calculate amount to SUBTRACT from each motor PWM
   motorDutyL =     SLOW_WHEEL_SPEED_PER_DEG * degErrTurnCW;
   motorDutyR =     SLOW_WHEEL_SPEED_PER_DEG * degErrTurnCCW;
   motorDutyL = max(FAST_WHEEL_SPEED_PER_DEG * degErrTurnCCW,motorDutyL);
   motorDutyR = max(FAST_WHEEL_SPEED_PER_DEG * degErrTurnCW, motorDutyR);
+  // Ensure duty cycle is always between 0 and FULL_SPEED
   motorDutyL = max(0,FULL_SPEED - motorDutyL);
   motorDutyR = max(0,FULL_SPEED - motorDutyR);
+  // Aliases are used to assign constants/variables to timer registers.
+  // Low-pass filter keeps motor from changing speed quickly
   MOTOR_TIMER_OCR_R = (7*MOTOR_TIMER_OCR_R + 1*motorDutyR)/8;
   MOTOR_TIMER_OCR_L = (7*MOTOR_TIMER_OCR_L + 1*motorDutyL)/8;
   MOTOR_TIMER_MAX   = MAX_SPEED;
@@ -80,6 +85,8 @@ void steeringAlgorithm(void)
 
 void calculateAngleToGoal(void)
 {
+//TODO Move defines to appropriate header. (Might be duplicated)
+//TODO Could also use a calibration routine to accurately set goal pos.
 #define GOAL_A_X    -400 
 #define GOAL_A_Y       0
 #define GOAL_B_X     400

@@ -9,10 +9,14 @@
 #define MAX7219_TEST_MODE_OFF      0x0F00
 
 #define RF_CHANNEL       1
+#define RF_PACKET_LENGTH 10
+
 #define TEAM_NUMBER      22
 #define ROBOT_NUMBER     1
+
 #define RF_RX_ADDRESS    (TEAM_NUMBER)*4 + (ROBOT_NUMBER)
-#define RF_PACKET_LENGTH 10
+#define RF_TX_ADDRESS_1  (TEAM_NUMBER)*4 + (ROBOT_NUMBER==3?1:ROBOT_NUMBER+1)
+#define RF_TX_ADDRESS_2  (TEAM_NUMBER)*4 + (ROBOT_NUMBER==1?3:ROBOT_NUMBER-1)
 
 // #ifndef _rock_headers_h 
 // #include "rock_headers.h"
