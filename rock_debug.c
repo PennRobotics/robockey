@@ -17,6 +17,13 @@ void doUSB(void)
 //      m_usb_tx_uint(blobMemAddr[i]);
 //      m_usb_tx_char(32);
 //    }
+    if () {
+      m_usb_tx_string("RED ");
+    } else if () {
+      m_usb_tx_string("BLUE ");
+    } else {
+      m_usb_tx_string("NO TEAM! ");
+    }
     m_usb_tx_int(robotX);
     m_usb_tx_char(32);
     m_usb_tx_int(robotY);

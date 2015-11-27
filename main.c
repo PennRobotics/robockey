@@ -54,22 +54,6 @@ void qualify(void)
   m_wait(1);
   calculateAngleToGoal();
   steeringAlgorithm();
-//TODO negativeError = max(255,min(0,k*(A1-A2+schmitt)));
-//TODO positiveError = max(255,min(0,k*(A2-A1+schmitt)));
-//TODO Modulo at the limits!
-
-//Try linear interpolation from +/- 28 deg to +/- 3 deg.
-// For instance, at ERRORANGLE = ROBOTANGLE - GOALANGLE = 28 (robot needs to turn CW)
-// ERRORANGLE=+28  LEFT=0.50  RIGHT=0.00
-// ERRORANGLE=+27  LEFT=0.52  RIGHT=0.04
-// ERRORANGLE=+13  LEFT=0.80  RIGHT=0.60
-// ERRORANGLE=+ 3  LEFT=1.00  RIGHT=1.00
-// ERRORANGLE=+ 0  LEFT=1.00  RIGHT=1.00
-// ERRORANGLE=- 4  LEFT=1.00  RIGHT=0.96
-// ERRORANGLE=-13  LEFT=0.60  RIGHT=0.80
-// ERRORANGLE=-60  LEFT=0.00  RIGHT=0.50
-  if (FALSE/*TODO*/) { /*MOTORLEFTPWM  = negativeError;*/ }
-  if (FALSE/*TODO*/) { /*MOTORRIGHTPWM = positiveError;*/ }
 }
 
 void steeringAlgorithm(void)
@@ -77,6 +61,7 @@ void steeringAlgorithm(void)
   //TODO Use proper variable names!
   int degErrTurnCW, degErrTurnCCW;
   int degAngleErr = angleOfRobot -  angleToEnemyGoal;
+  //TODO Error when moving from 179 to -179 (and vice versa)
   degErrTurnCW  =  degAngleErr - ANGLE_ERROR_TO_START_TURN;
   degErrTurnCCW = -degAngleErr - ANGLE_ERROR_TO_START_TURN;
   degErrTurnCW  = max(0,min(MAX_ANGLE_ERROR,degErrTurnCW ));
