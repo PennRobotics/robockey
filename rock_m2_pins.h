@@ -1,3 +1,6 @@
+#ifndef _rock_m2_pins_h
+#define _rock_m2_pins_h
+
 // In-Use ports
 //  B0   SPI SS
 //  B1   SPI SCLK
@@ -29,9 +32,6 @@
 #define PIN_LEFT_IR_ANALOG       15
 #define PIN_CENTER_IR_ANALOG     17
 #define PIN_RIGHT_IR_ANALOG      18
-
-#ifndef _rock_m2_pins_h
-#define _rock_m2_pins_h
 
 #define m_set(x) set(x)
 #define m_clear(x) clear(x)
