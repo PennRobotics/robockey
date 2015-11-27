@@ -20,4 +20,6 @@
 void motor(unsigned char motor_id, char motor_dir, unsigned char motor_duty);
 void testMotors();
 
+extern unsigned char motorDutyL, motorDutyR;
+
 #endif

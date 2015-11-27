@@ -17,9 +17,6 @@ void qualify(void); //TODO Move function after qualification!
 void calculateAngleToGoal(void); //TODO Move function after qual
 void steeringAlgorithm(void); //TODO
 
-//TODO
-unsigned char motorDutyL, motorDutyR;
-
 int main()
 {
   init(); //rock_init_routine.c
@@ -68,12 +65,12 @@ void steeringAlgorithm(void)
   degErrTurnCCW = max(0,min(MAX_ANGLE_ERROR,degErrTurnCCW));
   //TODO Double check if this algorithm changes appropriate PWM:
   //Calculate amount to SUBTRACT from each motor PWM:
-  motorDutyR =     SLOW_WHEEL_SPEED_PER_DEG * degErrTurnCCW;
   motorDutyL =     SLOW_WHEEL_SPEED_PER_DEG * degErrTurnCW;
-  motorDutyR = max(FAST_WHEEL_SPEED_PER_DEG * degErrTurnCW, motorDutyR);
+  motorDutyR =     SLOW_WHEEL_SPEED_PER_DEG * degErrTurnCCW;
   motorDutyL = max(FAST_WHEEL_SPEED_PER_DEG * degErrTurnCCW,motorDutyL);
-  motorDutyR = max(0,FULL_SPEED - motorDutyR);
+  motorDutyR = max(FAST_WHEEL_SPEED_PER_DEG * degErrTurnCW, motorDutyR);
   motorDutyL = max(0,FULL_SPEED - motorDutyL);
+  motorDutyR = max(0,FULL_SPEED - motorDutyR);
   MOTOR_TIMER_OCR_R = motorDutyR;
   MOTOR_TIMER_OCR_L = motorDutyL;
   MOTOR_TIMER_MAX   = MAX_SPEED;

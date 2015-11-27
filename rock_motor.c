@@ -5,6 +5,8 @@
 #include "rock_headers.h"
 #endif
 
+unsigned char motorDutyL=0, motorDutyR=0;
+
 void motor(unsigned char motor_id, char motor_dir, unsigned char motor_duty)
 {
   if (motor_id==LEFTMOTOR)

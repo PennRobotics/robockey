@@ -17,19 +17,25 @@ void doUSB(void)
 //      m_usb_tx_uint(blobMemAddr[i]);
 //      m_usb_tx_char(32);
 //    }
-    if () {
+    if (currentTeam == RED) {
       m_usb_tx_string("RED ");
-    } else if () {
+    } else if (currentTeam == BLUE) {
       m_usb_tx_string("BLUE ");
     } else {
       m_usb_tx_string("NO TEAM! ");
     }
     m_usb_tx_int(robotX);
-    m_usb_tx_char(32);
+    m_usb_tx_char(44);
     m_usb_tx_int(robotY);
     m_usb_tx_char(32);
+    m_usb_tx_char(60);
     m_usb_tx_int(angleOfRobot);
     m_usb_tx_char(32);
+    m_usb_tx_char(199);
+    m_usb_tx_int(motorDutyL);
+    m_usb_tx_char(196);
+    m_usb_tx_int(motorDutyR);
+    m_usb_tx_char(182);
     m_usb_tx_string("\n");
 //    m_usb_tx_uint(robotY);
 //    m_usb_tx_int( angleOfRobot);
