@@ -6,6 +6,7 @@ void abort(void) {cli();while(1){m_red(ON);m_green(OFF);}}
 
 void doUSB(void)
 {
+    m_usb_tx_string("\n");
  // if(m_usb_isconnected())
  // {
 //    m_red(ON);
@@ -24,23 +25,21 @@ void doUSB(void)
     } else {
       m_usb_tx_string("NO TEAM! ");
     }
-    m_usb_tx_char(40);
-    m_usb_tx_int(robotX); 
-    m_usb_tx_char(44);
-    m_usb_tx_int(robotY);
-    m_usb_tx_char(41);
+//    m_usb_tx_char(40);
+//    m_usb_tx_int(robotX); 
+//    m_usb_tx_char(44);
+//    m_usb_tx_int(robotY);
+//    m_usb_tx_char(41);
     m_usb_tx_char(32);
     m_usb_tx_char(60);
     m_usb_tx_int(angleOfRobot); // (X,Y) <ANGLE
     m_usb_tx_char(32);
-    m_usb_tx_char(199);
+      m_usb_tx_string("DUTY: ");
     m_usb_tx_int(motorDutyL);
-    m_usb_tx_char(196);
+    m_usb_tx_char(32);
     m_usb_tx_int(motorDutyR);
-    m_usb_tx_char(182); // ||- L -- R -||
-    m_usb_tx_char(174);
+      m_usb_tx_string("ANGLE_TO_ENEMY_GOAL:");
     m_usb_tx_int(angleToEnemyGoal);
-    m_usb_tx_char(175); // << GOAL >>
     m_usb_tx_string("\n");
 //    m_usb_tx_uint(robotY);
 //    m_usb_tx_int( angleOfRobot);

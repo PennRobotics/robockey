@@ -45,6 +45,7 @@ char locationWhereAmI(void)
     blobX[i] = blobMemAddr[i*3 + 0];
     blobY[i] = blobMemAddr[i*3 + 1];
 
+    //m_usb_tx_int(blobX[i]);m_usb_tx_char(32);
     // Check if blobs leave the mWii field-of-view
     if ((blobX[i]==1023) && (blobY[i]==1023)) {zeroIfFourBlobs++;}
     else /*Check if new data is near old data*/
@@ -62,6 +63,7 @@ char locationWhereAmI(void)
 //      }
     }
   }
+    //m_usb_tx_string("\n");
 
   if (zeroIfFourBlobs==0)
   {
@@ -128,8 +130,8 @@ char locationWhereAmI(void)
     int pointDX = X(indexD);
     int pointDY = Y(indexD);
 
-    m_usb_tx_int(pointDX);m_usb_tx_char(44);
-    m_usb_tx_int(pointDY);m_usb_tx_char(32);
+    //m_usb_tx_int(pointDX);m_usb_tx_char(44);
+    //m_usb_tx_int(pointDY);m_usb_tx_char(32);
 
     int pointCenterX = (pointBX + pointDX) / 2;
     int pointCenterY = (pointBY + pointDY) / 2;
@@ -144,9 +146,11 @@ int distX;
 int distY;
 
     distX = RINK_CENTER_X - pointCenterX;
-    distY = RINK_CENTER_Y - pointCenterY;
+    distY = pointCenterY - RINK_CENTER_Y;
 
+m_usb_tx_string("DistX:");
     m_usb_tx_int(distX);m_usb_tx_char(32);
+m_usb_tx_string("DistY:");
     m_usb_tx_int(distY);m_usb_tx_char(32);
  
     // Start with a good estimate of distR
@@ -159,16 +163,20 @@ int distY;
     //  the estimate and the square divided by the estimate
     distR_aprx  = (distR_aprx + distRSquare / distR_aprx) / 2;
     distR       = (distR_aprx + distRSquare / distR_aprx) / 2;
-    // Typical convergence: error of distR < 1 in two approximations.
+m_usb_tx_string(" DIST: ");
+m_usb_tx_int(distR);
+// Typical convergence: error of distR < 1 in two approximations.
 
     // Compute heading in degrees
     angleOfRobot = atan2d(pointDY-pointBY,pointDX-pointBX);
-    m_usb_tx_char(46);m_usb_tx_int(angleOfRobot);m_usb_tx_char(32);
+    m_usb_tx_string(" ROBOT ANGLE: ");m_usb_tx_int(angleOfRobot);m_usb_tx_char(32);
 
     //TODO Fix signs so position is shown correctly
     // Calculate absolute X and Y using distance and heading
-    robotX = cosd_M(angleOfRobot)*distR/1000;
-    robotY = sind_M(angleOfRobot)*distR/1000;
+    robotX = (-1*(long)cosd_M(angleOfRobot)*(long)distX)/1000 - ((long)sind_M(angleOfRobot)*(long)distY)/1000;
+    robotY = (-1*(long)sind_M(angleOfRobot)*(long)distX)/1000 + ((long)cosd_M(angleOfRobot)*(long)distY)/1000;
+    m_usb_tx_string("ROBOT COORDS: (");m_usb_tx_int(robotX);m_usb_tx_char(32);
+    m_usb_tx_int(robotY);m_usb_tx_string(")");m_usb_tx_char(32);
 
     return 1; //TODO Check return value!
   }
@@ -217,20 +225,20 @@ int atan2d(long y, long x)
 //This magic is an atan2d approximation for integers
   R = (x<0) ? (1000*(long)(x+abs(y)))/(abs(y)-x) :
               (1000*(long)(x-abs(y)))/(abs(y)+x);
-  m_usb_tx_char(47);m_usb_tx_long(R);m_usb_tx_char(45);
+//  m_usb_tx_char(47);m_usb_tx_long(R);m_usb_tx_char(45);
 
   angle = (x<0) ? 11781 : 3927;
-  m_usb_tx_int(angle);m_usb_tx_char(32);
+//  m_usb_tx_int(angle);m_usb_tx_char(32);
   angle = angle + ((((R*R)/660)*R)/1464 - ((R*1963)/400));
-  m_usb_tx_int(angle);m_usb_tx_char(32);
+//  m_usb_tx_int(angle);m_usb_tx_char(32);
   angle = angle / 87;
-  m_usb_tx_int(angle);m_usb_tx_char(32);
+//  m_usb_tx_int(angle);m_usb_tx_char(32);
   angle = (y<0) ? -angle : angle;
-  m_usb_tx_int(angle);m_usb_tx_char(32);
+//  m_usb_tx_int(angle);m_usb_tx_char(32);
   return angle;
 }
 
-int sind_M(char angle)
+long sind_M(long angle)
 {
   long sindCalc;
   sindCalc = (angle<0) ? 1000*(long)angle/45 + 
@@ -244,9 +252,9 @@ int sind_M(char angle)
   return sindCalc;
 }
 
-int cosd_M(char angle)
+long cosd_M(long angle)
 {
   // cosd(x) = sind(x + 90)
-  angle += (angle > 90) ? -270 : 90;
+  angle = angle + (angle > 90) ? -270 : 90;
   return sind_M(angle);
 }

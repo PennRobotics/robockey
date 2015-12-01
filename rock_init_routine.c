@@ -30,8 +30,8 @@ void init(void)
 
   initMRF();
 
-  initADC();
-  getADC(PIN_CENTER_IR_ANALOG);
+  //TODO initADC();
+  //TODO getADC(PIN_CENTER_IR_ANALOG);
   //result = ADC;
 
   initUSB();

@@ -29,8 +29,8 @@ char blobXOld[4], blobYOld[4];
 unsigned int blobMemAddr[12]; 
 
 int atan2d(long y, long x);
-int sind_M(char angle);
-int cosd_M(char angle);
+long sind_M(long angle);
+long cosd_M(long angle);
 
 #define min(a,b) ((a)<(b))?a:b
 //#define abs(a) (a<0)?-1*a:a

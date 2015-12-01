@@ -1,3 +1,4 @@
+// TODO Robot X and Y algorithm is ALL MESSED UP
 // TODO Set up mRF
 // TODO Communication routine
 // TODO Comm with game controller
@@ -17,6 +18,8 @@ void steeringAlgorithm(void); //TODO
 
 int main()
 {
+/*TODO*/   set(DDRD,5);
+/*TODO*/   set(PORTD,5);
   init(); //rock_init_routine.c
   
   //TODO Which side of the rink does the robot start?
@@ -30,10 +33,15 @@ int main()
   } else {
     currentTeam = BLUE;
   }
+  OCR4A = 125; // 50 percent duty cycle
+  OCR4D = 125; // 50 percent duty cycle
   while(1)
   {
+//  if (m_wii_open()==0){m_red(ON);}else{m_red(OFF);}
     qualify();
-    if (USB_DEBUGGING) {doUSB(); m_wait(1);} //rock_debug.c
+    updateStatusFlags();
+    if (USB_DEBUGGING) {doUSB(); m_wait(250);} //rock_debug.c
+    if (debugVar==1){status_set(STATUS_LOCALIZED);}else{status_clear(STATUS_LOCALIZED);}
   }
   while(1)
   { //TODO This is the main routine code. Re-enable after qual.
@@ -48,7 +56,7 @@ int main()
 void qualify(void)
 {
   debugVar = locationWhereAmI();
-  calculateAngleToGoal();
+//  calculateAngleToGoal();
   steeringAlgorithm();
 }
 
@@ -78,8 +86,8 @@ void steeringAlgorithm(void)
   motorDutyR = max(0,FULL_SPEED - motorDutyR);
   // Aliases are used to assign constants/variables to timer registers.
   // Low-pass filter keeps motor from changing speed quickly
-  MOTOR_TIMER_OCR_R = (7*MOTOR_TIMER_OCR_R + 1*motorDutyR)/8;
-  MOTOR_TIMER_OCR_L = (7*MOTOR_TIMER_OCR_L + 1*motorDutyL)/8;
+  MOTOR_TIMER_OCR_R = 255-(7*MOTOR_TIMER_OCR_R + 1*motorDutyR)/8;
+  MOTOR_TIMER_OCR_L = 255-(7*MOTOR_TIMER_OCR_L + 1*motorDutyL)/8;
   MOTOR_TIMER_MAX   = MAX_SPEED;
 }
 
@@ -101,5 +109,7 @@ void calculateAngleToGoal(void)
   } else if (currentTeam==BLUE) {
     angleToEnemyGoal = (angleToEnemyGoal + atan2d(GOAL_B_Y-robotY,GOAL_B_X-robotX)+1)/2;
     angleToTeamGoal  = (angleToTeamGoal  + atan2d(GOAL_A_Y-robotY,GOAL_A_X-robotX)+1)/2;
+  } else {
+    m_red(ON);
   }
 }
