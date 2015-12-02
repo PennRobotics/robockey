@@ -139,19 +139,21 @@ char locationWhereAmI(void)
     //TODO
 #define RINK_CENTER_X 511
 #define RINK_CENTER_Y 383
-int distR;
-int distR_aprx;
+long distR;
+long distR_aprx;
 long distRSquare;
-int distX;
-int distY;
+long distX;
+long distY;
 
+//    distX = RINK_CENTER_X - pointCenterX;
+//    distY = RINK_CENTER_Y - pointCenterY;
     distX = RINK_CENTER_X - pointCenterX;
     distY = pointCenterY - RINK_CENTER_Y;
 
-m_usb_tx_string("DistX:");
-    m_usb_tx_int(distX);m_usb_tx_char(32);
-m_usb_tx_string("DistY:");
-    m_usb_tx_int(distY);m_usb_tx_char(32);
+// m_usb_tx_string("DistX:");
+//     m_usb_tx_int(distX);m_usb_tx_char(32);
+// m_usb_tx_string("DistY:");
+//     m_usb_tx_int(distY);m_usb_tx_char(32);
  
     // Start with a good estimate of distR
     distR_aprx  = ((long)(abs(distX) + abs(distY)) * 11) / 14;
@@ -169,12 +171,36 @@ m_usb_tx_int(distR);
 
     // Compute heading in degrees
     angleOfRobot = atan2d(pointDY-pointBY,pointDX-pointBX);
+
+    // Make sure angle of robot stays between -180 and 180
+    //  while subtracting 90 degrees from angleOfRobot.
+    angleOfRobot -= (angleOfRobot < -90) ? -270 : 90;
+
+    long dY = (sind_M(angleOfRobot)*distY - cosd_M(angleOfRobot)*distX)/1000;
+    long dX = (-cosd_M(angleOfRobot)*distY - sind_M(angleOfRobot)*distX)/1000;
+
+ m_usb_tx_string("DX:");
+     m_usb_tx_int(dX);m_usb_tx_char(32);
+ m_usb_tx_string("DY:");
+     m_usb_tx_int(dY);m_usb_tx_char(32);
+
+    int angleToRobot = atan2d(dY,dX);
+
+    theta2 = angleOfRobot - angleToRobot;
+
+    theta2 += (theta2 > 180) ? -360 :
+              (theta2 < -180) ? 360 : 0;
+
     m_usb_tx_string(" ROBOT ANGLE: ");m_usb_tx_int(angleOfRobot);m_usb_tx_char(32);
+
+    m_usb_tx_string(" THETA1: ");m_usb_tx_int(angleToRobot);m_usb_tx_char(32);
+
+    m_usb_tx_string(" THETA2: ");m_usb_tx_int(theta2);m_usb_tx_char(32);
 
     //TODO Fix signs so position is shown correctly
     // Calculate absolute X and Y using distance and heading
-    robotX = (-1*(long)cosd_M(angleOfRobot)*(long)distX)/1000 - ((long)sind_M(angleOfRobot)*(long)distY)/1000;
-    robotY = (-1*(long)sind_M(angleOfRobot)*(long)distX)/1000 + ((long)cosd_M(angleOfRobot)*(long)distY)/1000;
+    robotX = (-1*(long)cosd_M(theta2)*(long)distR)/1000;
+    robotY = ( 1*(long)sind_M(theta2)*(long)distR)/1000;
     m_usb_tx_string("ROBOT COORDS: (");m_usb_tx_int(robotX);m_usb_tx_char(32);
     m_usb_tx_int(robotY);m_usb_tx_string(")");m_usb_tx_char(32);
 

@@ -20,8 +20,10 @@ long s14,s14Norm;
 long s23,s23Norm;
 long s24,s24Norm;
 long s34,s34Norm;
-int sMax;
+long sMax;
 int thr;
+
+int theta2; //TODO
 
 int blobX[4], blobY[4];
 char blobXOld[4], blobYOld[4];
