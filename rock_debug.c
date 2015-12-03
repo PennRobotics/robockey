@@ -35,6 +35,8 @@ void doUSB(void)
     m_usb_tx_int(angleOfRobot); // (X,Y) <ANGLE
     m_usb_tx_char(32);
       m_usb_tx_string("DUTY: ");
+    m_usb_tx_int(MOTOR_TIMER_OCR_R);
+    m_usb_tx_int(MOTOR_TIMER_OCR_L);
     m_usb_tx_int(motorDutyL);
     m_usb_tx_char(32);
     m_usb_tx_int(motorDutyR);

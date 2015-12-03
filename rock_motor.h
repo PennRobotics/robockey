@@ -12,10 +12,10 @@
 #define HALF_SPEED                     125
 #define FULL_SPEED                     250
 #define MAX_SPEED                      250
-#define SLOW_WHEEL_SPEED_PER_DEG         5
-#define FAST_WHEEL_SPEED_PER_DEG        10  
-#define ANGLE_ERROR_TO_START_TURN        2
-#define MAX_ANGLE_ERROR                 25
+#define SLOW_WHEEL_SPEED_PER_DEG         1
+#define FAST_WHEEL_SPEED_PER_DEG         2
+#define ANGLE_ERROR_TO_START_TURN        5
+#define MAX_ANGLE_ERROR                 70
 
 void motor(unsigned char motor_id, char motor_dir, unsigned char motor_duty);
 void testMotors();

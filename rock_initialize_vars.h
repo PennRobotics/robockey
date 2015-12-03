@@ -12,6 +12,7 @@ extern unsigned  int distToPuck;
 extern unsigned  int distToTeamGoal;
 //TODO enemyGoalX has a #define somewhere! (same w/ teamGoalX)
 extern           int enemyGoalX;
+extern           int enemyGoalY;
 extern unsigned char enemyScore;
 extern unsigned char hasPuck;
 extern           int puckX;
@@ -26,6 +27,7 @@ extern unsigned char state;
 extern unsigned  int statusFlags;
 extern unsigned char teamHasPuck;
 extern           int teamGoalX;
+extern           int teamGoalY;
 extern unsigned char teamScore;
 extern unsigned  int timeElapsedMS;
 
@@ -35,5 +37,10 @@ extern unsigned char currentTeam; //TODO
 #define RED  1
 #define BLUE 2
 #endif
+
+#define GOAL_RED_X    212
+#define GOAL_RED_Y    384
+#define GOAL_BLUE_X    812
+#define GOAL_BLUE_Y    384
 
 #endif

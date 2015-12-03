@@ -1,9 +1,6 @@
 #ifndef _rock_localization_h
 #define _rock_localization_h
 
-//TODO Lookup best max() and max3() functions!
-#define max3(a, b, c) max(a, max(b, c))
-#define max(a, b) (a>b)?a:b
 
 //TODO
 #define IR_SCHMITT_LEVEL 0

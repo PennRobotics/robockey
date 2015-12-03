@@ -4,7 +4,7 @@
 
 void testTeamLEDPins()
 {
-  //TODO Set up Team LEDs on MAX7219
+  // Set up Team LEDs on MAX7219
   sendSPI(0x0200 + 0x04); m_wait(TEST_TEAM_LED_TIME_MS);
   sendSPI(0x0200 + 0x08); m_wait(TEST_TEAM_LED_TIME_MS);
   sendSPI(0x0200 + 0x00);
@@ -32,7 +32,7 @@ void testStatusLEDPins()
 
 void updateStatusFlags()
 {
-//TODO SPI communication using the MAX7219 IC
+// SPI communication using the MAX7219 IC
   sendSPI(0x0100 + LOW(statusFlags));
   sendSPI(0x0200 + HIGH(statusFlags));
 

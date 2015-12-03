@@ -222,15 +222,15 @@ void initTimers(void)
   set(  DDRC,7); //TODO Move to rock_m2_pins.h
   set(  DDRD,7); //TODO Move to rock_m2_pins.h
 
-  // Channel A PWM ON at 0, OFF at OCR4C
+  // Channel A PWM OFF at 0, ON at OCR4A
   set(  TCCR4A,PWM4A);
   set(  TCCR4A,COM4A1);
-  clear(TCCR4A,COM4A0);
+  set(  TCCR4A,COM4A0);
 
-  // Channel D PWM ON at 0, OFF at OCR4C
+  // Channel D PWM OFF at 0, ON at OCR4D
   set(  TCCR4C,PWM4D);
   set(  TCCR4C,COM4D1);
-  clear(TCCR4C,COM4D0);
+  set(  TCCR4C,COM4D0);
 
   OCR4A = 6; // 20 percent duty cycle
   OCR4D = 6; // 30 percent duty cycle

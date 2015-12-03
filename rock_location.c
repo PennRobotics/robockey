@@ -107,64 +107,75 @@ char locationWhereAmI(void)
     int indexD = 6 - (indexAC1 + indexAC2 + indexB);
 
     // Assign point B (x,y) and D (x,y) using indices
-    int pointBX = X(indexB);
-    int pointBY = Y(indexB);
-    int pointDX = X(indexD);
-    int pointDY = Y(indexD);
+    pointBX = X(indexB);
+    pointBY = Y(indexB);
+    pointDX = X(indexD);
+    pointDY = Y(indexD);
 
     // Find the constellation center exactly between points B and D
     int pointCenterX = (pointBX + pointDX) / 2;
     int pointCenterY = (pointBY + pointDY) / 2;
 
-long distR;
-long distR_aprx;
-long distRSquare;
-long distX;
-long distY;
-
 //    distX = RINK_CENTER_X - pointCenterX;
 //    distY = RINK_CENTER_Y - pointCenterY;
-    distX = pointCenterX - RINK_CENTER_X;
-    distY = RINK_CENTER_Y - pointCenterY;
+//****************************    
+//    long distX = pointCenterX - RINK_CENTER_X;
+//    long distY = RINK_CENTER_Y - pointCenterY;
+//
+//m_usb_tx_string("DistX:");
+//    m_usb_tx_int(distX);m_usb_tx_char(32);
+//m_usb_tx_string("DistY:");
+//    m_usb_tx_int(distY);m_usb_tx_char(32);
+//
+//    int distR = distXYToR(distX, distY);
+//
+//    // Compute heading in degrees
+//    angleOfRobot = atan2d(pointDY-pointBY,pointDX-pointBX);
+//
+//    angleOfRobot -= (angleOfRobot < -90) ? -270 : 90;
+//    
+//    // Make sure angle of robot stays between -180 and 180
+//    //  while subtracting 90 degrees from angleOfRobot.
+//    long dY = ((long)sind_M(angleOfRobot)*(long)distY - (long)cosd_M(angleOfRobot)*(long)distX)/1000;
+//    long dX = (-1*(long)cosd_M(angleOfRobot)*(long)distY - (long)sind_M(angleOfRobot)*(long)distX)/1000;
+//    int theta2 = atan2d((int)dX,(int)dY);
+//
+////    theta2 -= (theta2 < -90) ? -270 : 90;
+//
+//    angleToRobot = angleOfRobot - theta2 - 90;
+//
+//    angleToRobot += (angleToRobot >  180) ? -360 :
+//                    (angleToRobot < -179) ?  360 : 0;
+//
+//    angleToRobot = theta2;
+//****************************    
 
-m_usb_tx_string("DistX:");
-    m_usb_tx_int(distX);m_usb_tx_char(32);
-m_usb_tx_string("DistY:");
-    m_usb_tx_int(distY);m_usb_tx_char(32);
- 
-    // Start with a good estimate of distR
-    distR_aprx  = ((long)(abs(distX) + abs(distY)) * 11) / 14;
-    // Find the square of distR to use with the Babylonian method
-    distRSquare = SQUARE((long)distX) + SQUARE((long)distY);
-    // Divide by zero protection when X and Y are at rink center
-    distR_aprx  = (distR_aprx != 0) ? distR_aprx : 2;
-    // Approximate distR by finding the midpoint between
-    //  the estimate and the square divided by the estimate
-    distR_aprx  = (distR_aprx + distRSquare / distR_aprx) / 2;
-    distR       = (distR_aprx + distRSquare / distR_aprx) / 2;
-m_usb_tx_string(" DIST: ");
-m_usb_tx_int(distR);
-// Typical convergence: error of distR < 1 in two approximations.
+    //TODO #define center coords
+    long distX = 512 - pointCenterX;
+    long distY = 384 - pointCenterY; 
 
-    // Compute heading in degrees
-    angleOfRobot = atan2d(pointDY-pointBY,pointDX-pointBX);
+    int distR = distXYToR(distX, distY);
 
-    angleOfRobot -= (angleOfRobot < -90) ? -270 : 90;
+    angleOfRobot = atan2d(pointDY - pointBY, pointDX - pointBX);
+
+    angleOfRobot = angleOfRobot - 90;
+
+    angleOfRobot += (angleOfRobot < -179) ? 360 : 0;
+
+    int theta2 = -atan2d(distX, distY);
     
-    // Make sure angle of robot stays between -180 and 180
-    //  while subtracting 90 degrees from angleOfRobot.
-    long dY = (sind_M(angleOfRobot)*distY - cosd_M(angleOfRobot)*distX)/1000;
-    long dX = (-cosd_M(angleOfRobot)*distY - sind_M(angleOfRobot)*distX)/1000;
-    int theta2 = -atan2d(dX,dY);
+    theta2 = theta2 - 90;
 
-    theta2 -= (theta2 < -90) ? -270 : 90;
+    theta2 += (theta2 < -179) ? 360 : 0;
 
-    angleToRobot = angleOfRobot - theta2 - 90;
+    angleToRobot = theta2 - angleOfRobot;
 
-    angleToRobot += (angleToRobot >  180) ? -360 :
-                    (angleToRobot < -179) ?  360 : 0;
+    angleToRobot = 180 - angleToRobot;
 
-    m_usb_tx_string(" ROBOT ANGLE: ");m_usb_tx_int(angleOfRobot);m_usb_tx_char(32);
+    angleToRobot += (angleToRobot < -180) ?  360 : 
+                    (angleToRobot >  180) ? -360 : 0;
+//****************************
+m_usb_tx_string(" ROBOT ANGLE: ");m_usb_tx_int(angleOfRobot);m_usb_tx_char(32);
 
     m_usb_tx_string(" THETA1: ");m_usb_tx_int(angleToRobot);m_usb_tx_char(32);
 
@@ -177,10 +188,51 @@ m_usb_tx_int(distR);
     m_usb_tx_string("ROBOT COORDS: (");m_usb_tx_int(robotX);m_usb_tx_char(32);
     m_usb_tx_int(robotY);m_usb_tx_string(")");m_usb_tx_char(32);
 
+    status_clear(STATUS_DEFENSE); //TODO TODO Remove before gameplay
+    status_clear(STATUS_TIME_ALMOST_UP); //TODO TODO Remove
     return 1; //TODO Check return value!
   }
-  else
+  else if (zeroIfFourBlobs==4)
   {
+    status_clear(STATUS_LOCALIZED);
+    status_set(STATUS_DEFENSE); //TODO TODO Remove before gameplay
+    status_set(STATUS_TIME_ALMOST_UP); //TODO TODO Remove
+  }
+  {
+    if (status_check(STATUS_LOCALIZED))
+    {
+      status_clear(STATUS_LOCALIZED);
+      //TODO TODO TODO
+      // THIS CODE needs to change distX, distY, and possible angleOfRo
+      // Do this using remaining blobs.
+      // Also, TODO handle when changing from 3 to 2 or 2 to 1 or 1 to 2
+      // (number of blobs) since this will change avgX and avgY
+      pointBXLastKnown = pointBX;
+      pointBYLastKnown = pointBY;
+      pointDXLastKnown = pointDX;
+      pointDYLastKnown = pointDY;
+    }
+    else
+    {
+      for (i=0;i<4;i++)
+      {
+        avgX += (blobX[i]==1023) ? blobX[i] : 0;
+        avgY += (blobY[i]==1023) ? blobY[i] : 0;
+      }     
+      avgX = avgX / (4-zeroIfFourBlobs);
+      avgY = avgY / (4-zeroIfFourBlobs);
+
+      diffX = avgX - avgXOld;
+      diffY = avgY - avgYOld;
+
+      avgXOld = avgX;
+      avgYOld = avgY;
+
+      pointBX = pointBXLastKnown + diffX;
+      pointBY = pointBYLastKnown + diffY;
+      pointDX = pointDXLastKnown + diffX;
+      pointDY = pointDYLastKnown + diffY;
+    }
     //TODO code
     // If last cycle, the robot detected four stars (use a flag),
     //   just get location of average blob X and Y. No calculations.
@@ -220,21 +272,21 @@ m_usb_tx_int(distR);
 int atan2d(long y, long x)
 {
   long R;
-  long angle;
+  long angle3;
 //This magic is an atan2d approximation for integers
   R = (x<0) ? (1000*(long)(x+abs(y)))/(abs(y)-x) :
               (1000*(long)(x-abs(y)))/(abs(y)+x);
 //  m_usb_tx_char(47);m_usb_tx_long(R);m_usb_tx_char(45);
 
-  angle = (x<0) ? 11781 : 3927;
+  angle3 = (x<0) ? 11781 : 3927;
 //  m_usb_tx_int(angle);m_usb_tx_char(32);
-  angle = angle + ((((R*R)/660)*R)/1464 - ((R*1963)/400));
+  angle3 = angle3 + ((((R*R)/660)*R)/1464 - ((R*1963)/400));
 //  m_usb_tx_int(angle);m_usb_tx_char(32);
-  angle = angle / 87;
+  angle3 = angle3 / 87;
 //  m_usb_tx_int(angle);m_usb_tx_char(32);
-  angle = (y<0) ? -angle : angle;
+  angle3 = (y<0) ? -angle3 : angle3;
 //  m_usb_tx_int(angle);m_usb_tx_char(32);
-  return angle;
+  return angle3;
 }
 
 long sind_M(long angle)
@@ -255,4 +307,24 @@ long cosd_M(long angle2)
 {
   angle2 += (angle2 > 90) ? -270 : 90;
   return sind_M(angle2);
+}
+
+int distXYToR (long dist_X, long dist_Y)
+{
+long dist_R;
+long dist_R_Aprx;
+long dist_R_Square;
+
+  // Start with a good estimate of distR
+  dist_R_Aprx  = ((abs(dist_X) + abs(dist_Y)) * 11) / 14;
+  // Find the square of distR to use with the Babylonian method
+  dist_R_Square = SQUARE(dist_X) + SQUARE(dist_Y);
+  // Divide by zero protection when X and Y are at rink center
+  dist_R_Aprx  = (dist_R_Aprx != 0) ? dist_R_Aprx : 2;
+  // Approximate distR by finding the midpoint between
+  //  the estimate and the square divided by the estimate
+  dist_R_Aprx  = (dist_R_Aprx + dist_R_Square / dist_R_Aprx) / 2;
+  dist_R       = (dist_R_Aprx + dist_R_Square / dist_R_Aprx) / 2;
+  return dist_R;
+// Typical convergence: error of distR < 1 in two approximations.
 }

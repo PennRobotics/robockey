@@ -19,13 +19,11 @@ int findPuckDistance(void)
   getADC(PIN_LEFT_IR_ANALOG);
   int pollLeftIR = ADC;
   // Optionally, 8-bit char poll(x)IR = ADCH w/ set(ADMUX,ADLAR);
-  getADC(PIN_CENTER_IR_ANALOG);
-  int pollCenterIR = ADC; 
   getADC(PIN_RIGHT_IR_ANALOG);
   int pollRightIR = ADC;
 
   // Find highest ADC value
-  highestIRPoll = max3(pollLeftIR, pollCenterIR, pollRightIR);
+  highestIRPoll = max(pollLeftIR, pollRightIR);
 
   // If no IR signal is strong enough, return -1.
   if (highestIRPoll < IR_THRESHOLD)
@@ -54,8 +52,6 @@ void getADC(char pin)
   {
     // Set appropriate MUX pins
     case PIN_LEFT_IR_ANALOG:
-      break;
-    case PIN_CENTER_IR_ANALOG:
       break;
     case PIN_RIGHT_IR_ANALOG:
       break;

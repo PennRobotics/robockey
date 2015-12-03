@@ -13,7 +13,9 @@
 #define X(a) blobX[a]    
 #define Y(a) blobY[a]    
 
-#define min(a,b) ((a)<(b))?a:b
+//TODO Lookup best max() and max3() functions!
+#define max(a, b) ((a)>(b)) ? (a) : (b)
+#define min(a, b) ((a)<(b)) ? (a) : (b)
 
 char locationWhereAmI(void);
 
@@ -46,6 +48,20 @@ int atan2d(long y, long x);
 long sind_M(long angle);
 long cosd_M(long angle2);
 
-//#define abs(a) (a<0)?-1*a:a
+int distXYToR (long dist_X, long dist_Y);
+
+//TODO Not needed?  #define abs(a) (a<0)?-1*a:a
+
+int pointBX;
+int pointBY;
+int pointDX;
+int pointDY;
+int pointBXLastKnown;
+int pointBYLastKnown;
+int pointDXLastKnown;
+int pointDYLastKnown;
+
+int avgX, avgY, avgXOld, avgYOld;
+int diffX, diffY;
 
 #endif
