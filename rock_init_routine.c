@@ -232,7 +232,7 @@ void initTimers(void)
   set(  TCCR4C,COM4D1);
   clear(TCCR4C,COM4D0);
 
-  OCR4A = 50; // 20 percent duty cycle
-  OCR4D = 75; // 30 percent duty cycle
+  OCR4A = 6; // 20 percent duty cycle
+  OCR4D = 6; // 30 percent duty cycle
 
 }

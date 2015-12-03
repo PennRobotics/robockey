@@ -1,13 +1,8 @@
-//TODO rock_location.h
-//TODO Check return of char whereAmI !! 0? -1? 1? et al?
-
-// When calling this function, pass pointers as inputs:
-// Let's say main() has 3 variables: robotXPos, robotYPos, robotHeading. Use:
-//   locationWhereAmI(&robotXPos, &robotYPos, &robotHeading); 
-
 #ifndef _rock_headers_h
 #include "rock_headers.h"
 #endif
+
+//TODO Check return of char whereAmI !! 0? -1? 1? et al?
 
 // Constellation points:
 // A   ( 11.655,   8.741)
@@ -18,17 +13,12 @@
 //  where each point is where the stars are focused on the rink.
 //  Refer to each point looking down from above the constellation.
 
-//TODO Currently, having memory addresses as arguments is not helpful.
 char locationWhereAmI(void)
 {
-//  assert(  xMemAddr);
-//  assert(  yMemAddr);
-//  assert(dirMemAddr); // check that addresses are not pointing to NULL
-
 //  int totalGain;
-//  char   xOld = robotX;       //  *xMemAddr;
-//  char   yOld = robotY;       //  *xMemAddr;
-//  char dirOld = angleOfRobot; //*dirMemAddr;
+//  char   xOld = robotX;
+//  char   yOld = robotY;
+//  char dirOld = angleOfRobot;
 
   int i; char zeroIfFourBlobs = 0;
 
@@ -67,10 +57,6 @@ char locationWhereAmI(void)
 
   if (zeroIfFourBlobs==0)
   {
-    //TODO arrange points in correct order (A, B, C, D)
-#define SQUARE(x) ((long)(x)*(long)(x))    
-#define X(a) blobX[a]    
-#define Y(a) blobY[a]    
     s12 = SQUARE(X(1)-X(0)) + SQUARE(Y(1)-Y(0));
     s13 = SQUARE(X(2)-X(0)) + SQUARE(Y(2)-Y(0));
     s14 = SQUARE(X(3)-X(0)) + SQUARE(Y(3)-Y(0));
@@ -78,12 +64,6 @@ char locationWhereAmI(void)
     s24 = SQUARE(X(3)-X(1)) + SQUARE(Y(3)-Y(1));
     s34 = SQUARE(X(3)-X(2)) + SQUARE(Y(3)-Y(2));
 
-    //m_usb_tx_long(s12);m_usb_tx_char(32);
-    //m_usb_tx_long(s13);m_usb_tx_char(32);
-    //m_usb_tx_long(s14);m_usb_tx_char(32);
-    //m_usb_tx_long(s23);m_usb_tx_char(32);
-    //m_usb_tx_long(s24);m_usb_tx_char(32);
-    //m_usb_tx_long(s34);m_usb_tx_char(13);
     // Find the maximum "s" (blob distance squared)
     long sMax;
     sMax =  s12 > s13 ?  s12 : s13;
@@ -92,7 +72,7 @@ char locationWhereAmI(void)
     sMax = sMax > s24 ? sMax : s24;
     sMax = sMax > s34 ? sMax : s34;
     
-    // Find points B and D (not ordered)
+    // Find indices of points B and D (not ordered)
     int indexBD1 = (s12 == sMax) ? 0 :
                     (s13 == sMax) ? 0 :
                     (s14 == sMax) ? 0 :
@@ -104,7 +84,7 @@ char locationWhereAmI(void)
                     (s14 == sMax) ? 3 :
                     (s23 == sMax) ? 2 : 3;
     
-    // Find points A and C (not ordered)
+    // Find indices of points A and C (not ordered)
     int indexAC1 = (indexBD1 != 0) ? 0 :
                     (indexBD2 != 1) ? 1 : 2;
 
@@ -112,7 +92,8 @@ char locationWhereAmI(void)
 
     // The sum of distances from B to A and B to C should be
     //  less than the sum of distances from D to A and D to C.
-    //  Determine which index is B or D:
+    
+    //  Determine which index is B and which is D
     int indexB =
       (SQUARE(X(indexBD1) - X(indexAC1)) + 
        SQUARE(Y(indexBD1) - Y(indexAC1)) +
@@ -125,20 +106,16 @@ char locationWhereAmI(void)
 
     int indexD = 6 - (indexAC1 + indexAC2 + indexB);
 
+    // Assign point B (x,y) and D (x,y) using indices
     int pointBX = X(indexB);
     int pointBY = Y(indexB);
     int pointDX = X(indexD);
     int pointDY = Y(indexD);
 
-    //m_usb_tx_int(pointDX);m_usb_tx_char(44);
-    //m_usb_tx_int(pointDY);m_usb_tx_char(32);
-
+    // Find the constellation center exactly between points B and D
     int pointCenterX = (pointBX + pointDX) / 2;
     int pointCenterY = (pointBY + pointDY) / 2;
 
-    //TODO
-#define RINK_CENTER_X 511
-#define RINK_CENTER_Y 383
 long distR;
 long distR_aprx;
 long distRSquare;
@@ -147,13 +124,13 @@ long distY;
 
 //    distX = RINK_CENTER_X - pointCenterX;
 //    distY = RINK_CENTER_Y - pointCenterY;
-    distX = RINK_CENTER_X - pointCenterX;
-    distY = pointCenterY - RINK_CENTER_Y;
+    distX = pointCenterX - RINK_CENTER_X;
+    distY = RINK_CENTER_Y - pointCenterY;
 
-// m_usb_tx_string("DistX:");
-//     m_usb_tx_int(distX);m_usb_tx_char(32);
-// m_usb_tx_string("DistY:");
-//     m_usb_tx_int(distY);m_usb_tx_char(32);
+m_usb_tx_string("DistX:");
+    m_usb_tx_int(distX);m_usb_tx_char(32);
+m_usb_tx_string("DistY:");
+    m_usb_tx_int(distY);m_usb_tx_char(32);
  
     // Start with a good estimate of distR
     distR_aprx  = ((long)(abs(distX) + abs(distY)) * 11) / 14;
@@ -172,24 +149,20 @@ m_usb_tx_int(distR);
     // Compute heading in degrees
     angleOfRobot = atan2d(pointDY-pointBY,pointDX-pointBX);
 
+    angleOfRobot -= (angleOfRobot < -90) ? -270 : 90;
+    
     // Make sure angle of robot stays between -180 and 180
     //  while subtracting 90 degrees from angleOfRobot.
-    angleOfRobot -= (angleOfRobot < -90) ? -270 : 90;
-
     long dY = (sind_M(angleOfRobot)*distY - cosd_M(angleOfRobot)*distX)/1000;
     long dX = (-cosd_M(angleOfRobot)*distY - sind_M(angleOfRobot)*distX)/1000;
+    int theta2 = -atan2d(dX,dY);
 
- m_usb_tx_string("DX:");
-     m_usb_tx_int(dX);m_usb_tx_char(32);
- m_usb_tx_string("DY:");
-     m_usb_tx_int(dY);m_usb_tx_char(32);
+    theta2 -= (theta2 < -90) ? -270 : 90;
 
-    int angleToRobot = atan2d(dY,dX);
+    angleToRobot = angleOfRobot - theta2 - 90;
 
-    theta2 = angleOfRobot - angleToRobot;
-
-    theta2 += (theta2 > 180) ? -360 :
-              (theta2 < -180) ? 360 : 0;
+    angleToRobot += (angleToRobot >  180) ? -360 :
+                    (angleToRobot < -179) ?  360 : 0;
 
     m_usb_tx_string(" ROBOT ANGLE: ");m_usb_tx_int(angleOfRobot);m_usb_tx_char(32);
 
@@ -197,10 +170,10 @@ m_usb_tx_int(distR);
 
     m_usb_tx_string(" THETA2: ");m_usb_tx_int(theta2);m_usb_tx_char(32);
 
-    //TODO Fix signs so position is shown correctly
-    // Calculate absolute X and Y using distance and heading
-    robotX = (-1*(long)cosd_M(theta2)*(long)distR)/1000;
-    robotY = ( 1*(long)sind_M(theta2)*(long)distR)/1000;
+    // Calculate absolute X and Y using distance and angle to robot
+    robotX = 512+((long)cosd_M(angleToRobot)*(long)distR)/1000;
+    robotY = 384+((long)sind_M(angleToRobot)*(long)distR)/1000;
+
     m_usb_tx_string("ROBOT COORDS: (");m_usb_tx_int(robotX);m_usb_tx_char(32);
     m_usb_tx_int(robotY);m_usb_tx_string(")");m_usb_tx_char(32);
 
@@ -209,9 +182,9 @@ m_usb_tx_int(distR);
   else
   {
     //TODO code
-    // If this is the first time without 4 stars,
-    //   just get location of average blob X and Y.
-    // Make sure to reset the flag any time there are 4 stars.
+    // If last cycle, the robot detected four stars (use a flag),
+    //   just get location of average blob X and Y. No calculations.
+    // (Make sure to reset the flag once there are 4 stars again.)
     // On subsequent iterations, take diff(blobX & Y)
     // Use diff(X & Y) to adjust the last known location of each blob.
     // Also, inform the code of limited current data reliability.
@@ -278,9 +251,8 @@ long sind_M(long angle)
   return sindCalc;
 }
 
-long cosd_M(long angle)
+long cosd_M(long angle2)
 {
-  // cosd(x) = sind(x + 90)
-  angle = angle + (angle > 90) ? -270 : 90;
-  return sind_M(angle);
+  angle2 += (angle2 > 90) ? -270 : 90;
+  return sind_M(angle2);
 }
