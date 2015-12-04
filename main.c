@@ -49,10 +49,13 @@ int main()
   while(1)
   {
 //  if (m_wii_open()==0){m_red(ON);}else{m_red(OFF);}
-    qualify();
-    updateStatusFlags();
-    if (USB_DEBUGGING) {doUSB(); m_wait(250);} //rock_debug.c
-    if (debugVar==1){status_set(STATUS_LOCALIZED);}else{status_clear(STATUS_LOCALIZED);}
+    if (state==GAMEPLAY_PLAY_COMMAND)
+    {
+      qualify();
+      updateStatusFlags();
+      if (USB_DEBUGGING) {doUSB(); m_wait(250);} //rock_debug.c
+      if (debugVar==1){status_set(STATUS_LOCALIZED);}else{status_clear(STATUS_LOCALIZED);}
+    }
   }
   while(1)
   { //TODO This is the main routine code. Re-enable after qual.
