@@ -26,9 +26,19 @@ int switchDirection = 0; //TODO
 
   init(); //rock_init_routine.c
   
+  set(DIDR0, ADC0D); //TODO Disable digital circuitry on ADC0 (F0)
+  set(DIDR0, ADC1D); //TODO Disable digital circuitry on ADC0 (F0)
+
   while(1) /*TODO*/
   {
     
+    getADC(0);
+    int result = ADC;
+    getADC(1);
+    result += ADC;
+    if (timeElapsedMS/result != 0 /*TODO*/) { m_red(TOGGLE); timeElapsedMS=0;}
+//    m_usb_tx_string("\nADC: ");
+//    m_usb_tx_int(result);
 
   }
 

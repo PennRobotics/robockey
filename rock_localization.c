@@ -59,8 +59,25 @@ void getADC(char pin)
       break;
   }
 
-//TODO check if we need to disable pin-change interrupts
-set(ADCSRA, ADSC); // Begin ADC conversion
-set(  SMCR, SE ); //Enable sleep mode
+if (pin==0)
+{
+//TODO Select ADC0 (F0)
+  clear(ADCSRB,MUX5);
+  clear( ADMUX,MUX2);
+  clear( ADMUX,MUX1);
+  clear( ADMUX,MUX0);
+}
+else if (pin==1)
+{
+  clear(ADCSRB,MUX5);
+  clear( ADMUX,MUX2);
+  clear( ADMUX,MUX1);
+  set  ( ADMUX,MUX0);
+
+}
+
+_delay_us(30);
+set  (ADCSRA, ADSC); // Begin ADC conversion
+set  (SMCR, SE ); //Enable sleep mode
 
 }

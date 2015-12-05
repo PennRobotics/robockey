@@ -30,7 +30,7 @@ void init(void)
 
   initMRF();
 
-  //TODO initADC();
+  initADC();
   //TODO getADC(PIN_CENTER_IR_ANALOG);
   //result = ADC;
 
@@ -97,18 +97,20 @@ void initMRF(void)
 
 void initADC(void)
 {
+  sei(); //TODO Check if needed! Should be redundant, refer to fcn.
+  //
   // Disable Power Reduction ADC (for ADC input MUX)
   clear(PRR0, PRADC);
 
   // Higher sample rate (more power consumption)
-  set(  ADCSRB, ADHSM);
+  set  (ADCSRB, ADHSM);
 
-  // Set voltage reference to AREF
+  // Set voltage reference to Vcc
   clear(ADMUX, REFS1);
-  clear(ADMUX, REFS0);
+  set  (ADMUX, REFS0);
 
   // Set ADC clock prescaler /32 (16 MHz sys --> 500 kHz)
-  set(  ADCSRA, ADPS2);
+  set  (ADCSRA, ADPS2);
   clear(ADCSRA, ADPS1);
   set  (ADCSRA, ADPS0);
 
@@ -119,8 +121,7 @@ void initADC(void)
 //  set(  DIDRx, ADCnD);
 
   // Enable ADC interrupts
-  set(  ADCSRA, ADIE);
-  //sei(); TODO Check if needed! Should be redundant, refer to fcn.
+  set  (ADCSRA, ADIE);
   //Will use ISR(ADC_vect)
   //TODO ISR(ANALOG_COMP_vect)
 
@@ -129,22 +130,26 @@ void initADC(void)
 //  // Multiple inputs: Modify MUXn bits while conversion is in-progress.
 //  //   Important! Wait at least 1 ADC CLOCK CYCLE before changing!
 
+  // Disable free-running mode
+  clear(ADCSRA,ADATE);
+
   // Select desired analog input
   clear(ADCSRB,MUX5); // F0 --- ADC0
   clear(ADMUX,MUX2);  //  "   "   "
   clear(ADMUX,MUX1);  //  "   "   "
   clear(ADMUX,MUX0);  //  "   "   "
 
-  set(  ADCSRA, ADEN); // Enable ADC subsystem
-//  set(ADCSRA, ADSC); // Begin first conversion
-
-  // Read ADC result when ADIF flag is set (ISR or manual clear)
-  //   result in 16-bit register mask ADC... or ADCL, then ADCH
-
   // Using ADC sleep mode: faster conversion & results only when polled
   clear(SMCR, SM2); //Sleep mode: ADC noise reduction mode
   clear(SMCR, SM1); // "
-  set(  SMCR, SM0); // "
+  set  (SMCR, SM0); // "
+
+  // Read ADC result when ADIF flag is set (ISR or manual clear)
+  //   result in 16-bit register mask ADC... or ADCL, then ADCH
+  set  (ADCSRA, ADIF); // Clear ADIF flag
+
+  set  (ADCSRA, ADEN); // Enable ADC subsystem
+  set  (ADCSRA, ADSC); // Begin first conversion
 
 }
 
