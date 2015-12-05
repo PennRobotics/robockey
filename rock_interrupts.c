@@ -18,6 +18,8 @@ ISR(INT2_vect)
       break;
     case 0xA1: /*PLAY*/
       state = GAMEPLAY_PLAY_COMMAND;
+      m_red(TOGGLE);
+      m_green(TOGGLE);
       break;
     case 0xA2: /*GOAL A*/
       //TODO Ensure team selection is correct
@@ -47,4 +49,4 @@ ISR(INT2_vect)
   }
 }
 
-ISR(TIMER0_OVF_vect) { /*timeElapsedMS++;*/ }
+ISR(TIMER0_OVF_vect) { timeElapsedMS++; }
