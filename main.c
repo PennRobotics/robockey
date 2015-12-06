@@ -1,6 +1,4 @@
-// TODO Comm with other robots
 // TODO Comm with local debug (USB serial monitor)
-// TODO rock_motor.c
 // TODO Determine best way to track IR
 // TODO Fix localization when 1--3 stars detected
 // TODO Change all references to rock_initialize_vars to rock_vars
