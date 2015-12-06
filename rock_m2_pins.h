@@ -31,17 +31,17 @@
 //  D1   mBUS
 //  D2   mBUS
 
-#define ADC_PIN_FRONT_LEFT_IR        0
-#define ADC_PIN_FRONT_RIGHT_IR       1
-#define ADC_PIN_REAR_LEFT_IR         4
-#define ADC_PIN_REAR_RIGHT_IR        5
-
 #define m_set(x) set(x)
 #define m_clear(x) clear(x)
 #define m_toggle(x) toggle(x)
 #define m_check(x) check(x)
 #define m_output(x) set(x)
 #define m_input(x) clear(x)
+
+#define ADC_PIN_FRONT_LEFT_IR        0
+#define ADC_PIN_FRONT_RIGHT_IR       1
+#define ADC_PIN_REAR_LEFT_IR         4
+#define ADC_PIN_REAR_RIGHT_IR        5
 
 // Example of naming convention:
 // LED_OUT, DDR_LED_OUT

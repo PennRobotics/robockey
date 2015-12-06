@@ -245,11 +245,11 @@ int stateStart(void)
   if (robotIs(GOALIE))
   {
     if (distToPuck == 255) {return GUARD_GOAL_PUCK_OUT_OF_SIGHT;}
-    if (hasPuck == TRUE) {return GUARD_GOAL_PUCK_IN_CONTACT;}
+    if (havePuck == TRUE) {return GUARD_GOAL_PUCK_IN_CONTACT;}
     return GUARD_GOAL_PUCK_IN_SIGHT;
   }
   if (timeElapsedMS>30000) {return GET_AGGRESSIVE;}
-  if ((teamHasPuck==TRUE) && (hasPuck==FALSE))
+  if ((teamHasPuck==TRUE) && (havePuck==FALSE))
   {
     //TODO See if assist opportunity exists (V formation or wedge)
     return ASSIST_BY_CLEARING_PATH;
@@ -262,13 +262,13 @@ int stateStart(void)
   if (distToPuck == 255/*TODO*/) {return FIND_PUCK;}
   if (((angleToBehindPuck - angleOfRobot) < GOAL_ALIGN_DEG)&&
       ((angleOfRobot - angleToBehindPuck) < GOAL_ALIGN_DEG)&&
-      (hasPuck == FALSE))
+      (havePuck == FALSE))
   {
     return MOVE_TO_PUCK;
   }
   if ((((angleOfRobot - angleToEnemyGoal) > GOAL_ALIGN_DEG) ||
        ((angleToEnemyGoal - angleOfRobot) > GOAL_ALIGN_DEG)) &&
-      (hasPuck == TRUE))
+      (havePuck == TRUE))
   {
     if (((angleOfRobot - angleToTeamGoal) < GOAL_ALIGN_DEG) &&
         ((angleToTeamGoal - angleOfRobot) < GOAL_ALIGN_DEG) &&

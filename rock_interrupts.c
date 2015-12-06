@@ -5,12 +5,13 @@
 ISR(ADC_vect) /*ADC conversion complete!*/
 {
   clear(  SMCR, SE ); //Disable sleep mode
-  // Have other routines look up the ADC register
+  // Result stored in the ADC register
 }
 
 //TODO Check if INT2 will interfere with other functionality!
 ISR(INT2_vect)
 {
+  m_red(TOGGLE);
   m_rf_read(bufferRF, RF_PACKET_LENGTH); 
   switch((unsigned char)bufferRF[0]) /*rock_comm.h*/ {
     case 0xA0: /*COMM TEST*/
@@ -51,6 +52,36 @@ ISR(INT2_vect)
 //      enemyY[i] = ...
       break;
 
+    case FRIEND_1+10:
+      robot1X     =  bufferRF[1] * 4 + 2;
+      robot1Y     =  bufferRF[2] * 3 + 1;
+      robot1Angle =  bufferRF[3] * 2 + 1;
+      puckX       = (bufferRF[4] + puckX) * 4 / 5; //LOW PASS
+      puckY       = (bufferRF[5] + puckY) * 4 / 5;
+      //TODO Replace havePuck with status flag for extra packet
+      if ((teamHasPuck == FALSE) || (teamHasPuck == FRIEND_1))
+      {
+        teamHasPuck = bufferRF[6] * FRIEND_1;
+      }
+      //TODO Change behavior based on friendly robot state, bufferRF[7]
+      //TODO Check status flags of friendly robot
+      break;
+
+    case FRIEND_2+10:
+      robot2X     =  bufferRF[1] * 4 + 2;
+      robot2Y     =  bufferRF[2] * 3 + 1;
+      robot2Angle =  bufferRF[3] * 2 + 1;
+      puckX       = (bufferRF[4] + puckX) * 4 / 5; //LOW PASS
+      puckY       = (bufferRF[5] + puckY) * 4 / 5;
+      //TODO Replace havePuck with status flag for extra packet
+      if ((teamHasPuck == FALSE) || (teamHasPuck == FRIEND_2))
+      {
+        teamHasPuck = bufferRF[6] * FRIEND_2;
+      }
+      //TODO Change behavior based on friendly robot state, bufferRF[7]
+      //TODO Check status flags of friendly robot
+      break;
+
     default:
       break;
   }
@@ -66,5 +97,21 @@ ISR(TIMER0_OVF_vect)
         MOTOR_UPDATE_PERIOD_MS )
   {
     updateMotors();
+  }
+}
+
+//TODO Check if better to use INTx or PCINTx
+// Pin Change Interrupt
+ISR(PCINT0_vect)
+{
+  if (m_check(PUCK_SENSOR_PIN)==ON)
+  {
+    havePuck = TRUE;
+    status_set  ( STATUS_HAVE_PUCK);
+  }
+  else
+  {
+    havePuck = FALSE;
+    status_clear( STATUS_HAVE_PUCK);
   }
 }
