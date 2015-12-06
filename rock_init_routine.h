@@ -18,10 +18,6 @@
 #define RF_TX_ADDRESS_1  (TEAM_NUMBER)*4 + (ROBOT_NUMBER==3?1:ROBOT_NUMBER+1) - 1
 #define RF_TX_ADDRESS_2  (TEAM_NUMBER)*4 + (ROBOT_NUMBER==1?3:ROBOT_NUMBER-1) - 1
 
-// #ifndef _rock_headers_h 
-// #include "rock_headers.h"
-// #endif
-
 void init(void);
 void initStatusLEDPins(void);
 void initTeamLEDPins(void);

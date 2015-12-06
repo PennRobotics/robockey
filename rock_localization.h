@@ -1,7 +1,6 @@
 #ifndef _rock_localization_h
 #define _rock_localization_h
 
-
 //TODO
 #define IR_SCHMITT_LEVEL 0
 
@@ -16,17 +15,10 @@
 //TODO
 #define IR_THRESHOLD 6
 
-#endif
-//TODO Clean rock_localization.h
-
 int findPuckDistance(void);
 void updateLocalization(void);
 
-
 //TODO Make poll(x)IR extern and put in vars.h
-extern int pollLeftIR;
-extern int pollCenterIR;
-extern int pollRightIR;
 
 int highestIRPoll; //TODO extern?
 
@@ -36,3 +28,5 @@ char puckIsRight;
 char turnServo;
 
 void getADC(char pin);
+
+#endif

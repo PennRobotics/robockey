@@ -30,8 +30,12 @@ extern           int teamGoalY;
 extern unsigned char teamScore;
 extern unsigned  int timeElapsedMS;
 
+extern           int pollLeftIR;
+extern           int pollRightIR;
+
 extern           int debugVar; //TODO
 extern unsigned char currentTeam; //TODO
+
 #ifndef RED
 #define RED  1
 #define BLUE 2
