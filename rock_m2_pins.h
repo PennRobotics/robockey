@@ -2,10 +2,10 @@
 #define _rock_m2_pins_h
 
 // DIP Switches
-//   1   
-//   2   
-//   3   
-//   4   
+//   1   TODO M2 VCC
+//   2   UNUSED
+//   3   UNUSED
+//   4   UNUSED
 
 // In-Use ports
 //  B0   SPI SS
