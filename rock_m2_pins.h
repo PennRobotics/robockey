@@ -1,6 +1,12 @@
 #ifndef _rock_m2_pins_h
 #define _rock_m2_pins_h
 
+// DIP Switches
+//   1   
+//   2   
+//   3   
+//   4   
+
 // In-Use ports
 //  B0   SPI SS
 //  B1   SPI SCLK
