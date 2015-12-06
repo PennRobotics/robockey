@@ -13,7 +13,7 @@ extern unsigned  int distToTeamGoal;
 extern           int enemyGoalX;
 extern           int enemyGoalY;
 extern unsigned char enemyScore;
-extern unsigned char hasPuck;
+extern unsigned char havePuck;
 extern           int puckX;
 extern           int puckY;
 extern           int robotX;
