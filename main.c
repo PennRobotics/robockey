@@ -15,10 +15,11 @@ void randomshit(void); //TODO
 
 int main()
 {
-/*TODO*/   set(DDRD,5);
-/*TODO*/   set(PORTD,5);
+  //TODO=LOW Currently, pin D5 is being used as a +5V to mWii
+  set(DDRD,5);
+  set(PORTD,5);
 
-int switchDirection = 0; //TODO
+  int switchDirection = 0; //TODO
 
   init(); //rock_init_routine.c
   
