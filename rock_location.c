@@ -336,6 +336,20 @@ void calculateAngleToGoal(void)
   if (currentTeam==RED)
   {
     // Calculate angle between robot and each goal
+    // Low-pass filter, take average of old and new value
+    angleToEnemyGoal += atan2d(GOAL_BLUE_Y-robotY,GOAL_BLUE_X-robotX)+1;
+    angleToEnemyGoal  = angleToEnemyGoal >> 1;
+    angleToTeamGoal  += atan2d(GOAL_RED_Y -robotY,GOAL_RED_X -robotX)+1;
+    angleToTeamGoal   = angleToTeamGoal  >> 1;
+  } else if (currentTeam==BLUE) {
+    angleToEnemyGoal += atan2d(GOAL_RED_Y -robotY,GOAL_RED_X -robotX)+1;
+    angleToEnemyGoal  = angleToEnemyGoal >> 1;
+    angleToTeamGoal  += atan2d(GOAL_BLUE_Y-robotY,GOAL_BLUE_X-robotX)+1;
+    angleToTeamGoal   = angleToTeamGoal  >> 1;
+  } else {
+    m_red(ON);
+  }
+}
 
 int atan2d(long y, long x)
 {
