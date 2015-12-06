@@ -17,6 +17,14 @@ void init(void)
 
   initMWii(); //rock_init_routine.c
 
+  initMRF();
+
+  initADC();
+
+  initUSB();
+
+  initTimers();
+
   initStatusLEDPins(); //rock_init_routine.c
   if (TEST_LEDS_ON_STARTUP /*rock_settings.h*/)
     {testStatusLEDPins(); /*rock_status.c*/}
@@ -27,16 +35,6 @@ void init(void)
 
   if (TEST_MOTORS_ON_STARTUP /*rock_settings.h*/)
     {m_green(ON);testMotors(); /*rock_motor.c*/m_green(OFF);}
-
-  initMRF();
-
-  initADC();
-  //TODO getADC(PIN_CENTER_IR_ANALOG);
-  //result = ADC;
-
-  initUSB();
-
-  initTimers();
 
   status_clear_all(); //rock_status.h
 
@@ -113,11 +111,11 @@ void initADC(void)
   set  (ADMUX, REFS0);
 
   // Set ADC clock prescaler /32 (16 MHz sys --> 500 kHz)
-  //TODO Check if ADC clock freq can be increased without error
-  //      (If so, change _delay_ms(x) value in ADC routine!!)
   set  (ADCSRA, ADPS2);
   clear(ADCSRA, ADPS1);
   set  (ADCSRA, ADPS0);
+  //TODO Check if ADC clock freq can be increased without error
+  //      (If so, change _delay_ms(x) value in ADC routine!!)
 
   // Disable digital inputs
   // Bits n=0--7 are in DIDR0, 8--13 in DIDR2
@@ -162,7 +160,8 @@ void initTimers(void)
 {
   // Timer 0 fires interrupt every 1 ms, increments timeElapsedMS
   // Timer 1 controls servo PWM, 2 MHz (40000 overflow, 3000 neutral)
-  // Timer 4 controls motor PWM.
+  // Timer 3 UNUSED
+  // Timer 4 controls motor PWM
 
   /* **************************************************** */  
   //   TIMER 0 CONFIGURATION
@@ -220,8 +219,8 @@ void initTimers(void)
   clear(TCCR4D,WGM41);
   clear(TCCR4D,WGM40);
 
-  // Timer overflows every 250 cycles, 31.25 us (32 kHz)
-  OCR4C = 250;
+  // Timer overflows every MAX_SPEED [250] cycles, 31.25 us (32 kHz)
+  MOTOR_TIMER_MAX   = MAX_SPEED;
 
   // Channels A and D output C7 (L) and D7 (R)
   set(  DDRC,7); //TODO Move to rock_m2_pins.h
@@ -237,7 +236,7 @@ void initTimers(void)
   set(  TCCR4C,COM4D1);
   set(  TCCR4C,COM4D0);
 
-  OCR4A = 6; // 20 percent duty cycle
-  OCR4D = 6; // 30 percent duty cycle
+  MOTOR_TIMER_OCR_L = 3; // 1.2 percent duty cycle (effectively OFF)
+  MOTOR_TIMER_OCR_R = 3; // 1.2 percent duty cycle
 
 }

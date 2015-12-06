@@ -56,4 +56,13 @@ ISR(INT2_vect)
   }
 }
 
-ISR(TIMER0_OVF_vect) { timeElapsedMS += oneIfPlaying ; }
+ISR(TIMER0_OVF_vect)
+{
+  timeElapsedMS += oneIfPlaying;
+  //TODO Remove hardcoded motor update timer
+  //Every 10 ms, update the motor state
+  if (timeElapsedMS/10==(timeElapsedMS+9)/10)
+  {
+    updateMotors();
+  }
+}

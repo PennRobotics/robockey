@@ -5,48 +5,40 @@
 #include "rock_headers.h"
 #endif
 
-unsigned char motorDutyL=0, motorDutyR=0;
+unsigned char motorDutyL=0, motorDutyR=0, motorDirL=OFF, motorDirR=OFF;
 
-void motor(unsigned char motor_id, char motor_dir, unsigned char motor_duty)
+void updateMotors(void)
 {
-  if (motor_id==LEFTMOTOR)
+  // motor driver enable signal LOW-PASS
+  if (motorDirL != OFF) 
   {
-    // motor driver enable signal LOW-PASS
-    if (motor_dir != OFF) 
-    {
-      MOTOR_TIMER_OCR_L = (7*MOTOR_TIMER_OCR_L + 1*motor_duty)/8;
-    } else {
-      MOTOR_TIMER_OCR_L = (MOTOR_TIMER_OCR_L)*2/3 + 1;
-    }
-
-    // motor driver direction signal
-    if (motor_dir == FORWARD)
-    {
-      //TODO set(MOTOR_L_DIR_PORT);
-    } else {
-      //TODO clear(MOTOR_L_DIR_PORT);
-    }
-
+    MOTOR_TIMER_OCR_L = (7*MOTOR_TIMER_OCR_L + 1*motorDutyL)/8;
+  } else {
+    MOTOR_TIMER_OCR_L = (MOTOR_TIMER_OCR_L)*2/3 + 1;
   }
-  else if (motor_id==RIGHTMOTOR)
+
+  if (motorDirR != OFF) 
   {
-    // motor driver enable signal LOW-PASS
-    if (motor_dir != OFF) 
-    {
-      MOTOR_TIMER_OCR_R = (7*MOTOR_TIMER_OCR_R + 1*motor_duty)/8;
-    } else {
-      MOTOR_TIMER_OCR_R = (MOTOR_TIMER_OCR_R)*2/3 + 1;
-    }
-
-    // motor driver direction signal
-    if (motor_dir == FORWARD)
-    {
-      //TODO set(MOTOR_L_DIR_PORT);
-    } else {
-      //TODO clear(MOTOR_L_DIR_PORT);
-    }
-
+    MOTOR_TIMER_OCR_R = (7*MOTOR_TIMER_OCR_R + 1*motorDutyR)/8;
+  } else {
+    MOTOR_TIMER_OCR_R = (MOTOR_TIMER_OCR_R)*2/3 + 1;
   }
+
+  // motor driver direction signal
+  if (motorDirL == FORWARD)
+  {
+    //TODO set(MOTOR_L_DIR_PORT);
+  } else {
+    //TODO clear(MOTOR_L_DIR_PORT);
+  }
+
+  if (motorDirR == FORWARD)
+  {
+    //TODO set(MOTOR_R_DIR_PORT);
+  } else {
+    //TODO clear(MOTOR_R_DIR_PORT);
+  }
+
 
   // Enable status LED if either motor is in motion
   if ((MOTOR_TIMER_OCR_L > 20) || (MOTOR_TIMER_OCR_R > 20))
@@ -61,21 +53,13 @@ void testMotors()
 {
   if (TEST_MOTORS_ON_STARTUP)
   {
-    motor(LEFTMOTOR,  FORWARD, QTR_SPEED ); m_wait(900); // motor(motor_id, direction, speed/255);
-    motor(LEFTMOTOR,  OFF,     OFF       ); m_wait(200);
-    motor(LEFTMOTOR,  REVERSE, QTR_SPEED ); m_wait(900);
-    motor(LEFTMOTOR,  OFF,     OFF       );
-    motor(RIGHTMOTOR, FORWARD, QTR_SPEED ); m_wait(900);
-    motor(RIGHTMOTOR, OFF,     OFF       ); m_wait(200);
-    motor(RIGHTMOTOR, REVERSE, QTR_SPEED ); m_wait(900);
-    motor(RIGHTMOTOR, OFF,     OFF       );
-    motor(LEFTMOTOR,  FORWARD, FULL_SPEED); m_wait(900);
-    motor(LEFTMOTOR,  OFF,     OFF       ); m_wait(200);
-    motor(LEFTMOTOR,  REVERSE, FULL_SPEED); m_wait(900);
-    motor(LEFTMOTOR,  OFF,     OFF       );
-    motor(RIGHTMOTOR, FORWARD, FULL_SPEED); m_wait(900);
-    motor(RIGHTMOTOR, OFF,     OFF       ); m_wait(200);
-    motor(RIGHTMOTOR, REVERSE, FULL_SPEED); m_wait(900);
-    motor(RIGHTMOTOR, OFF,     OFF       );
+    motorDirL=FORWARD; motorDutyL = QTR_SPEED; m_wait(900);
+    motorDirL=OFF    ; motorDutyL = OFF      ; m_wait(200);
+    motorDirL=REVERSE; motorDutyL = QTR_SPEED; m_wait(900);
+    motorDirL=OFF    ; motorDutyL = OFF      ; m_wait(200);
+    motorDirR=FORWARD; motorDutyR = QTR_SPEED; m_wait(900);
+    motorDirR=OFF    ; motorDutyR = OFF      ; m_wait(200);
+    motorDirR=REVERSE; motorDutyR = QTR_SPEED; m_wait(900);
+    motorDirR=OFF    ; motorDutyR = OFF      ; m_wait(200);
   }
 }

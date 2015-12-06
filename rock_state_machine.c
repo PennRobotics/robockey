@@ -2,15 +2,18 @@
 #include "rock_headers.h"
 #endif
 
+//TODO Test and move to header
+int patrolCounter;
+
 // This is used to update the display and act in the CURRENT state.
 // Use getCurrentState() to determine if the CURRENT state has changed!
+
 void stateMachine()
 {
   switch(state) /*rock_initialize_vars.h*/
   {
   case ROBOT_STARTUP: /*rock_states.h*/
-    motor(LEFTMOTOR, OFF, 0); /*rock_motor.h*/ 
-    motor(RIGHTMOTOR, OFF, 0);
+    motorsOff;
     status_clear( STATUS_PUCK_IN_SIGHT); /*rock_status.h;rock_states.h*/
     status_clear( STATUS_HAVE_PUCK);
     status_clear( STATUS_LOCALIZED);
@@ -24,14 +27,12 @@ void stateMachine()
     break;
 
   case GAMEPLAY_NOT_PLAYING: /*rock_states.h*/
-    motor(LEFTMOTOR, OFF, 0); /*rock_motor.h*/ 
-    motor(RIGHTMOTOR, OFF, 0);
+    motorsOff;
     status_set  ( STATUS_NO_GAMEPLAY);
     break;
 
   case GAMEPLAY_COMM_TEST: /*rock_states.h*/
-    motor(LEFTMOTOR, OFF, 0); /*rock_motor.h*/ 
-    motor(RIGHTMOTOR, OFF, 0);
+    motorsOff;
     oneIfPlaying = 1;
     if (timeElapsedMS/100 != 0)
     {
@@ -52,16 +53,15 @@ void stateMachine()
     status_clear( STATUS_NO_GAMEPLAY);
     // do something;
     break;
+
   case GAMEPLAY_TIMEOUT: /*rock_states.h*/
-    motor(LEFTMOTOR, OFF, 0); /*rock_motor.h*/ 
-    motor(RIGHTMOTOR, OFF, 0);
+    motorsOff;
     oneIfPlaying = 0;
     // do something;
     break;
 
   case GAMEPLAY_HALFTIME: /*rock_states.h*/
-    motor(LEFTMOTOR, OFF, 0); /*rock_motor.h*/ 
-    motor(RIGHTMOTOR, OFF, 0);
+    motorsOff;
     oneIfPlaying = 0;
     timeElapsedMS = 30000;
     //status_blink( STATUS_NO_GAMEPLAY);
@@ -80,6 +80,7 @@ void stateMachine()
     break;
 
   case GAMEPLAY_SCORED_GOAL:
+    motorsOff;
     oneIfPlaying = 0;
     // do something;
     //TODO determine which team scored goal
@@ -134,7 +135,7 @@ void stateMachine()
     patrolCounter++;
     if (timeElapsedMS - patrolCounter > 10000)
     {
-      int patrolCounter = timeElapsedMS; //TODO global var?
+      patrolCounter = timeElapsedMS; //TODO global var?
       //TODO enemyGoalX = RED;
       //TODO=HIGH When EXITING move_patrol state,
       //      set the enemy goal back to the correct side!!!
@@ -200,6 +201,8 @@ void stateMachine()
     status_clear( STATUS_ASSISTING);
     status_set  ( STATUS_NO_RECENT_COMM);
     status_set  ( STATUS_NO_GAMEPLAY);
+    status_set  ( LED_RED);
+    status_set  ( LED_BLUE);
     break;
   }
 }
