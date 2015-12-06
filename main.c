@@ -1,12 +1,8 @@
-// TODO Robot X and Y algorithm is ALL MESSED UP
-// TODO Set up mRF
-// TODO Communication routine
-// TODO Comm with game controller
 // TODO Comm with other robots
 // TODO Comm with local debug (USB serial monitor)
 // TODO rock_motor.c
-// TODO Add interrupts
 // TODO Determine best way to track IR
+// TODO Fix localization when 1--3 stars detected
 
 #ifndef _rock_headers_h
 #include "rock_headers.h"
@@ -26,21 +22,8 @@ int switchDirection = 0; //TODO
 
   init(); //rock_init_routine.c
   
-  set(DIDR0, ADC0D); //TODO Disable digital circuitry on ADC0 (F0)
-  set(DIDR0, ADC1D); //TODO Disable digital circuitry on ADC0 (F0)
-
-  while(1) /*TODO*/
-  {
-    
-    getADC(0);
-    int result = ADC;
-    getADC(1);
-    result += ADC;
-    if (timeElapsedMS/result != 0 /*TODO*/) { m_red(TOGGLE); timeElapsedMS=0;}
-//    m_usb_tx_string("\nADC: ");
-//    m_usb_tx_int(result);
-
-  }
+  //TODO Get ADC value from F0
+  getADC(0); int result = ADC;
 
   //TODO Which side of the rink does the robot start?
   m_wait(500);
@@ -69,7 +52,7 @@ int switchDirection = 0; //TODO
   while(1) /*TODO delete this while loop after qual*/
   {
     updateStatusFlags();
-//    if (USB_DEBUGGING) {doUSB(); m_wait(250);} //rock_debug.c
+//    if (USB_DEBUGGING) doUSB(); //rock_debug.c
     if (debugVar==1){status_set(STATUS_LOCALIZED);}else{status_clear(STATUS_LOCALIZED);}
 
     if (state==GAMEPLAY_COMM_TEST)
@@ -161,9 +144,6 @@ void steeringAlgorithm(void)
   degAngleErr += (degAngleErr >  180) ? -360 :
                  (degAngleErr < -179) ?  360 : 0;
 
-//  m_usb_tx_string("\nANGLE ERROR: ");
-//  m_usb_tx_int(degAngleErr);
-
   // Include a small buffer when robot is almost aligned
   degErrTurnCCW =  degAngleErr - ANGLE_ERROR_TO_START_TURN;
   degErrTurnCW  = -degAngleErr - ANGLE_ERROR_TO_START_TURN;
@@ -174,23 +154,10 @@ void steeringAlgorithm(void)
 
   // Each motor's PWM duty cycle will vary based on CW/CCW error
   // When the robot needs to move CW, L wheel will be faster than R
-  // Calculate amount to SUBTRACT from each motor PWM
-//  motorDutyL =     SLOW_WHEEL_SPEED_PER_DEG * degErrTurnCW;
-//  motorDutyR =     SLOW_WHEEL_SPEED_PER_DEG * degErrTurnCCW;
-//  motorDutyL = max(FAST_WHEEL_SPEED_PER_DEG*degErrTurnCCW,motorDutyL);
-//  motorDutyR = max(FAST_WHEEL_SPEED_PER_DEG*degErrTurnCW, motorDutyR);
-//motorDutyL = MAX_SPEED;
-//motorDutyL = motorDutyL - FAST_WHEEL_SPEED_PER_DEG * degErrTurnCCW; 
-//motorDutyL = motorDutyL - SLOW_WHEEL_SPEED_PER_DEG * degErrTurnCW; 
-//motorDutyR = MAX_SPEED;
-//motorDutyR = motorDutyR - FAST_WHEEL_SPEED_PER_DEG * degErrTurnCW; 
-//motorDutyR = motorDutyR - SLOW_WHEEL_SPEED_PER_DEG * degErrTurnCCW; 
-
   motorDutyR = 3*(120 - degErrTurnCCW)/2;
   motorDutyL = 3*(120 - degErrTurnCW)/2;
 
   int slowDownNearGoal = max(0, 120 - distXYToR(robotX-enemyGoalX, robotY-enemyGoalY));
-
 
   // Ensure duty cycle is always between 0 and FULL_SPEED
   motorDutyL = max(0, motorDutyL-slowDownNearGoal);
@@ -198,12 +165,8 @@ void steeringAlgorithm(void)
 
   // Aliases are used to assign constants/variables to timer registers.
   // Low-pass filter keeps motor from changing speed quickly
-//  MOTOR_TIMER_OCR_R = 255-(7*MOTOR_TIMER_OCR_R + 1*motorDutyR)/8;
-//  MOTOR_TIMER_OCR_L = 255-(7*MOTOR_TIMER_OCR_L + 1*motorDutyL)/8;
-//  MOTOR_TIMER_OCR_R = 253 - motorDutyR;
-//  MOTOR_TIMER_OCR_L = 253 - motorDutyL;
-  OCR4D = (int)motorDutyL;
-  OCR4A = (int)motorDutyR;
+  MOTOR_TIMER_OCR_R = (7*MOTOR_TIMER_OCR_R + 1*motorDutyR)/8;
+  MOTOR_TIMER_OCR_L = (7*MOTOR_TIMER_OCR_L + 1*motorDutyL)/8;
   MOTOR_TIMER_MAX   = MAX_SPEED;
 }
 

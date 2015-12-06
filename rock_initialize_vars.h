@@ -38,9 +38,9 @@ extern unsigned char currentTeam; //TODO
 #define BLUE 2
 #endif
 
-#define GOAL_RED_X    212
+#define GOAL_RED_X    172
 #define GOAL_RED_Y    384
-#define GOAL_BLUE_X    812
+#define GOAL_BLUE_X    832
 #define GOAL_BLUE_Y    384
 
 #endif

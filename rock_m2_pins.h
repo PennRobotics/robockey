@@ -6,32 +6,29 @@
 //  B1   SPI SCLK
 //  B2   SPI MOSI
 
-// Proposed ports
-//  B4   digital rear  IR
-//  F5   analog  left  IR
-//  F6   analog  front IR
-//  F7   analog  right IR
+//  B4   Puck contact switch
+
+//  F0   analog IR, L Front 
+//  F1   analog IR, R Front 
+//  F4   analog IR, L Rear 
+//  F5   analog IR, R Rear 
 
 //  B7   Servo PWM output
 
-//       Timer4 for motor L/R en
-//  C7   OC4A (L)
-//  D7   OC4D (R)
-//(Did not consider OC4B---multiplexed with PCINT5/6)
-//TODO  Figure out how to disable inverted outputs
-//TODO  Ensure no multiplexed pins are active
+//  C7   OC4A (motor, L)
+//  D7   OC4D (motor, R)
 
-//TODO Check if B7 (/RTS) or Timer0 is in use
+//TODO Figure out if complementary outputs can be disabled
 
 // Reserved ports
 //  D0   mBUS
 //  D1   mBUS
 //  D2   mBUS
 
-//TODO Place in appropriate bin and choose real pin numbers
-#define PIN_LEFT_IR_ANALOG       15
-#define PIN_CENTER_IR_ANALOG     17
-#define PIN_RIGHT_IR_ANALOG      18
+#define ADC_PIN_FRONT_LEFT_IR        0
+#define ADC_PIN_FRONT_RIGHT_IR       1
+#define ADC_PIN_REAR_LEFT_IR         4
+#define ADC_PIN_REAR_RIGHT_IR        5
 
 #define m_set(x) set(x)
 #define m_clear(x) clear(x)
@@ -54,13 +51,10 @@
 #define PORT_HAS_PUCK PORTB,4
 #define  DDR_HAS_PUCK DDRB,4
 
+// May be in-use due to SPI
 #define UNUSED_04_PIN PINB,3
 #define UNUSED_04_PORT PORTB,3
 #define UNUSED_04_DDR DDRB,3
-
-#define UNUSED_05_PIN PINB,7
-#define UNUSED_05_PORT PORTB,7
-#define UNUSED_05_DDR DDRB,7
 
 #define UNUSED_09_PIN PIND,3
 #define UNUSED_09_PORT PORTD,3
@@ -74,29 +68,20 @@
 #define UNUSED_11_PORT PORTD,5
 #define UNUSED_11_DDR DDRD,5
 
+// May be in-use due to Timer 4
 #define UNUSED_12_PIN PIND,6
 #define UNUSED_12_PORT PORTD,6
 #define UNUSED_12_DDR DDRD,6
 
-#define UNUSED_13_PIN PIND,7
-#define UNUSED_13_PORT PORTD,7
-#define UNUSED_13_DDR DDRD,7
-
+// Double check JTAG disabled!
 #define UNUSED_14_PIN PINF,7
 #define UNUSED_14_PORT PORTF,7
 #define UNUSED_14_DDR DDRF,7
 
+// Double check JTAG disabled!
 #define UNUSED_15_PIN PINF,6
 #define UNUSED_15_PORT PORTF,6
 #define UNUSED_15_DDR DDRF,6
-
-#define UNUSED_16_PIN PINF,5
-#define UNUSED_16_PORT PORTF,5
-#define UNUSED_16_DDR DDRF,5
-
-#define UNUSED_17_PIN PINF,4
-#define UNUSED_17_PORT PORTF,4
-#define UNUSED_17_DDR DDRF,4
 
 #define UNUSED_18_PIN PINF,1
 #define UNUSED_18_PORT PORTF,1
@@ -110,18 +95,17 @@
 #define UNUSED_20_PORT PORTE,6
 #define UNUSED_20_DDR DDRE,6
 
-#define UNUSED_21_PIN PINC,7
-#define UNUSED_21_PORT PORTC,7
-#define UNUSED_21_DDR DDRC,7
-
+// May be in-use by timer
 #define UNUSED_22_PIN PINC,6
 #define UNUSED_22_PORT PORTC,6
 #define UNUSED_22_DDR DDRC,6
 
+// May be in-use by timer
 #define UNUSED_23_PIN PINB,6
 #define UNUSED_23_PORT PORTB,6
 #define UNUSED_23_DDR DDRB,6
 
+// May be in-use by timer
 #define UNUSED_24_PIN PINB,5
 #define UNUSED_24_PORT PORTB,5
 #define UNUSED_24_DDR DDRB,5

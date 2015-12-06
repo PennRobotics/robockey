@@ -2,16 +2,17 @@
 #include "rock_headers.h"
 #endif
 
-//TODO Check return of char whereAmI !! 0? -1? 1? et al?
-
 // Constellation points:
 // A   ( 11.655,   8.741)
 // B   (  0.000,  14.500)
 // C   (-10.563,   2.483)
 // D   (  0.000, -14.500)
 // These coordinates are (X, Y) Cartesian pairs,
-//  where each point is where the stars are focused on the rink.
+//  where each point is where the IR "stars" are focused on the rink.
 //  Refer to each point looking down from above the constellation.
+//
+// Red goal is on the far left i.e. (-200, 0)
+// Blue goal is on the far right i.e. (200, 0)
 
 char locationWhereAmI(void)
 {
@@ -27,18 +28,20 @@ char locationWhereAmI(void)
 
   for (i=0;i<4;i++)
   {
-    // Remember the previous values of blobX and blobY
-    blobXOld[i] = blobX[i];
-    blobYOld[i] = blobY[i];
+    //TODO=LOW Remember the previous values of blobX and blobY
+  //  blobXOld[i] = blobX[i];
+  //  blobYOld[i] = blobY[i];
     
     // Copy from blobMemAddr into blobX and blobY (blob size ignored)
     blobX[i] = blobMemAddr[i*3 + 0];
     blobY[i] = blobMemAddr[i*3 + 1];
 
-    //m_usb_tx_int(blobX[i]);m_usb_tx_char(32);
     // Check if blobs leave the mWii field-of-view
-    if ((blobX[i]==1023) && (blobY[i]==1023)) {zeroIfFourBlobs++;}
-    else /*Check if new data is near old data*/
+    if ((blobX[i]==1023) && (blobY[i]==1023))
+    {
+      zeroIfFourBlobs++;
+    }
+    else /*TODO Check if new data is near old data*/
     {
       //TODO This needs to compare ORDERED data, not raw data!!
       //TODO Fix the order and compare check and create a threshold var.
@@ -106,15 +109,34 @@ char locationWhereAmI(void)
 
     int indexD = 6 - (indexAC1 + indexAC2 + indexB);
 
+    // Compare coords of point B and D to previous coords
+    int pointBXOld = pointBX;
+    int pointBYOld = pointBY;
+    int pointDXOld = pointDX;
+    int pointDYOld = pointDY;
+
     // Assign point B (x,y) and D (x,y) using indices
     pointBX = X(indexB);
     pointBY = Y(indexB);
     pointDX = X(indexD);
     pointDY = Y(indexD);
 
+    int pointCenterX, pointCenterY;
+
+    //TODO Make sure code works, then move to header
+#define STAR_JUMP_THRESHOLD 25
+
+    if ((abs(pointBXOld - pointBX) > STAR_JUMP_THRESHOLD) || 
+        (abs(pointBYOld - pointBY) > STAR_JUMP_THRESHOLD) || 
+        (abs(pointDXOld - pointDX) > STAR_JUMP_THRESHOLD) || 
+        (abs(pointDYOld - pointDY) > STAR_JUMP_THRESHOLD)   ) 
+    {
+    pointCenterX = (pointBX + pointBXOld + pointDX + pointDXOld) / 4;
+    pointCenterY = (pointBY + pointBYOld + pointDY + pointDYOld) / 4;
+    }
     // Find the constellation center exactly between points B and D
-    int pointCenterX = (pointBX + pointDX) / 2;
-    int pointCenterY = (pointBY + pointDY) / 2;
+    pointCenterX = (pointBX + pointDX) / 2;
+    pointCenterY = (pointBY + pointDY) / 2;
 
 //    distX = RINK_CENTER_X - pointCenterX;
 //    distY = RINK_CENTER_Y - pointCenterY;
@@ -188,24 +210,20 @@ m_usb_tx_string(" ROBOT ANGLE: ");m_usb_tx_int(angleOfRobot);m_usb_tx_char(32);
     m_usb_tx_string("ROBOT COORDS: (");m_usb_tx_int(robotX);m_usb_tx_char(32);
     m_usb_tx_int(robotY);m_usb_tx_string(")");m_usb_tx_char(32);
 
-    status_clear(STATUS_DEFENSE); //TODO TODO Remove before gameplay
-    status_clear(STATUS_TIME_ALMOST_UP); //TODO TODO Remove
     return 1; //TODO Check return value!
   }
   else if (zeroIfFourBlobs==4)
   {
     status_clear(STATUS_LOCALIZED);
-    status_set(STATUS_DEFENSE); //TODO TODO Remove before gameplay
-    status_set(STATUS_TIME_ALMOST_UP); //TODO TODO Remove
   }
   {
     if (status_check(STATUS_LOCALIZED))
     {
       status_clear(STATUS_LOCALIZED);
-      //TODO TODO TODO
+      //TODO=HIGH
       // THIS CODE needs to change distX, distY, and possible angleOfRo
       // Do this using remaining blobs.
-      // Also, TODO handle when changing from 3 to 2 or 2 to 1 or 1 to 2
+      // Also, TODO detect when changing from 3 to 2 or 2 to 1 or 1 to 2
       // (number of blobs) since this will change avgX and avgY
       pointBXLastKnown = pointBX;
       pointBYLastKnown = pointBY;
@@ -243,9 +261,9 @@ m_usb_tx_string(" ROBOT ANGLE: ");m_usb_tx_int(angleOfRobot);m_usb_tx_char(32);
     return 0; //TODO Check return value!
   }
 
-//TODO Synchronize X, Y to rink center on startup or on switch/PCI.
+//TODO=LOW Synchronize X, Y to rink center on startup or on switch/PCI.
   
-//TODO TODO Implement prediction into the localization.  
+//TODO Implement prediction into the localization.  
 //  char   xCalculated = 0; //   *xMemAddr;
 //  char   yCalculated = 0; //   *yMemAddr;
 //  char dirCalculated = 0; // *dirMemAddr;

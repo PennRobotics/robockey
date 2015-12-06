@@ -3,8 +3,8 @@
 #endif
 
 //TODO Physical robot: shield phototransistors from constellation!!!
-//TODO Read ATMEGA datasheet about differential measurements on ADC
-//TODO Also, chapter 23 details the analog comparator.
+//TODO=LOW Read ATMEGA datasheet about differential measurements on ADC
+//TODO=LOW Also, chapter 23 details the analog comparator.
 
 void updateLocalization(void)
 {
@@ -15,11 +15,11 @@ void updateLocalization(void)
   
 int findPuckDistance(void)
 {
+  //TODO=LOW Optionally, 8-bit char pollIR = ADCH w/ set(ADMUX,ADLAR);
   //TODO Discrete Lowpass on IR polling
-  getADC(PIN_LEFT_IR_ANALOG);
+  getADC(ADC_PIN_FRONT_LEFT_IR);
   int pollLeftIR = ADC;
-  // Optionally, 8-bit char poll(x)IR = ADCH w/ set(ADMUX,ADLAR);
-  getADC(PIN_RIGHT_IR_ANALOG);
+  getADC(ADC_PIN_FRONT_RIGHT_IR);
   int pollRightIR = ADC;
 
   // Find highest ADC value
@@ -46,37 +46,40 @@ int findPuckDistance(void)
   return PUCK_DISTANCE_GAIN * highestIRPoll;
 }
 
-void getADC(char pin)
+void getADC(char pinADC)
 {
-  switch (pin)
+  switch (pinADC)
   {
-    // Set appropriate MUX pins
-    case PIN_LEFT_IR_ANALOG:
+    // MUX registers define appropriate pin for ADC input
+    case 0:
+      clear(ADCSRB,MUX5);
+      clear( ADMUX,MUX2);
+      clear( ADMUX,MUX1);
+      clear( ADMUX,MUX0);
       break;
-    case PIN_RIGHT_IR_ANALOG:
+    case 1:
+      clear(ADCSRB,MUX5);
+      clear( ADMUX,MUX2);
+      clear( ADMUX,MUX1);
+      set  ( ADMUX,MUX0);
+      break;
+    case 4:
+      clear(ADCSRB,MUX5);
+      set  ( ADMUX,MUX2);
+      clear( ADMUX,MUX1);
+      set  ( ADMUX,MUX0);
+      break;
+    case 5:
+      clear(ADCSRB,MUX5);
+      set  ( ADMUX,MUX2);
+      clear( ADMUX,MUX1);
+      set  ( ADMUX,MUX0);
       break;
     default:
       break;
   }
 
-if (pin==0)
-{
-//TODO Select ADC0 (F0)
-  clear(ADCSRB,MUX5);
-  clear( ADMUX,MUX2);
-  clear( ADMUX,MUX1);
-  clear( ADMUX,MUX0);
-}
-else if (pin==1)
-{
-  clear(ADCSRB,MUX5);
-  clear( ADMUX,MUX2);
-  clear( ADMUX,MUX1);
-  set  ( ADMUX,MUX0);
-
-}
-
-_delay_us(30);
+_delay_us(30); // Short delay required after changing ADC input
 set  (ADCSRA, ADSC); // Begin ADC conversion
 set  (SMCR, SE ); //Enable sleep mode
 

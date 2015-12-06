@@ -97,8 +97,11 @@ void initMRF(void)
 
 void initADC(void)
 {
-  sei(); //TODO Check if needed! Should be redundant, refer to fcn.
-  //
+  //TODO=LOW Check if ISR(ANALOG_COMP_vect) is useful
+
+  // Enable interrupts
+  sei();
+  
   // Disable Power Reduction ADC (for ADC input MUX)
   clear(PRR0, PRADC);
 
@@ -110,27 +113,24 @@ void initADC(void)
   set  (ADMUX, REFS0);
 
   // Set ADC clock prescaler /32 (16 MHz sys --> 500 kHz)
+  //TODO Check if ADC clock freq can be increased without error
+  //      (If so, change _delay_ms(x) value in ADC routine!!)
   set  (ADCSRA, ADPS2);
   clear(ADCSRA, ADPS1);
   set  (ADCSRA, ADPS0);
 
-  //TODO Disable digital inputs
+  // Disable digital inputs
   // Bits n=0--7 are in DIDR0, 8--13 in DIDR2
-//  set(  DIDRx, ADCnD);
-//  set(  DIDRx, ADCnD);
-//  set(  DIDRx, ADCnD);
+  //  set(  DIDRx, ADCnD);
+  set(DIDR0, ADC0D);
+  set(DIDR0, ADC1D);
+  set(DIDR0, ADC4D);
+  set(DIDR0, ADC5D);
 
   // Enable ADC interrupts
-  set  (ADCSRA, ADIE);
-  //Will use ISR(ADC_vect)
-  //TODO ISR(ANALOG_COMP_vect)
+  set  (ADCSRA, ADIE); // Will use ISR(ADC_vect) to wake up from sleep
 
-//  // Enable triggering
-//  set(ADCSRA, ADATE); // free-running mode
-//  // Multiple inputs: Modify MUXn bits while conversion is in-progress.
-//  //   Important! Wait at least 1 ADC CLOCK CYCLE before changing!
-
-  // Disable free-running mode
+  // Disable free-running mode (only provide ADC conversions when asked)
   clear(ADCSRA,ADATE);
 
   // Select desired analog input
