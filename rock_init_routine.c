@@ -6,6 +6,9 @@ void init(void)
 {
   m_red(ON); //m_general.h
 
+  // Enable interrupts TODO remove other sei()
+  sei();
+
   // Run the system clock at 16 MHz
   m_clockdivide(0); //m_general.h
 
@@ -25,6 +28,8 @@ void init(void)
 
   initTimers();
 
+  initGPIO();
+
   initStatusLEDPins(); //rock_init_routine.c
   if (TEST_LEDS_ON_STARTUP /*rock_settings.h*/)
     {testStatusLEDPins(); /*rock_status.c*/}
@@ -41,18 +46,25 @@ void init(void)
   m_red(OFF); //m_general.h
 }
 
+void initGPIO(void)
+{
+  set  (PCICR,  PCIE0);  // Pin-Change Interrupt Enable
+  set  (PCMSK0, PCINT4); // Enable PCINT0 (B0)
+  set  (PCIFR,  PCIF0);  // Clear interrupt flag
+}
+
 void initStatusLEDPins(void)
 {
   // Set up SPI
   clear(PRR0, PRSPI); // disable power reduction
-  m_set(DDR_MOSI); // MOSI
-  m_set(DDR_SCLK); // SCLK
-  m_set(DDR_SS); // SS
-  set(SPCR, SPR1); // 125 kHz SPI clock 
-  set(SPCR, SPR0); // "    "
-  set(SPCR, MSTR); // SPI module in Master mode
-  clear(SPCR, SPIE); // disable SPI interrupts (TODO needed?)
-  set(SPCR, SPE);  // enable SPI
+  m_set(DDR_MOSI);    // MOSI
+  m_set(DDR_SCLK);    // SCLK
+  m_set(DDR_SS);      // SS
+  set  (SPCR, SPR1);  // 125 kHz SPI clock 
+  set  (SPCR, SPR0);  // "    "
+  set  (SPCR, MSTR);  // SPI module in Master mode
+  clear(SPCR, SPIE);  // disable SPI interrupts (TODO needed?)
+  set  (SPCR, SPE);   // enable SPI
 
   // Initialize MAX7219 (rock_status.c, rock_init_routine.h)
   sendSPI(MAX7219_NORMAL_OPERATION); // Normal operation

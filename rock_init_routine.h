@@ -21,6 +21,7 @@
 #define RF_TX_ADDRESS_2  (TEAM_NUMBER)*4 + FRIEND_2 - 1
 
 void init(void);
+void initGPIO(void);
 void initStatusLEDPins(void);
 void initTeamLEDPins(void);
 void initADC(void);
