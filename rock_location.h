@@ -18,6 +18,8 @@
 #define min(a, b) ((a)<(b)) ? (a) : (b)
 
 char locationWhereAmI(void);
+void calculateAngleToGoal(void);
+void steeringAlgorithm(void);
 
 //TODO put all these in correct place
 //TODO check that all variables are being called

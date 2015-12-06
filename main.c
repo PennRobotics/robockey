@@ -9,8 +9,6 @@
 #endif
 
 void qualify(void); //TODO Move function after qualification!
-void calculateAngleToGoal(void); //TODO Move function after qual
-void steeringAlgorithm(void); //TODO
 
 int main()
 {
@@ -122,64 +120,4 @@ void qualify(void)
   debugVar = locationWhereAmI();
   calculateAngleToGoal();
   steeringAlgorithm();
-}
-
-void steeringAlgorithm(void)
-{
-  int degErrTurnCW, degErrTurnCCW;
-
-  // Calculate angle error (where robot SHOULD be pointed)
-  int degAngleErr = angleOfRobot - angleToEnemyGoal;
-
-  // Handle angles which wrap around at -179 to 180
-  degAngleErr += (degAngleErr >  180) ? -360 :
-                 (degAngleErr < -179) ?  360 : 0;
-
-  // Include a small buffer when robot is almost aligned
-  degErrTurnCCW =  degAngleErr - ANGLE_ERROR_TO_START_TURN;
-  degErrTurnCW  = -degAngleErr - ANGLE_ERROR_TO_START_TURN;
-
-  // Bound CW and CCW errors between 0 and MAX_ANGLE_ERROR
-  degErrTurnCCW = max(0, min(MAX_ANGLE_ERROR, degErrTurnCCW ));
-  degErrTurnCW  = max(0, min(MAX_ANGLE_ERROR, degErrTurnCW));
-
-  // Each motor's PWM duty cycle will vary based on CW/CCW error
-  // When the robot needs to move CW, L wheel will be faster than R
-  motorDutyL = 3*(120 - degErrTurnCW)/2;
-  motorDutyR = 3*(120 - degErrTurnCCW)/2;
-
-  int slowDownNearGoal = max(0, 120 - distXYToR(robotX-enemyGoalX, robotY-enemyGoalY));
-
-  // Ensure duty cycle is always between 0 and FULL_SPEED
-  motorDutyL = max(0, motorDutyL-slowDownNearGoal);
-  motorDutyR = max(0, motorDutyR-slowDownNearGoal);
-
-  // Cap motor duty cycle at 99.2 percent when timer overflow is 250
-  motorDutyL = min(255, motorDutyL);
-  motorDutyR = min(255, motorDutyR);
-
-  // Aliases are used to assign constants/variables to timer registers.
-  // Low-pass filter keeps motor from changing speed quickly
-  motor( LEFTMOTOR, FORWARD, motorDutyL);
-  motor(RIGHTMOTOR, FORWARD, motorDutyR);
-  MOTOR_TIMER_MAX   = MAX_SPEED;
-}
-
-void calculateAngleToGoal(void)
-{
-//TODO Move defines to appropriate header. (Might be duplicated)
-//TODO Could also use a calibration routine to accurately set goal pos.
-//TODO Make sure goal selection is correct during actual gameplay!
-  if (currentTeam==RED)
-  {
-    // Calculate angle between robot and each goal
-    // Low-pass filter, take average of old and new value
-    angleToEnemyGoal = (angleToEnemyGoal + atan2d(GOAL_BLUE_Y-robotY,GOAL_BLUE_X-robotX)+1)/2;
-    angleToTeamGoal  = (angleToTeamGoal  + atan2d(GOAL_RED_Y-robotY,GOAL_RED_X-robotX)+1)/2;
-  } else if (currentTeam==BLUE) {
-    angleToEnemyGoal = (angleToEnemyGoal + atan2d(GOAL_RED_Y-robotY,GOAL_RED_X-robotX)+1)/2;
-    angleToTeamGoal  = (angleToTeamGoal  + atan2d(GOAL_BLUE_Y-robotY,GOAL_BLUE_X-robotX)+1)/2;
-  } else {
-    m_red(ON);
-  }
 }
