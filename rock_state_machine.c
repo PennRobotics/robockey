@@ -48,7 +48,7 @@ void stateMachine()
   case MOVE_TO_PUCK:
 //TODO estimate puck distance
     break;
-  case ALIGN_PUCK:
+  case ALIGN_WITH_PUCK:
 //TODO if puck is too close and robot is pointing toward enemy half, drive while steering puck
     break;
   case CHECK_FOR_ASSIST_CHANCE:
@@ -178,13 +178,29 @@ int stateStart(void)
     return CHARGE_ENEMY_GOAL;
   }
   if (distToPuck == 255/*TODO*/) {return FIND_PUCK;}
-  if (((angleToBehindPuck - angleOfRobot) < DEGREE_THRESHOLD)&&((angleOfRobot - angleToBehindPuck) < DEGREE_THRESHOLD)&&(hasPuck == FALSE)) {return MOVE_TO_PUCK;}
-  if ((((angleOfRobot - angleToEnemyGoal) > DEGREE_THRESHOLD) || ((angleToEnemyGoal - angleOfRobot) > DEGREE_THRESHOLD)) && (hasPuck == TRUE))
+  if (((angleToBehindPuck - angleOfRobot) < GOAL_ALIGN_DEG)&&
+      ((angleOfRobot - angleToBehindPuck) < GOAL_ALIGN_DEG)&&
+      (hasPuck == FALSE))
   {
-    if (((angleOfRobot - angleToTeamGoal) < DEGREE_THRESHOLD) && ((angleToTeamGoal - angleOfRobot) < DEGREE_THRESHOLD) && (distToTeamGoal < 15)) {return CALL_FOR_ASSIST;}
-    return ALIGN_PUCK;
+    return MOVE_TO_PUCK;
   }
-  if ((distToPuck <= 4) && ((angleOfRobot - angleToEnemyGoal) <= DEGREE_THRESHOLD) && ((angleToEnemyGoal - angleOfRobot) <= DEGREE_THRESHOLD) && (distToEnemyGoal > 15))
+  if ((((angleOfRobot - angleToEnemyGoal) > GOAL_ALIGN_DEG) ||
+       ((angleToEnemyGoal - angleOfRobot) > GOAL_ALIGN_DEG)) &&
+      (hasPuck == TRUE))
+  {
+    if (((angleOfRobot - angleToTeamGoal) < GOAL_ALIGN_DEG) &&
+        ((angleToTeamGoal - angleOfRobot) < GOAL_ALIGN_DEG) &&
+        (distToTeamGoal < 15))
+    {
+      return CALL_FOR_ASSIST;
+    }
+    return ALIGN_WITH_PUCK;
+  }
+  //TODO Test hard-coded distance values that enable MOVE_TO_GOAL state
+  if ((distToPuck <= 4) &&
+      ((angleOfRobot - angleToEnemyGoal) <= GOAL_ALIGN_DEG) &&
+      ((angleToEnemyGoal - angleOfRobot) <= GOAL_ALIGN_DEG) &&
+      (distToEnemyGoal > 15))
   {
     if (robotIs(SHOOTER)) {return SHOOT_PUCK;}
     return MOVE_TO_GOAL; 
