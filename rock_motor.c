@@ -49,7 +49,7 @@ void motor(unsigned char motor_id, char motor_dir, unsigned char motor_duty)
   }
 
   // Enable status LED if either motor is in motion
-  if (MOTOR_TIMER_OCR_L > 15) || (MOTOR_TIMER_OCR_R > 15)
+  if ((MOTOR_TIMER_OCR_L > 15) || (MOTOR_TIMER_OCR_R > 15))
   {
     status_set(STATUS_MOTOR_ON);
   } else {
