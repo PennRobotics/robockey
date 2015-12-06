@@ -104,7 +104,7 @@ ISR(TIMER0_OVF_vect)
 // Pin Change Interrupt
 ISR(PCINT0_vect)
 {
-  if (m_check(PUCK_SENSOR_PIN)==ON)
+  if (m_check(PIN_HAS_PUCK))
   {
     havePuck = TRUE;
     status_set  ( STATUS_HAVE_PUCK);
