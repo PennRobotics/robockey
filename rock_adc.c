@@ -4,7 +4,6 @@
 
 int findPuckDistance(void)
 {
-  //TODO=LOW Optionally, 8-bit char pollIR = ADCH w/ set(ADMUX,ADLAR);
   //TODO Discrete Lowpass on IR polling
   getADC(ADC_PIN_FRONT_LEFT_IR);
   int pollLeftIR = ADC;

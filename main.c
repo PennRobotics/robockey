@@ -114,7 +114,7 @@ int main()
     stateMachine(); //rock_state_machine.c
     getCurrentState(); //rock_state_machine.c
     updateStatusFlags(); //rock_status.c
-    updateLocalization(); //rock_localization.c
+    locationWhereAmI(); //rock_location.c
   }
 }
 
