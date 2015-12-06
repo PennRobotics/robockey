@@ -23,10 +23,13 @@ ISR(INT2_vect)
 
     case 0xA2: /*GOAL A*/
       state = GAMEPLAY_SCORED_GOAL;
+      //TODO Make sure team assignment is correct!
+      if (currentTeam == RED)  { enemyScore++; } else { teamScore++; }
       break;
 
     case 0xA3: /*GOAL B*/
       state = GAMEPLAY_SCORED_GOAL;
+      if (currentTeam == BLUE) { enemyScore++; } else { teamScore++; }
       break;
 
     case 0xA4: /*PAUSE*/

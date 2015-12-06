@@ -8,8 +8,6 @@
 #include "rock_headers.h"
 #endif
 
-void qualify(void); //TODO Move function after qualification!
-
 int main()
 {
   //TODO=LOW Currently, pin D5 is being used as a +5V to mWii
@@ -44,72 +42,17 @@ int main()
         teamGoalX  = GOAL_BLUE_X;
       }
 
-  OCR4A = 3; // 0 percent duty cycle
-  OCR4D = 3; // 0 percent duty cycle
-  while(1) /*TODO delete this while loop after qual*/
-  {
-    if (debugVar==1){status_set(STATUS_LOCALIZED);}else{status_clear(STATUS_LOCALIZED);}
+  OCR4A = 3; // 1.2 percent duty cycle (effectively OFF)
+  OCR4D = 3; // 1.2 percent duty cycle (effectively OFF)
 
-    if (state==GAMEPLAY_COMM_TEST)
-    {
-    }
-    if (state==GAMEPLAY_PLAY_COMMAND)
-    {
-      if (currentTeam==RED) { status_set(LED_RED);status_clear(LED_BLUE); } else { status_set(LED_BLUE);status_clear(LED_RED); }
-      status_clear(STATUS_NO_GAMEPLAY);
-      if (timeElapsedMS/5 != 0 /*TODO*/)
-      {
-        switchDirection++;
-        if (switchDirection>1600)
-        {
-          currentTeam = RED;
-        }
-        if (switchDirection>3200)
-        {
-          switchDirection = 0;
-          currentTeam = BLUE;
-        }
-        timeElapsedMS = 0;
-        //randomshit();
-         qualify();
-        status_toggle(STATUS_PUCK_IN_SIGHT);
-        status_toggle(STATUS_HAVE_PUCK);
-        status_toggle(STATUS_DEFENSE);
-        status_toggle(STATUS_TIME_ALMOST_UP);
-        status_toggle(STATUS_MOTOR_ON);
-        status_toggle(STATUS_WAIT_FOR_TEAMMATE);
-        status_toggle(STATUS_ASSISTING);
-        status_toggle(STATUS_NO_RECENT_COMM);
-      }
-    }
-    else if ((state==GAMEPLAY_NOT_PLAYING) || (state==GAMEPLAY_TIMEOUT) || (state==GAMEPLAY_HALFTIME) || (state==GAMEPLAY_SCORED_GOAL))
-    {
-      status_clear(STATUS_PUCK_IN_SIGHT);
-      status_clear(STATUS_HAVE_PUCK);
-      status_clear(STATUS_DEFENSE);
-      status_clear(STATUS_TIME_ALMOST_UP);
-      status_clear(STATUS_MOTOR_ON);
-      status_clear(STATUS_WAIT_FOR_TEAMMATE);
-      status_clear(STATUS_ASSISTING);
-      status_clear(STATUS_NO_RECENT_COMM);
-      status_set(STATUS_NO_GAMEPLAY);
-      OCR4A = 3;
-      OCR4D = 3;
-    }
-  }
   while(1)
   {
     stateMachine(); //rock_state_machine.c
     getCurrentState(); //rock_state_machine.c
     updateStatusFlags(); //rock_status.c
     locationWhereAmI(); //rock_location.c
+    calculateAngleToGoal();
+    steeringAlgorithm();
     if (USB_DEBUGGING) doUSB(); //rock_debug.c
   }
-}
-
-void qualify(void)
-{
-  debugVar = locationWhereAmI();
-  calculateAngleToGoal();
-  steeringAlgorithm();
 }

@@ -30,6 +30,8 @@ void stateMachine()
     break;
 
   case GAMEPLAY_COMM_TEST: /*rock_states.h*/
+    motor(LEFTMOTOR, OFF, 0); /*rock_motor.h*/ 
+    motor(RIGHTMOTOR, OFF, 0);
     oneIfPlaying = 1;
     if (timeElapsedMS/100 != 0)
     {
@@ -51,26 +53,27 @@ void stateMachine()
     // do something;
     break;
   case GAMEPLAY_TIMEOUT: /*rock_states.h*/
+    motor(LEFTMOTOR, OFF, 0); /*rock_motor.h*/ 
+    motor(RIGHTMOTOR, OFF, 0);
     oneIfPlaying = 0;
     // do something;
     break;
 
   case GAMEPLAY_HALFTIME: /*rock_states.h*/
-    oneIfPlaying = 0;
     motor(LEFTMOTOR, OFF, 0); /*rock_motor.h*/ 
     motor(RIGHTMOTOR, OFF, 0);
+    oneIfPlaying = 0;
+    timeElapsedMS = 30000;
     //status_blink( STATUS_NO_GAMEPLAY);
+
+    // Swap team and enemy goal locations
     if (currentTeam == RED)
     {
-      currentTeam = BLUE;
-      status_set(LED_RED);
       enemyGoalX = GOAL_RED_X;
       teamGoalX  = GOAL_BLUE_X;
     }
     else if (currentTeam == BLUE)
     {
-      currentTeam = BLUE;
-      status_set(LED_RED);
       enemyGoalX = GOAL_RED_X;
       teamGoalX  = GOAL_BLUE_X;
     }
@@ -125,6 +128,22 @@ void stateMachine()
 
   case MOVE_PATROL:
 //TODO if puck and/or constellation has been out-of-sight for several seconds, move in large figure eights
+
+    // TODO When entering move_patrol state: 
+    //       int patrolCounter = timeElapsedMS; //TODO global var?
+    patrolCounter++;
+    if (timeElapsedMS - patrolCounter > 10000)
+    {
+      int patrolCounter = timeElapsedMS; //TODO global var?
+      //TODO enemyGoalX = RED;
+      //TODO=HIGH When EXITING move_patrol state,
+      //      set the enemy goal back to the correct side!!!
+    }
+    else if (timeElapsedMS - patrolCounter > 5000)
+    {
+      //TODO enemyGoalX = BLUE;
+    }
+
     break;
 
   case MOVE_TO_DEFENSE_PUCK_IN_SIGHT:
