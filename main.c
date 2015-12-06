@@ -155,8 +155,8 @@ void steeringAlgorithm(void)
 
   // Each motor's PWM duty cycle will vary based on CW/CCW error
   // When the robot needs to move CW, L wheel will be faster than R
-  motorDutyR = 3*(120 - degErrTurnCCW)/2;
   motorDutyL = 3*(120 - degErrTurnCW)/2;
+  motorDutyR = 3*(120 - degErrTurnCCW)/2;
 
   int slowDownNearGoal = max(0, 120 - distXYToR(robotX-enemyGoalX, robotY-enemyGoalY));
 
@@ -166,8 +166,8 @@ void steeringAlgorithm(void)
 
   // Aliases are used to assign constants/variables to timer registers.
   // Low-pass filter keeps motor from changing speed quickly
-  MOTOR_TIMER_OCR_R = (7*MOTOR_TIMER_OCR_R + 1*motorDutyR)/8;
-  MOTOR_TIMER_OCR_L = (7*MOTOR_TIMER_OCR_L + 1*motorDutyL)/8;
+  motor( LEFTMOTOR, FORWARD, motorDutyL);
+  motor(RIGHTMOTOR, FORWARD, motorDutyR);
   MOTOR_TIMER_MAX   = MAX_SPEED;
 }
 

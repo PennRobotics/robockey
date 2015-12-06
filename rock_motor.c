@@ -14,12 +14,12 @@ void motor(unsigned char motor_id, char motor_dir, unsigned char motor_duty)
     // motor driver enable signal
     if (motor_dir != OFF) 
     {
+      MOTOR_TIMER_OCR_L = (7*MOTOR_TIMER_OCR_L + 1*motor_duty)/8;
       //TODO set(MOTOR_L_EN_PORT);
-      status_set(STATUS_MOTOR_ON);
     } else {
+      MOTOR_TIMER_OCR_L = (6*MOTOR_TIMER_OCR_L)/8;
       //TODO clear(MOTOR_L_EN_PORT);
       //TODO Check if both motors disabled before clearing status!
-      //status_clear(STATUS_MOTOR_OFF);
     }
 
     // motor driver direction signal
@@ -29,16 +29,19 @@ void motor(unsigned char motor_id, char motor_dir, unsigned char motor_duty)
     } else {
       //TODO clear(MOTOR_L_DIR_PORT);
     }
-//TODO    TimerRegA = motor_duty;
-//TODO One compare reg for each motor. Check these to disable status.
-//    OC4A -> C7
-//    OC4B -> B6
 
   }
   else if (motor_id==RIGHTMOTOR)
   {
-// copy from above
-//    TimerRegB = motor_duty;
+    MOTOR_TIMER_OCR_R = (7*MOTOR_TIMER_OCR_R + 1*motor_duty)/8;
+  }
+
+  // Enable status LED if either motor is in motion
+  if (MOTOR_TIMER_OCR_L > 15) || (MOTOR_TIMER_OCR_R > 15)
+  {
+    status_set(STATUS_MOTOR_ON);
+  } else {
+    status_clear(STATUS_MOTOR_ON);
   }
 }
 
