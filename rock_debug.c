@@ -46,4 +46,14 @@ void doUSB(void)
 //    m_usb_tx_uint(robotY);
 //    m_usb_tx_int( angleOfRobot);
  // }
+//****************************
+    m_usb_tx_string(" ROBOT ANGLE: ");m_usb_tx_int(angleOfRobot);m_usb_tx_char(32);
+
+    m_usb_tx_string(" THETA1: ");m_usb_tx_int(angleToRobot);m_usb_tx_char(32);
+
+    m_usb_tx_string(" THETA2: ");m_usb_tx_int(theta2);m_usb_tx_char(32);
+
+    m_usb_tx_string("ROBOT COORDS: (");m_usb_tx_int(robotX);m_usb_tx_char(32);
+    m_usb_tx_int(robotY);m_usb_tx_string(")");m_usb_tx_char(32);
+
 }

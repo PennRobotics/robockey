@@ -11,12 +11,12 @@ void motor(unsigned char motor_id, char motor_dir, unsigned char motor_duty)
 {
   if (motor_id==LEFTMOTOR)
   {
-    // motor driver enable signal
+    // motor driver enable signal LOW-PASS
     if (motor_dir != OFF) 
     {
       MOTOR_TIMER_OCR_L = (7*MOTOR_TIMER_OCR_L + 1*motor_duty)/8;
     } else {
-      MOTOR_TIMER_OCR_L = (MOTOR_TIMER_OCR_L)*3/4;
+      MOTOR_TIMER_OCR_L = (MOTOR_TIMER_OCR_L)*2/3 + 1;
     }
 
     // motor driver direction signal
@@ -30,12 +30,12 @@ void motor(unsigned char motor_id, char motor_dir, unsigned char motor_duty)
   }
   else if (motor_id==RIGHTMOTOR)
   {
-    // motor driver enable signal
+    // motor driver enable signal LOW-PASS
     if (motor_dir != OFF) 
     {
       MOTOR_TIMER_OCR_R = (7*MOTOR_TIMER_OCR_R + 1*motor_duty)/8;
     } else {
-      MOTOR_TIMER_OCR_R = (MOTOR_TIMER_OCR_R)*3/4;
+      MOTOR_TIMER_OCR_R = (MOTOR_TIMER_OCR_R)*2/3 + 1;
     }
 
     // motor driver direction signal
@@ -49,7 +49,7 @@ void motor(unsigned char motor_id, char motor_dir, unsigned char motor_duty)
   }
 
   // Enable status LED if either motor is in motion
-  if ((MOTOR_TIMER_OCR_L > 15) || (MOTOR_TIMER_OCR_R > 15))
+  if ((MOTOR_TIMER_OCR_L > 20) || (MOTOR_TIMER_OCR_R > 20))
   {
     status_set(STATUS_MOTOR_ON);
   } else {

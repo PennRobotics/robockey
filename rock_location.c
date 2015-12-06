@@ -196,30 +196,22 @@ char locationWhereAmI(void)
 
     angleToRobot += (angleToRobot < -180) ?  360 : 
                     (angleToRobot >  180) ? -360 : 0;
-//****************************
-m_usb_tx_string(" ROBOT ANGLE: ");m_usb_tx_int(angleOfRobot);m_usb_tx_char(32);
-
-    m_usb_tx_string(" THETA1: ");m_usb_tx_int(angleToRobot);m_usb_tx_char(32);
-
-    m_usb_tx_string(" THETA2: ");m_usb_tx_int(theta2);m_usb_tx_char(32);
 
     // Calculate absolute X and Y using distance and angle to robot
     robotX = 512+((long)cosd_M(angleToRobot)*(long)distR)/1000;
     robotY = 384+((long)sind_M(angleToRobot)*(long)distR)/1000;
 
-    m_usb_tx_string("ROBOT COORDS: (");m_usb_tx_int(robotX);m_usb_tx_char(32);
-    m_usb_tx_int(robotY);m_usb_tx_string(")");m_usb_tx_char(32);
-
+    status_set  ( STATUS_LOCALIZED);
     return 1; //TODO Check return value!
   }
   else if (zeroIfFourBlobs==4)
   {
-    status_clear(STATUS_LOCALIZED);
+    status_clear( STATUS_LOCALIZED);
   }
   {
     if (status_check(STATUS_LOCALIZED))
     {
-      status_clear(STATUS_LOCALIZED);
+      status_clear( STATUS_LOCALIZED);
       //TODO=HIGH
       // THIS CODE needs to change distX, distY, and possible angleOfRo
       // Do this using remaining blobs.
@@ -232,6 +224,7 @@ m_usb_tx_string(" ROBOT ANGLE: ");m_usb_tx_int(angleOfRobot);m_usb_tx_char(32);
     }
     else
     {
+      //TODO status_blink(STATUS_LOCALIZED);
       for (i=0;i<4;i++)
       {
         avgX += (blobX[i]==1023) ? blobX[i] : 0;

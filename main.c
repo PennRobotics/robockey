@@ -20,28 +20,30 @@ int main()
 
   init(); //rock_init_routine.c
   
-  //TODO Which side of the rink does the robot start?
-  m_wait(50);
-  m_green(TOGGLE);m_wait(50);
-  locationWhereAmI();m_wait(50);
-  int rockX = robotX;
-  int rockY = robotY;
-  locationWhereAmI();
-  robotX = (rockX + robotX)/2;
-  robotY = (rockY + robotY)/2;
-  m_green(TOGGLE);
-  if (robotX < 512)
-  {
-    currentTeam = RED;
-    status_set(LED_RED);
-    enemyGoalX = GOAL_BLUE_X;
-    teamGoalX  = GOAL_RED_X;
-  } else {
-    currentTeam = BLUE;
-    status_set(LED_BLUE);
-    enemyGoalX = GOAL_RED_X;
-    teamGoalX  = GOAL_BLUE_X;
-  }
+  //TODO=HIGH Enable team selection using hard switch
+      //TODO Which side of the rink does the robot start?
+      m_wait(50);
+      m_green(TOGGLE);m_wait(50);
+      locationWhereAmI();m_wait(50);
+      int rockX = robotX;
+      int rockY = robotY;
+      locationWhereAmI();
+      robotX = (rockX + robotX)/2;
+      robotY = (rockY + robotY)/2;
+      m_green(TOGGLE);
+      if (robotX < 512)
+      {
+        currentTeam = RED;
+        status_set(LED_RED);
+        enemyGoalX = GOAL_BLUE_X;
+        teamGoalX  = GOAL_RED_X;
+      } else {
+        currentTeam = BLUE;
+        status_set(LED_BLUE);
+        enemyGoalX = GOAL_RED_X;
+        teamGoalX  = GOAL_BLUE_X;
+      }
+
   OCR4A = 3; // 0 percent duty cycle
   OCR4D = 3; // 0 percent duty cycle
   while(1) /*TODO delete this while loop after qual*/

@@ -34,6 +34,7 @@ void stateMachine()
     if (timeElapsedMS/100 != 0)
     {
       timeElapsedMS = 0;
+      //Ensure correct LED blinks after halftime!
       if (currentTeam==RED)
       {
         status_toggle(LED_RED);
