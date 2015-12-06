@@ -10,7 +10,7 @@ int patrolCounter;
 
 void stateMachine()
 {
-  switch(state) /*rock_initialize_vars.h*/
+  switch(state) /*rock_vars.h*/
   {
   case ROBOT_STARTUP: /*rock_states.h*/
     motorsOff;
@@ -220,7 +220,7 @@ int getCurrentState(void)
 
   // If not winning and time is running low...
   //TODO Potential to use STATUS_LOW_TIME
-  if ((teamScore < enemyScore + 1) && (timeElapsedMS > 52500)) /*rock_initialize_var.h*/
+  if ((teamScore < enemyScore + 1) && (timeElapsedMS > 52500)) /*rock_vars.h*/
     {return GO_BATSHIT_CRAZY; /*rock_states.h*/}
 
   if ((teamScore == enemyScore) && (teamScore == 0))
