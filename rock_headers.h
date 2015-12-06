@@ -15,7 +15,7 @@
 #include "m_rf.h"
 #include "m_usb.h"
 #include "m_wii.h"
-#include "rock_initialize_vars.h"
+#include "rock_vars.h"
 #include "rock_init_routine.h"
 #include "rock_state_machine.h"
 #include "rock_adc.h"
