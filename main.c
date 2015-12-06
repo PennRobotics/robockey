@@ -11,7 +11,6 @@
 void qualify(void); //TODO Move function after qualification!
 void calculateAngleToGoal(void); //TODO Move function after qual
 void steeringAlgorithm(void); //TODO
-void randomshit(void); //TODO
 
 int main()
 {
@@ -116,15 +115,6 @@ int main()
     updateStatusFlags(); //rock_status.c
     locationWhereAmI(); //rock_location.c
   }
-}
-
-
-//TODO 
-void randomshit(void)
-{
-#define  RAND_MAX  200
-  OCR4A = rand()+50;
-  OCR4D = rand()+50;
 }
 
 void qualify(void)
