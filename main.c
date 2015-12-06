@@ -164,6 +164,10 @@ void steeringAlgorithm(void)
   motorDutyL = max(0, motorDutyL-slowDownNearGoal);
   motorDutyR = max(0, motorDutyR-slowDownNearGoal);
 
+  // Cap motor duty cycle at 99.2 percent when timer overflow is 250
+  motorDutyL = min(255, motorDutyL);
+  motorDutyR = min(255, motorDutyR);
+
   // Aliases are used to assign constants/variables to timer registers.
   // Low-pass filter keeps motor from changing speed quickly
   motor( LEFTMOTOR, FORWARD, motorDutyL);
