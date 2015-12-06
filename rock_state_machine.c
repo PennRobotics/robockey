@@ -6,9 +6,9 @@
 // Use getCurrentState() to determine if the CURRENT state has changed!
 void stateMachine()
 {
-  switch(state /*rock_initialize_vars.h*/)
+  switch(state) /*rock_initialize_vars.h*/
   {
-  case ROBOT_STARTUP:
+  case ROBOT_STARTUP: /*rock_states.h*/
     motor(LEFTMOTOR, OFF, 0); /*rock_motor.h*/ 
     motor(RIGHTMOTOR, OFF, 0);
     status_clear( STATUS_PUCK_IN_SIGHT); /*rock_status.h;rock_states.h*/
@@ -19,95 +19,154 @@ void stateMachine()
     status_clear( STATUS_MOTOR_ON);
     status_clear( STATUS_WAIT_FOR_TEAMMATE);
     status_clear( STATUS_ASSISTING);
-    status_set(   STATUS_NO_RECENT_COMM);
-    status_set(   STATUS_NO_GAMEPLAY);
+    status_set  ( STATUS_NO_RECENT_COMM);
+    status_set  ( STATUS_NO_GAMEPLAY);
     break;
+
   case GAMEPLAY_NOT_PLAYING: /*rock_states.h*/
     motor(LEFTMOTOR, OFF, 0); /*rock_motor.h*/ 
     motor(RIGHTMOTOR, OFF, 0);
-    status_set(STATUS_NO_GAMEPLAY);
+    status_set  ( STATUS_NO_GAMEPLAY);
     break;
-  case GAMEPLAY_COMM_TEST:
+
+  case GAMEPLAY_COMM_TEST: /*rock_states.h*/
+    oneIfPlaying = 1;
+    if (timeElapsedMS/100 != 0)
+    {
+      timeElapsedMS = 0;
+      if (currentTeam==RED)
+      {
+        status_toggle(LED_RED);
+      } else {
+        status_toggle(LED_BLUE);
+      }
+    }
+    status_set  ( STATUS_NO_GAMEPLAY);
+    break;
+
+  case GAMEPLAY_PLAY_COMMAND: /*rock_states.h*/
+    oneIfPlaying = 1;
+    status_clear( STATUS_NO_GAMEPLAY);
     // do something;
     break;
-  case GAMEPLAY_PLAY_COMMAND:
+  case GAMEPLAY_TIMEOUT: /*rock_states.h*/
+    oneIfPlaying = 0;
     // do something;
     break;
-  case GAMEPLAY_TIMEOUT:
-    // do something;
+
+  case GAMEPLAY_HALFTIME: /*rock_states.h*/
+    oneIfPlaying = 0;
+    motor(LEFTMOTOR, OFF, 0); /*rock_motor.h*/ 
+    motor(RIGHTMOTOR, OFF, 0);
+    //status_blink( STATUS_NO_GAMEPLAY);
+    if (currentTeam == RED)
+    {
+      currentTeam = BLUE;
+      status_set(LED_RED);
+      enemyGoalX = GOAL_RED_X;
+      teamGoalX  = GOAL_BLUE_X;
+    }
+    else if (currentTeam == BLUE)
+    {
+      currentTeam = BLUE;
+      status_set(LED_RED);
+      enemyGoalX = GOAL_RED_X;
+      teamGoalX  = GOAL_BLUE_X;
+    }
     break;
-  case GAMEPLAY_HALFTIME:
-    // do something;
-    break;
+
   case GAMEPLAY_SCORED_GOAL:
+    oneIfPlaying = 0;
     // do something;
+    //TODO determine which team scored goal
     break;
+
   case FIND_PUCK:
 //TODO turn
     break;
+
   case MOVE_TO_PUCK:
 //TODO estimate puck distance
     break;
+
   case ALIGN_WITH_PUCK:
 //TODO if puck is too close and robot is pointing toward enemy half, drive while steering puck
     break;
+
   case CHECK_FOR_ASSIST_CHANCE:
 //TODO ready to attempt a goal; get friendly robot position and see if robot "role" allows assist
     break;
+
   case CALL_FOR_ASSIST:
 //TODO send request, if not acknowledged, move on to next state. otherwise, wait for assist.
     break;
+
   case ASSIST_BY_CLEARING_PATH:
 //TODO OR drive down path in front of puck (assisting runner)
     break;
+
   case MOVE_TO_GOAL:
     break;
+
   case RIGHT_GUIDE_TO_GOAL:
     break;
+
   case LEFT_GUIDE_TO_GOAL:
     break;
+
   case CHARGE_ENEMY_GOAL:
 //TODO charge goal from the side (assisting shooter) 
     break;
+
   case SHOOT_PUCK:
 //TODO fire solenoid or run to goal (stop short at 15 cm[?] if seeking 2 points)
     break;
+
   case MOVE_PATROL:
 //TODO if puck and/or constellation has been out-of-sight for several seconds, move in large figure eights
     break;
+
   case MOVE_TO_DEFENSE_PUCK_IN_SIGHT:
-    status_set(   STATUS_PUCK_IN_SIGHT); /*rock_status.h*/
+    status_set  ( STATUS_PUCK_IN_SIGHT); /*rock_status.h*/
     status_clear( STATUS_HAVE_PUCK);
-    status_set(   STATUS_DEFENSE);
+    status_set  ( STATUS_DEFENSE);
     break;
+
   case MOVE_TO_DEFENSE_PUCK_OUT_OF_SIGHT:
     status_clear( STATUS_PUCK_IN_SIGHT); /*rock_status.h*/
     status_clear( STATUS_HAVE_PUCK);
-    status_set(   STATUS_DEFENSE);
+    status_set  ( STATUS_DEFENSE);
     break;
+
   case MOVE_AROUND_PERIMETER:
     break;
+
   case GUARD_GOAL_PUCK_IN_SIGHT:
-    status_set(   STATUS_PUCK_IN_SIGHT); /*rock_status.h*/
+    status_set  ( STATUS_PUCK_IN_SIGHT); /*rock_status.h*/
     status_clear( STATUS_HAVE_PUCK);
-    status_set(   STATUS_DEFENSE);
+    status_set  ( STATUS_DEFENSE);
     break;
+
   case GUARD_GOAL_PUCK_IN_CONTACT:
-    status_set(   STATUS_PUCK_IN_SIGHT); /*rock_status.h*/
-    status_set(   STATUS_HAVE_PUCK);
-    status_set(   STATUS_DEFENSE);
+    status_set  ( STATUS_PUCK_IN_SIGHT); /*rock_status.h*/
+    status_set  ( STATUS_HAVE_PUCK);
+    status_set  ( STATUS_DEFENSE);
     break;
+
   case GUARD_GOAL_PUCK_OUT_OF_SIGHT:
     status_clear( STATUS_PUCK_IN_SIGHT); /*rock_status.h*/
     status_clear( STATUS_HAVE_PUCK);
-    status_set(   STATUS_DEFENSE);
+    status_set  ( STATUS_DEFENSE);
     break;
+
   case GET_AGGRESSIVE:
     //status_blink(STATUS_TIME_ALMOST_UP);
     break;
+
   case GO_BATSHIT_CRAZY:
-    status_set(STATUS_TIME_ALMOST_UP);
+    status_set  ( STATUS_TIME_ALMOST_UP);
     break;
+
   default:
     // do something;
     m_red(ON);
@@ -119,8 +178,8 @@ void stateMachine()
     status_clear( STATUS_MOTOR_ON);
     status_clear( STATUS_WAIT_FOR_TEAMMATE);
     status_clear( STATUS_ASSISTING);
-    status_set(   STATUS_NO_RECENT_COMM);
-    status_set(   STATUS_NO_GAMEPLAY);
+    status_set  ( STATUS_NO_RECENT_COMM);
+    status_set  ( STATUS_NO_GAMEPLAY);
     break;
   }
 }

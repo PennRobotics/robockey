@@ -30,5 +30,8 @@ unsigned char teamHasPuck = FALSE;
 unsigned char teamScore = 0;
 unsigned  int timeElapsedMS = 0;
 
+// oneIfPlaying is also 1 at startup to enable comm test blinking
+         char oneIfPlaying = 1;
+
           int debugVar = 127;
 unsigned char currentTeam = 0;

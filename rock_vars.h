@@ -36,6 +36,8 @@ extern           int pollRightIR;
 extern           int debugVar; //TODO
 extern unsigned char currentTeam; //TODO
 
+extern          char oneIfPlaying;
+
 #ifndef RED
 #define RED  1
 #define BLUE 2

@@ -20,11 +20,8 @@ int main()
 
   init(); //rock_init_routine.c
   
-  //TODO Get ADC value from F0
-  getADC(0); int result = ADC;
-
   //TODO Which side of the rink does the robot start?
-  m_wait(500);
+  m_wait(50);
   m_green(TOGGLE);m_wait(50);
   locationWhereAmI();m_wait(50);
   int rockX = robotX;
@@ -38,29 +35,21 @@ int main()
     currentTeam = RED;
     status_set(LED_RED);
     enemyGoalX = GOAL_BLUE_X;
-    teamGoalX = GOAL_RED_X;
+    teamGoalX  = GOAL_RED_X;
   } else {
     currentTeam = BLUE;
     status_set(LED_BLUE);
     enemyGoalX = GOAL_RED_X;
-    teamGoalX = GOAL_BLUE_X;
+    teamGoalX  = GOAL_BLUE_X;
   }
   OCR4A = 3; // 0 percent duty cycle
   OCR4D = 3; // 0 percent duty cycle
   while(1) /*TODO delete this while loop after qual*/
   {
-    updateStatusFlags();
-//    if (USB_DEBUGGING) doUSB(); //rock_debug.c
     if (debugVar==1){status_set(STATUS_LOCALIZED);}else{status_clear(STATUS_LOCALIZED);}
 
     if (state==GAMEPLAY_COMM_TEST)
     {
-      if (timeElapsedMS/100 != 0 /*TODO*/)
-      {
-        timeElapsedMS = 0;
-        if (currentTeam==RED) { status_toggle(LED_RED); } else { status_toggle(LED_BLUE); }
-      }
-      status_set(STATUS_NO_GAMEPLAY);
     }
     if (state==GAMEPLAY_PLAY_COMMAND)
     {
@@ -112,6 +101,7 @@ int main()
     getCurrentState(); //rock_state_machine.c
     updateStatusFlags(); //rock_status.c
     locationWhereAmI(); //rock_location.c
+    if (USB_DEBUGGING) doUSB(); //rock_debug.c
   }
 }
 
