@@ -15,6 +15,8 @@
 // How much tolerance in puck-robot-goal alignment
 #define GOAL_ALIGN_DEG        12
 
+#define MOTOR_UPDATE_PERIOD_MS          10
+
 #define USB_DEBUGGING                   TRUE
 
 #endif
