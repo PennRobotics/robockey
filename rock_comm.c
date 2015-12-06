@@ -32,7 +32,7 @@ void tellFriendsAboutMe()
     bufferRF[9] =   LOW(statusFlags); 
 
     m_red(TOGGLE);
-    m_rf_send((RF_TX_ADDRESS_1), bufferRF, RF_PACKET_LENGTH);
-    m_rf_send((RF_TX_ADDRESS_2), bufferRF, RF_PACKET_LENGTH);
+    m_rf_send(RF_TX_ADDRESS_1, bufferRF, RF_PACKET_LENGTH);
+    m_rf_send(RF_TX_ADDRESS_2, bufferRF, RF_PACKET_LENGTH);
     m_red(TOGGLE);
 }
