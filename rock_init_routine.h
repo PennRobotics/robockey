@@ -11,8 +11,9 @@
 #define RF_CHANNEL       1
 #define RF_PACKET_LENGTH 10
 
-#define TEAM_NUMBER      5
+#define TEAM_NUMBER      22
 #define ROBOT_NUMBER     1
+
 #define FRIEND_1         (ROBOT_NUMBER==3?1:ROBOT_NUMBER+1)
 #define FRIEND_2         (ROBOT_NUMBER==1?3:ROBOT_NUMBER-1)
 

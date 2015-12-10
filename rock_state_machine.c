@@ -3,10 +3,10 @@
 #endif
 
 //TODO Test and move to header
-int patrolCounter;
 
 // This is used to update the display and act in the CURRENT state.
 // Use getCurrentState() to determine if the CURRENT state has changed!
+char robotOnPatrol = FALSE;
 
 void stateMachine()
 {
@@ -28,6 +28,7 @@ void stateMachine()
 
   case GAMEPLAY_NOT_PLAYING: /*rock_states.h*/
     motorsOff;
+    oneIfPlaying = 0;
     status_set  ( STATUS_NO_GAMEPLAY);
     break;
 
@@ -51,19 +52,19 @@ void stateMachine()
   case GAMEPLAY_PLAY_COMMAND: /*rock_states.h*/
     oneIfPlaying = 1;
     status_clear( STATUS_NO_GAMEPLAY);
-    // do something;
     break;
 
   case GAMEPLAY_TIMEOUT: /*rock_states.h*/
     motorsOff;
     oneIfPlaying = 0;
-    // do something;
+    status_set  ( STATUS_NO_GAMEPLAY);
     break;
 
   case GAMEPLAY_HALFTIME: /*rock_states.h*/
     motorsOff;
     oneIfPlaying = 0;
     timeElapsedMS = 30000;
+    status_set  ( STATUS_NO_GAMEPLAY);
     //status_blink( STATUS_NO_GAMEPLAY);
 
     // Swap team and enemy goal locations
@@ -82,8 +83,7 @@ void stateMachine()
   case GAMEPLAY_SCORED_GOAL:
     motorsOff;
     oneIfPlaying = 0;
-    // do something;
-    //TODO determine which team scored goal
+//TODO determine which team scored goal
     break;
 
   case FIND_PUCK:
@@ -128,23 +128,27 @@ void stateMachine()
     break;
 
   case MOVE_PATROL:
-//TODO if puck and/or constellation has been out-of-sight for several seconds, move in large figure eights
-
-    // TODO When entering move_patrol state: 
-    //       int patrolCounter = timeElapsedMS; //TODO global var?
-    patrolCounter++;
-    if (timeElapsedMS - patrolCounter > 10000)
+    if (robotOnPatrol)
+    {
+    if (timeElapsedMS - patrolCounter > 8000)
     {
       patrolCounter = timeElapsedMS; //TODO global var?
-      //TODO enemyGoalX = RED;
+      enemyGoalX = GOAL_RED_X;
       //TODO=HIGH When EXITING move_patrol state,
       //      set the enemy goal back to the correct side!!!
     }
-    else if (timeElapsedMS - patrolCounter > 5000)
+    else if (timeElapsedMS - patrolCounter > 4000)
     {
-      //TODO enemyGoalX = BLUE;
+      enemyGoalX = GOAL_BLUE_X;
     }
-
+    // TODO When entering move_patrol state: 
+    //       int patrolCounter = timeElapsedMS; //TODO global var?
+    }
+    else
+    {
+      patrolCounter = timeElapsedMS;
+      robotOnPatrol = TRUE;
+    }
     break;
 
   case MOVE_TO_DEFENSE_PUCK_IN_SIGHT:
@@ -259,7 +263,14 @@ int stateStart(void)
     return LEFT_GUIDE_TO_GOAL;
     return CHARGE_ENEMY_GOAL;
   }
-  if (distToPuck == 255/*TODO*/) {return FIND_PUCK;}
+  if (distToPuck == 255/*TODO*/)
+  {
+    return FIND_PUCK;
+  }
+  else
+  {
+    robotOnPatrol = FALSE;
+  }
   if (((angleToBehindPuck - angleOfRobot) < GOAL_ALIGN_DEG)&&
       ((angleOfRobot - angleToBehindPuck) < GOAL_ALIGN_DEG)&&
       (havePuck == FALSE))

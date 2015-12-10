@@ -8,6 +8,8 @@ ISR(ADC_vect) /*ADC conversion complete!*/
   // Result stored in the ADC register
 }
 
+// mRF INTERRUPT
+// ***************
 //TODO Check if INT2 will interfere with other functionality!
 ISR(INT2_vect)
 {
@@ -87,6 +89,8 @@ ISR(INT2_vect)
   }
 }
 
+// MILLISECOND COUNTER
+// ********************
 ISR(TIMER0_OVF_vect)
 {
   timeElapsedMS += oneIfPlaying;

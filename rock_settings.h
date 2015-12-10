@@ -5,8 +5,8 @@
 #define ROBOT RUNNER
 
 // Adjustable Settings
-#define TEST_LEDS_ON_STARTUP            FALSE
-#define TEST_MOTORS_ON_STARTUP          FALSE
+#define TEST_LEDS_ON_STARTUP            TRUE 
+#define TEST_MOTORS_ON_STARTUP          TRUE 
 #define TEST_STATUS_LED_TIME_MS         54
 #define TEST_TEAM_LED_TIME_MS           203
 #define SHORT_WAIT_BEFORE_TESTS         FALSE

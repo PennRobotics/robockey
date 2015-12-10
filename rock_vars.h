@@ -1,5 +1,6 @@
 #ifndef _rock_vars_h
 #define _rock_vars_h
+extern int patrolCounter ;
 
 extern           int angleOfRobot;
 extern           int angleToBehindPuck;

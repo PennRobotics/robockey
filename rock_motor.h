@@ -16,7 +16,7 @@
 #define SLOW_WHEEL_SPEED_PER_DEG         1
 #define FAST_WHEEL_SPEED_PER_DEG         2
 #define ANGLE_ERROR_TO_START_TURN        5
-#define MAX_ANGLE_ERROR                 70
+#define MAX_ANGLE_ERROR                 60
 
 #define motorsOff                    motorDutyL = 0; motorDutyR = 0
 

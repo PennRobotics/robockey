@@ -6,6 +6,9 @@ void init(void)
 {
   m_red(ON); //m_general.h
 
+  // Set up motor direction pins as outputs
+  set(DDRD,3); set(DDRD,4); set(DDRD,5); set(DDRD,6);
+
   // Enable interrupts TODO remove other sei()
   sei();
 
@@ -221,17 +224,17 @@ void initTimers(void)
 
   /* **************************************************** */  
   //   TIMER 4 CONFIGURATION
-  // Timer 4 clock 16MHz / 2 = 8 MHz (period 125 ns)
+  // Timer 4 clock 16MHz / 8 = 2 MHz (period 500 ns)
   clear(TCCR4B,CS43);
-  clear(TCCR4B,CS42);
-  set(  TCCR4B,CS41);
+  set  (TCCR4B,CS42);
+  clear(  TCCR4B,CS41);
   clear(TCCR4B,CS40);
 
   // Count UP to OCR4C
   clear(TCCR4D,WGM41);
   clear(TCCR4D,WGM40);
 
-  // Timer overflows every MAX_SPEED [250] cycles, 31.25 us (32 kHz)
+  // Timer overflows every MAX_SPEED [250] cycles, 125.00 us (8 kHz)
   MOTOR_TIMER_MAX   = MAX_SPEED;
 
   // Channels A and D output C7 (L) and D7 (R)
@@ -241,12 +244,12 @@ void initTimers(void)
   // Channel A PWM OFF at 0, ON at OCR4A
   set(  TCCR4A,PWM4A);
   set(  TCCR4A,COM4A1);
-  set(  TCCR4A,COM4A0);
+  clear(TCCR4A,COM4A0);
 
   // Channel D PWM OFF at 0, ON at OCR4D
   set(  TCCR4C,PWM4D);
   set(  TCCR4C,COM4D1);
-  set(  TCCR4C,COM4D0);
+  clear(TCCR4C,COM4D0);
 
   MOTOR_TIMER_OCR_L = 3; // 1.2 percent duty cycle (effectively OFF)
   MOTOR_TIMER_OCR_R = 3; // 1.2 percent duty cycle

@@ -301,8 +301,8 @@ void steeringAlgorithm(void)
 
   // Each motor's PWM duty cycle will vary based on CW/CCW error
   // When the robot needs to move CW, L wheel will be faster than R
-  motorDutyL = 3*(120 - degErrTurnCW)/2;
-  motorDutyR = 3*(120 - degErrTurnCCW)/2;
+  motorDutyL = 3*(100 - degErrTurnCW)/2;
+  motorDutyR = 3*(100 - degErrTurnCCW)/2;
 
   int slowDownNearGoal = max(0, 120 - distXYToR(robotX-enemyGoalX, robotY-enemyGoalY));
 

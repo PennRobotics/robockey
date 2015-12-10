@@ -32,6 +32,7 @@ unsigned char teamHasPuck = FALSE;
 unsigned char teamScore = 0;
 unsigned  int timeElapsedMS = 0;
 
+int patrolCounter = 0;
 // oneIfPlaying is also 1 at startup to enable comm test blinking
          char oneIfPlaying = 1;
 
